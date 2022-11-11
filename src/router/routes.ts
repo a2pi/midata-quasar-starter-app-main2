@@ -70,6 +70,13 @@ const routes: RouteRecordRaw[] = [
       { path: '', component: () => import('pages/LoginPage.vue') },
     ],
   },
+  {
+    path: '/prom',
+    component: () => import('layouts/DigitalPromLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/prom.vue') },
+    ],
+  },
   // Always leave this as last one,
   // but you can also remove it
   {

@@ -12,7 +12,7 @@
     <input type="password" placeholder="Password" required/>                         </div>
   
   <div class="form-field">
-    <button class="btn" type="submit" onclick="window.location.href='form.html';">Log in</button>
+    <button class="btn" type="submit" onclick="$router.replace(’pages/prom.vue'’)">Log in</button>
   </div>
 </form>
   </q-page>
