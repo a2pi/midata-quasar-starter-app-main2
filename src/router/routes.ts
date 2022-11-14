@@ -84,6 +84,13 @@ const routes: RouteRecordRaw[] = [
       { path: '', component: () => import('pages/patFile.vue') },
     ],
   },
+  {
+    path: '/patsearch',
+    component: () => import('layouts/DigitalPromLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/patSearch.vue') },
+    ],
+  },
   // Always leave this as last one,
   // but you can also remove it
   {

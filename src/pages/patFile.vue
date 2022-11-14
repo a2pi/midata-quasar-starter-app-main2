@@ -4,14 +4,14 @@
     <table border="0">
         <tr>
             <td>
-                Name 
+                Name
                 <input type="text" placeholder="Name">
 
             </td>
             <td>
                 Nachname <input type="text" placeholder="Nachname" width="100%">
             </td>
-            
+
         </tr>
         <tr>
             <td colspan="2" >Address <input type="text" placeholder="Addresse"></td>
@@ -101,9 +101,9 @@
                           <option value="November">November</option>
                           <option value="December">December</option>
                         </select>
-                        
-                      </span>  
-                
+
+                      </span>
+
                 </span>
                 <label>Year</label>
                   <span class="" style="vertical-align: top">
@@ -112,7 +112,7 @@
                       id="year"
                       class=""
                       data-component="birthdate-year"
-                      
+
                     >
                       <option></option>
                       <option value="2022">2022</option>
@@ -219,12 +219,17 @@
                       <option value="1921">1921</option>
                       <option value="1920">1920</option>
                     </select>
-                   
+
                   </span>
-                
+
             </td>
         </tr>
-        
+        <tr>
+          <td>
+            <q-btn unelevated color="grey" label="ok" to="prom" />
+          </td>
+        </tr>
+
 
     </table>
   </q-page>
