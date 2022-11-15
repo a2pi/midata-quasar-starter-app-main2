@@ -121,8 +121,8 @@
 		  <tr><td colspan="6" class="separators"></td></tr>
 		  
  </table>
- <!-- //Error here , string has a invalid character. Still searching for the error.//
- <table widtd 100%><tr>
+ 
+ <table width=100%><tr>
 			<td >Wie würden Sie Ihre Schmerzen im Allgemeinen einschätzen?</td>
 			
 			<td rowspan='2' class="col_"><input type="checkbox" name="Ausgezeichnet" value="0"   /><br>0 <br><strong>Keine Schmerzen</strong> </td>
@@ -140,7 +140,8 @@
 		  </tr>
 		  
 		</table>
--->
+    <br>
+<center><q-btn color="primary" id="beendenBtn" label="Beenden" to="finalPage" size="30px"/></center>
   </q-page>
 </template>
 

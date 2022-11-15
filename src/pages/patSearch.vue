@@ -25,6 +25,7 @@
       </template>
     </q-input>
   </div>
+   <q-btn color="primary" label="Search" to="patFile" />
 
   </q-page>
 

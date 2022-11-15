@@ -7,6 +7,7 @@
           Damit sie MIDATA verwenden können, müssen Sie sich zuerst
           einloggen/registrieren.
         </div>
+        <img src="../assets/digitalprom/Logo.png"  class="logo">
       </q-card-section>
       <q-separator inset />
       <q-card-actions>

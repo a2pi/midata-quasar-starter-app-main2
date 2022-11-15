@@ -3,8 +3,8 @@ import { RouteRecordRaw } from 'vue-router';
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/Overview.vue') }],
+    component: () => import('layouts/DigitalPromLayout.vue'),
+    children: [{ path: '', component: () => import('pages/LoginPage.vue') }],
   },
   {
     path: '/overview',
@@ -85,10 +85,17 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
-    path: '/patsearch',
+    path: '/search',
     component: () => import('layouts/DigitalPromLayout.vue'),
     children: [
       { path: '', component: () => import('pages/patSearch.vue') },
+    ],
+  },
+  {
+    path: '/ende',
+    component: () => import('layouts/DigitalPromLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/finalPage.vue') },
     ],
   },
   // Always leave this as last one,
