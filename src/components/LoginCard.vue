@@ -2,11 +2,6 @@
   <div class="container">
     <q-card class="card">
       <q-card-section>
-        <div class="text-h4 text-weight-thin">MIDATA Login</div>
-        <div class="text-body1">
-          Damit sie MIDATA verwenden können, müssen Sie sich zuerst
-          einloggen/registrieren.
-        </div>
         <img src="../assets/digitalprom/Logo.png"  class="logo">
       </q-card-section>
       <q-separator inset />

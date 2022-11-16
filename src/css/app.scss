@@ -8,43 +8,38 @@ input{
 	width: 35px;
 	height: 35px;
   }
- 
-  td{
-	border-color:rgb(241, 241, 241);
-	background-color: rgb(241, 241, 241);
 
-	border-width:0px;
-	font-family:Arial, sans-serif;
-	font-size:14px;
-	overflow:hidden;
-	padding:10px 20px;
-	word-break:normal;
-	border-spacing: 50px 0;
-	
-	}
-
-  td{
-	  border-color:rgb(241, 241, 241);
-	  border-style:none;
-	  
-	  font-family:Arial, sans-serif;
-	  font-size:14px;
-	  font-weight:normal;
-	  overflow:hidden;
-	  padding:20px 20px;
-	  word-break:normal;
-	  border-spacing: 50px 0;
-
-	  
-	}
-
-  	.col_{
+  	.col_form{
 	text-align:center;
 	vertical-align:top;
 	background-color: rgb(241, 241, 241);
 	width:7%;
 	border-spacing: 50px;
+  font-family:Arial, sans-serif;
+	font-size:14px;
+	font-weight:normal;
+	overflow:hidden;
+	padding:20px 20px;
+	word-break:normal;
+	border-spacing: 50px 0;
 	}
+  .col_pat{
+    text-align:center;
+    vertical-align:top;
+    background-color: rgb(241, 241, 241);
+    width:7%;
+    border-spacing: 50px;
+    font-family:Arial, sans-serif;
+    font-size:14px;
+    font-weight:normal;
+    overflow:hidden;
+    padding:20px 20px;
+    word-break:normal;
+    border-spacing: 50px 0;
+    }
+  .frage{
+    background-color: rgb(241, 241, 241);
+  }
 
 	.scale{
     
@@ -61,7 +56,7 @@ input{
 	.separators{
 		background-color: rgb(255, 255, 255);
 		border-color:rgb(255, 255, 255);
-		
+		margin-top: '20px';
 	}
 
 	-------------------------------------------------------------
@@ -157,15 +152,5 @@ form .btn {
   
 }
 
-div.container4 {
-  height: 10em;
-  position: relative }
-div.container4 p {
-  margin: 0;
-  background: yellow;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-right: -50%;
-  transform: translate(-50%, -50%) }
+
 

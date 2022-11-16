@@ -4,6 +4,8 @@
     <form >
 
 <login-card></login-card>      
+      <!--<img src="../assets/digitalprom/Logo.png"  class="logo">
+ <div class="form-field">
     <input type="email" placeholder="Username" required/>
   </div>
 
