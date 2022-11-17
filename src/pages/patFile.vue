@@ -1,33 +1,32 @@
 <template>
   <q-page padding>
-    <div>
+    <div class="q-pa-md" style="max-width: 400px">
       <h2>Patient Name</h2>
       <table>
         <tr>
-          <td class="col_" >
-            
-          <q-input outlined v-model="patientName"  label="Name"  />
+          <td>
+            <q-input outlined v-model="patientName" label="Name" />
           </td>
           <td class="col_">
-            <q-input outlined v-model="nachName" label="Nachname"  />
+            <q-input outlined v-model="nachName" label="Nachname" />
           </td>
         </tr>
         <tr>
           <td class="col_" colspan="2">
-            <q-input outlined v-model="Addresse"  label="Addresse"  />
+            <q-input outlined v-model="Addresse" label="Addresse" />
           </td>
         </tr>
         <tr>
-          <td class="col_"><q-input outlined v-model="PLZ"  label="PLZ"  /></td>
-          <td class="col_"><q-input outlined v-model="ORT"  label="ORT"  /></td>
+          <td class="col_"><q-input outlined v-model="PLZ" label="PLZ" /></td>
+          <td class="col_"><q-input outlined v-model="ORT" label="ORT" /></td>
         </tr>
-       
+
         <tr>
           <td class="col_">
-            <q-input outlined v-model="email"  label="email"  />
+            <q-input outlined v-model="email" label="email" />
           </td>
           <td class="col_">
-            <q-input outlined v-model="geburtsdatum"  label="Geburtsdatum"  />
+            <q-input outlined v-model="geburtsdatum" label="Geburtsdatum" />
           </td>
         </tr>
         <!-- <tr>
@@ -226,29 +225,23 @@
 </template>
 
 <script>
-
-import { ref } from 'vue'
-
-
-
+import { ref } from 'vue';
 
 export default {
   // name: 'PageName',
-  setup () {
-    
-    
+  setup() {
     return {
-      patientName:'Elisabeth',
-      nachName:'Brönimann',
-      Addresse:'',
-      PLZ:'',
-      ORT:'',
-      email:'',
-      geburtsdatum:'',
+      patientName: ref(''),
+      nachName: ref(''),
+      Addresse: ref(''),
+      PLZ: ref(''),
+      ORT: ref(''),
+      email: ref(''),
+      geburtsdatum: ref(''),
       text: ref(''),
       ph: ref(''),
-      dense: ref(false)
-    }
-  }
+      dense: ref(false),
+    };
+  },
 };
 </script>
