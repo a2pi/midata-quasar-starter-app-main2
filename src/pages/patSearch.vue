@@ -2,9 +2,9 @@
 
   <q-page padding>
     <H3>Patient Search</H3>
-    <q-input filled v-model="text" label="Name" :dense="dense" />
-    <q-input filled v-model="text" label="Nachname" :dense="dense" />
-    <q-input filled v-model="text" label="Name" :dense="dense" />
+    <q-input filled v-model="name" label="Name" :dense="dense" />
+    <q-input filled v-model="nachName" label="Nachname" :dense="dense" />
+
     <div class="q-pa-md" style="max-width: 300px"></div>
 
 
@@ -43,14 +43,15 @@ export default {
  name: 'patSearch',
 
  setup () {
- 
+
 
 
 
     return {
       model1: ref('2019-02-15'),
-
       date: ref('2019/02/01'),
+      name: ref(''),
+      nachName: ref(''),
 
     }
   }
