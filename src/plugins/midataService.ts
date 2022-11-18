@@ -114,6 +114,13 @@ export default class MidataService {
           .catch((error) => reject(error));
       });
     }
+    // //load the patient into an array and delivers this array
+    // async loadPatients(){
+    //   const allPatients = await this.getPatients();
+    //   console.log('Patients loaded to AllPatients array');
+    //   return allPatients;
+    // }
+
 
   public getEpisodeOfCare(): Promise<EpisodeOfCare> {
     return new Promise((resolve, reject) => {

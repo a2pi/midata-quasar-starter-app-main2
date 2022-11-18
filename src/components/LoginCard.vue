@@ -21,13 +21,17 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
+
+
 export default defineComponent({
   name: 'LoginCard',
   methods: {
+
     connect() {
       this.$midata.authenticate();
-      this.$midata.getPractitionerResource();
+  this.$midata.getPractitionerResource();
       this.$midata.getQuestionnaireResponseResourcesAsBundle();
+
     },
   },
 });

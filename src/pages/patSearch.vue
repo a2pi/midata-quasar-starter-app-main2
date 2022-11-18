@@ -7,6 +7,7 @@
         <table width="100%">
           <tr>
             <td>
+
               Bearbeiter:
               {{
                 namePracticioner
@@ -16,16 +17,12 @@
           <tr>
             <td>
               <q-input outlined v-model="name" label="Name" :dense="dense" />
+
             </td>
           </tr>
           <tr>
             <td>
-              <q-input
-                outlined
-                v-model="nachName"
-                label="Nachname"
-                :dense="dense"
-              />
+              <q-input outlined v-model="nachName" label="Nachname" />
             </td>
           </tr>
           <tr>
@@ -56,12 +53,20 @@
           </tr>
         </table>
 
-        <q-btn color="primary" label="Search" to="patFile" />
+        <q-btn color="primary" label="Search" @click="searchPat()" />
         <q-btn color="primary" label="LogOut" @click="logout()" />
-        <q-btn color="primary" label="Login" to="login"/>
-        <q-btn color="primary" label="Get Patient" @click="getPatient()"/>
-        <q-btn color="primary" label="Get Episode of Care" @click="getEpisodeOfCare()"/>
-        <q-btn color="primary" label="Register Patient" @click="registerPatient()" />
+        <q-btn color="primary" label="Login" to="/login" />
+        <!-- <q-btn color="primary" label="Get Patient" @click="getPatient()" /> -->
+        <q-btn
+          color="primary"
+          label="Get Episode of Care"
+          @click="getEpisodeOfCare()"
+        />
+        <q-btn
+          color="primary"
+          label="Register Patient"
+          @click="registerPatient()"
+        />
       </div>
     </div>
   </q-page>
@@ -70,7 +75,21 @@
 <script lang="ts">
 
 import { ref } from 'vue';
-import { Practitioner } from '@i4mi/fhir_r4';
+import { Patient } from '@i4mi/fhir_r4';
+
+interface patObj{
+        ersteName: string,
+        nachName: string,
+        addresse: string,
+        plz: string,
+        ort: string,
+        email: string,
+        geburtsDatum: string,
+}
+
+let allPatients: Patient[] = [];
+let patientsArray:patObj[] = [];
+
 
 export default {
   name: 'patSearch',
@@ -100,7 +119,7 @@ export default {
       email: string,
       geburtsDatum: string
     ) {
-      const patient = {
+      const patient:patObj = {
         ersteName: ersteName,
         nachName: nachName,
         addresse: addresse,
@@ -117,6 +136,7 @@ export default {
       console.log('Logged out');
     },
 
+
     async getPatient(){
       const patients = await this.$midata.getPatients()
       console.log(patients);
@@ -126,18 +146,46 @@ export default {
       this.practitionerResource = this.$storage.getPractitioner();
       this.namePracticioner = [this.practitionerResource?.name[0]?.family, this.practitionerResource?.name[0]?.given[0]].join(' ')
       console.log(this.practitionerResource);
+
     },
 
-    getEpisodeOfCare(){
+    builldPatientList() {
+      
+
+      allPatients.forEach((obj) => {
+        patientsArray.push(
+          this.createPatient(
+            obj.name[0].given[0],
+            obj.name[0].family,
+            obj.address[0].country,
+            'PLZ',
+            'ORT',
+            obj.telecom[0].value,
+            '12-12-1200'
+          )
+        );
+      });
+    },
+
+
+    async searchPat() {
+      await this.getPatient();
+      this.builldPatientList();
+
+      console.log(patientsArray);
+    },
+
+    getEpisodeOfCare() {
       console.log(this.$midata.getEpisodeOfCare());
     },
 
-    registerPatient(){
+    registerPatient() {
       console.log('To be implemented');
-    }
+    },
   },
-  beforeMount(){
-    this.getPractitioner();
-  }
+  // created(){
+  //   this.getPatient();
+  // }
+
 };
 </script>
