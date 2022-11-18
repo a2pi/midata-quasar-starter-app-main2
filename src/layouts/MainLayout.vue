@@ -10,7 +10,7 @@
           aria-label="Menu"
           @click="toggleLeftDrawer"
         />
-        <q-toolbar-title> Demo App </q-toolbar-title>
+        <q-toolbar-title> PROM Fragebogenapp </q-toolbar-title>
 
         <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
@@ -69,7 +69,7 @@ const linksList = [
 ];
 
 const midataLinksList = [
-  {
+  /* {
     title: 'Einführung in MIDATA',
     icon: 'rocket',
     link: '/midata/introduction',
@@ -78,17 +78,17 @@ const midataLinksList = [
     title: 'Meine erste MIDATA App',
     icon: 'terminal',
     link: '/midata/myFirstApp',
-  },
+  },*/
   {
     title: 'Midata Demo',
     icon: 'auto_fix_high',
-    link: '/midata/demo',
+    link: '',
   },
 ];
 
 const deveelopmentLinksList = [
-  {
-    title: 'Basics',
+  {}
+/*     title: 'Basics',
     icon: 'keyboard_arrow_right',
     link: '/developmentBasics',
   },
@@ -106,7 +106,7 @@ const deveelopmentLinksList = [
     title: 'Internationalisierung mit Vue-i18n und Moment.js',
     icon: 'language',
     link: '/internationalization',
-  },
+  }, */
 ];
 
 import { defineComponent, ref } from 'vue';
