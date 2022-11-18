@@ -27,10 +27,10 @@ export default defineComponent({
         if (response && this.$midata.isLoggedIn()) {
           Promise.all([
             this.$storage.restoreFromMidata(),
-            this.$midata.getPatientResource(),
+            this.$midata.getPractitionerResource(),
           ])
             .then((results) => {
-              const preferredCom = results[1].communication.find((coms) => {
+              /* const preferredCom = results[1].communication.find((coms) => {
                 return coms.preferred;
               });
               if (preferredCom) {
@@ -38,7 +38,7 @@ export default defineComponent({
                 if (lang) {
                   this.setLanguage(lang);
                 }
-              }
+              }*/
               this.$router.push('/midata/demo');
             })
             .catch();
