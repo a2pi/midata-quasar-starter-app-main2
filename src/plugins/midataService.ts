@@ -1,5 +1,5 @@
 import { JSOnFhir } from '@i4mi/js-on-fhir';
-import { Patient, Bundle, ObservationStatus, Observation } from '@i4mi/fhir_r4';
+import { Patient, Bundle, ObservationStatus, Observation, EpisodeOfCare } from '@i4mi/fhir_r4';
 import moment from 'moment';
 
 // import moment library. More information under https://momentjs.com
@@ -64,7 +64,8 @@ export default class MidataService {
   public getPatientResource(): Promise<Patient> {
     return new Promise((resolve, reject) => {
       this.jsOnFhir
-        .search('Patient', { _id: this.jsOnFhir.getPatient() })
+        // .search('Patient', { _id: this.jsOnFhir.getPatient() })
+        .search('Patient')
         .then((result) => {
           const patientBundle = result as Bundle;
           (patientBundle.entry?.length !== undefined && patientBundle.entry?.length > 0 && patientBundle.entry[0].resource)
@@ -74,6 +75,29 @@ export default class MidataService {
         .catch((error) => reject(error));
     });
   }
+
+  public getEpisodeOfCare(): Promise<EpisodeOfCare> {
+    return new Promise((resolve, reject) => {
+      this.jsOnFhir
+        .search('EpisodeOfCare')
+        .then((result) => {
+          // const episodeBundle = result as Bundle;
+          const episodeBundle = result;
+          // (patientBundle.entry?.length !== undefined && patientBundle.entry?.length > 0 && patientBundle.entry[0].resource)
+          //   ? resolve(patientBundle.entry[0].resource as Patient)
+          //   : reject('No entry in patient bundle found!');
+          console.log(episodeBundle);
+          
+        })
+        .catch((error) => reject(error));
+    });
+  }
+
+
+
+
+
+
 
   /**
    * Gets the observation resources as bundle from the fhir endpoint.

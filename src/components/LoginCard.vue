@@ -26,6 +26,13 @@ export default defineComponent({
   methods: {
     connect() {
       this.$midata.authenticate();
+
+      //-------------------------------------
+      // this.$midata.getEpisodeOfCare();
+      // console.log(this.$midata.getPatientResource())
+      
+
+      //-------------------------------------
     },
   },
 });
