@@ -26,7 +26,12 @@ export default defineComponent({
   methods: {
     connect() {
       this.$midata.authenticate();
+
       this.$midata.getQuestionnaireResponseResourcesAsBundle();
+
+
+      
+
     },
   },
 });
