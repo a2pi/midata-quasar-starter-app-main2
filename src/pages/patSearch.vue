@@ -63,6 +63,7 @@
 
 import { ref } from 'vue';
 
+
 export default {
   name: 'patSearch',
 
@@ -102,9 +103,13 @@ export default {
       this.$midata.logout();
       console.log('Logged out');
     },
-    
-    getPatient(){
-      console.log(this.$midata.getPatientResource());
+
+    async getPatient(){
+      const patients = await this.$midata.getPatients()
+      console.log(patients[0]);
+      //console.log(JSON.stringify(patients));
+      //console.log(this.$midata.getPatients());
+      //console.log(JSON.stringify(this.$midata.getPatients()));
     },
 
     getEpisodeOfCare(){

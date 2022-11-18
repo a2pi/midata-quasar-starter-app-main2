@@ -65,8 +65,10 @@ export default class MidataService {
    */
      public getPractitionerResource(): Promise<Practitioner> {
       return new Promise((resolve, reject) => {
+        console.log('patient id fhir: '+ this.jsOnFhir.getPatient());
+
         this.jsOnFhir
-          .search('Practitioner', { _id: this.jsOnFhir.getPractitioner() })
+          .search('Practitioner', { _id: this.jsOnFhir.getPatient() })
           .then((result) => {
             const practitionerBundle = result as Bundle;
             (practitionerBundle.entry?.length !== undefined && practitionerBundle.entry?.length > 0 && practitionerBundle.entry[0].resource)
@@ -87,7 +89,6 @@ export default class MidataService {
         // .search('Patient', { _id: this.jsOnFhir.getPatient() })
         .search('Patient')
         .then((result) => {
-          console.log('test1');
           const patientBundle = result as Bundle;
           (patientBundle.entry?.length !== undefined && patientBundle.entry?.length > 0 && patientBundle.entry[0].resource)
             ? resolve(patientBundle.entry[0].resource as Patient)
@@ -96,6 +97,25 @@ export default class MidataService {
         .catch((error) => reject(error));
     });
   }
+
+    /**
+   * Gets the patient resource from the fhir endpoint.
+   * @returns patient resource as JSON
+   */
+     public getPatients(): Promise<Patient[]> {
+      return new Promise((resolve, reject) => {
+        this.jsOnFhir
+          // .search('Patient', { _id: this.jsOnFhir.getPatient() })
+          .search('Patient')
+          .then((result) => {
+            const patientBundle = result as Bundle;
+            (patientBundle.entry?.length !== undefined && patientBundle.entry?.length > 0 && patientBundle.entry[0].resource)
+              ? resolve(patientBundle.entry.map(x => x.resource as Patient))
+              : reject('No entry in patient bundle found!');
+          })
+          .catch((error) => reject(error));
+      });
+    }
 
   public getEpisodeOfCare(): Promise<EpisodeOfCare> {
     return new Promise((resolve, reject) => {
@@ -108,7 +128,7 @@ export default class MidataService {
           //   ? resolve(patientBundle.entry[0].resource as Patient)
           //   : reject('No entry in patient bundle found!');
           console.log(episodeBundle);
-          
+
         })
         .catch((error) => reject(error));
     });
