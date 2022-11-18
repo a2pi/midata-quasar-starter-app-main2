@@ -7,6 +7,14 @@
         <table width="100%">
           <tr>
             <td>
+              Bearbeiter:
+              {{
+                practitionerResource
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td>
               <q-input outlined v-model="name" label="Name" :dense="dense" />
             </td>
           </tr>
@@ -54,20 +62,22 @@
         <q-btn color="primary" label="Get Patient" @click="getPatient()"/>
         <q-btn color="primary" label="Get Episode of Care" @click="getEpisodeOfCare()"/>
         <q-btn color="primary" label="Register Patient" @click="registerPatient()" />
+        <q-btn color="primary" label="Get Practitioner" @click="getPractitioner()" />
       </div>
     </div>
   </q-page>
 </template>
 
-<script>
+<script lang="ts">
 
 import { ref } from 'vue';
-
+import { Practitioner } from '@i4mi/fhir_r4';
 
 export default {
   name: 'patSearch',
 
   setup() {
+
     return {
       model1: ref('2019-02-15'),
       date: ref('2019/02/01'),
@@ -75,16 +85,20 @@ export default {
       nachName: ref(''),
     };
   },
+  data: () => ({
+    practitionerResource: {} as Practitioner,
+    flag: false,
+  }
+  ),
   methods: {
-    //patient cosntructor
     createPatient(
-      ersteName,
-      nachName,
-      addresse,
-      plz,
-      ort,
-      email,
-      geburtsDatum
+      ersteName: string,
+      nachName: string,
+      addresse: string,
+      plz: string,
+      ort: string,
+      email: string,
+      geburtsDatum: string
     ) {
       const patient = {
         ersteName: ersteName,
@@ -95,7 +109,6 @@ export default {
         email: email,
         geburtsDatum: geburtsDatum,
       };
-
       return patient;
     },
 
@@ -106,10 +119,12 @@ export default {
 
     async getPatient(){
       const patients = await this.$midata.getPatients()
-      console.log(patients[0]);
-      //console.log(JSON.stringify(patients));
-      //console.log(this.$midata.getPatients());
-      //console.log(JSON.stringify(this.$midata.getPatients()));
+      console.log(patients);
+    },
+
+    async getPractitioner() {
+      this.practitionerResource = await this.$midata.getPractitionerResource();
+      console.log(this.practitionerResource);
     },
 
     getEpisodeOfCare(){
@@ -119,8 +134,6 @@ export default {
     registerPatient(){
       console.log('To be implemented');
     }
-
-
   },
 };
 </script>

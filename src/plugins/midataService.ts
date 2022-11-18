@@ -1,6 +1,6 @@
 import { JSOnFhir } from '@i4mi/js-on-fhir';
 
-import { Patient, Bundle, ObservationStatus, Observation, Practitioner, EpisodeOfCare} from '@i4mi/fhir_r4';
+import { Patient, Bundle, ObservationStatus, Observation, Practitioner, EpisodeOfCare, Organization} from '@i4mi/fhir_r4';
 
 import moment from 'moment';
 
@@ -65,8 +65,6 @@ export default class MidataService {
    */
      public getPractitionerResource(): Promise<Practitioner> {
       return new Promise((resolve, reject) => {
-        console.log('patient id fhir: '+ this.jsOnFhir.getPatient());
-
         this.jsOnFhir
           .search('Practitioner', { _id: this.jsOnFhir.getPatient() })
           .then((result) => {
@@ -134,9 +132,19 @@ export default class MidataService {
     });
   }
 
-
-
-
+  public getOrganization(id: number): Promise<Organization> {
+    return new Promise((resolve, reject) => {
+      this.jsOnFhir
+        .search('Organization', id)
+        .then((result) => {
+          const organizationBundle = result as Bundle
+           (organizationBundle.entry?.length !== undefined && organizationBundle.entry?.length > 0 && organizationBundle.entry[0].resource)
+             ? resolve(organizationBundle.entry[0].resource as Organization)
+             : reject('No entry in patient bundle found!');
+        })
+        .catch((error) => reject(error));
+    });
+  }
 
 
 
