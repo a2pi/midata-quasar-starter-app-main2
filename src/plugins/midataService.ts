@@ -1,5 +1,5 @@
 import { JSOnFhir } from '@i4mi/js-on-fhir';
-import { Patient, Bundle, ObservationStatus, Observation } from '@i4mi/fhir_r4';
+import { Patient, Bundle, ObservationStatus, Observation, Practitioner} from '@i4mi/fhir_r4';
 import moment from 'moment';
 
 // import moment library. More information under https://momentjs.com
@@ -57,6 +57,24 @@ export default class MidataService {
     return this.jsOnFhir.handleAuthResponse();
   }
 
+    /**
+   * Gets the Practitioner resource from the fhir endpoint.
+   * @returns Practitioner resource as JSON
+   */
+     public getPractitionerResource(): Promise<Practitioner> {
+      return new Promise((resolve, reject) => {
+        this.jsOnFhir
+          .search('Practitioner', { _id: this.jsOnFhir.getPractitioner() })
+          .then((result) => {
+            const practitionerBundle = result as Bundle;
+            (practitionerBundle.entry?.length !== undefined && practitionerBundle.entry?.length > 0 && practitionerBundle.entry[0].resource)
+              ? resolve(practitionerBundle.entry[0].resource as Practitioner)
+              : reject('No entry in Practitioner bundle found!');
+          })
+          .catch((error) => reject(error));
+      });
+    }
+
   /**
    * Gets the patient resource from the fhir endpoint.
    * @returns patient resource as JSON
@@ -66,6 +84,7 @@ export default class MidataService {
       this.jsOnFhir
         .search('Patient', { _id: this.jsOnFhir.getPatient() })
         .then((result) => {
+          console.log('test1');
           const patientBundle = result as Bundle;
           (patientBundle.entry?.length !== undefined && patientBundle.entry?.length > 0 && patientBundle.entry[0].resource)
             ? resolve(patientBundle.entry[0].resource as Patient)
@@ -74,6 +93,25 @@ export default class MidataService {
         .catch((error) => reject(error));
     });
   }
+
+  /**
+   * Gets the questionnaire response resources as bundle from the fhir endpoint.
+   * @returns bundle with questionnaire response resources as JSON.
+   */
+     getQuestionnaireResponseResourcesAsBundle(): Promise<Bundle> {
+      return new Promise((resolve, reject) => {
+        this.jsOnFhir
+          .search('Questionnaire Response')
+          .then((result) => {
+            const questionnaireResponseBundle = result as Bundle;
+            questionnaireResponseBundle.entry?.length > 0
+              ? resolve(questionnaireResponseBundle)
+              : reject('No entries in questionnaire response bundle found!');
+          })
+          .catch((error) => reject(error));
+      });
+    }
+
 
   /**
    * Gets the observation resources as bundle from the fhir endpoint.
