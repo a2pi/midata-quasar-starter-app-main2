@@ -9,7 +9,7 @@
             <td>
               Bearbeiter:
               {{
-                practitionerResource
+                namePracticioner
               }}
             </td>
           </tr>
@@ -62,7 +62,6 @@
         <q-btn color="primary" label="Get Patient" @click="getPatient()"/>
         <q-btn color="primary" label="Get Episode of Care" @click="getEpisodeOfCare()"/>
         <q-btn color="primary" label="Register Patient" @click="registerPatient()" />
-        <q-btn color="primary" label="Get Practitioner" @click="getPractitioner()" />
       </div>
     </div>
   </q-page>
@@ -83,6 +82,7 @@ export default {
       date: ref('2019/02/01'),
       name: ref(''),
       nachName: ref(''),
+      namePracticioner: ref('')
     };
   },
   data: () => ({
@@ -122,8 +122,9 @@ export default {
       console.log(patients);
     },
 
-    async getPractitioner() {
-      this.practitionerResource = await this.$midata.getPractitionerResource();
+    getPractitioner() {
+      this.practitionerResource = this.$storage.getPractitioner();
+      this.namePracticioner = [this.practitionerResource?.name[0]?.family, this.practitionerResource?.name[0]?.given[0]].join(' ')
       console.log(this.practitionerResource);
     },
 
@@ -135,5 +136,8 @@ export default {
       console.log('To be implemented');
     }
   },
+  beforeMount(){
+    this.getPractitioner();
+  }
 };
 </script>
