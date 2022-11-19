@@ -7,7 +7,17 @@
         <table width="100%">
           <tr>
             <td>
-              <q-input outlined v-model="name" label="Name" />
+
+              Bearbeiter:
+              {{
+                namePracticioner
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <q-input outlined v-model="name" label="Name" :dense="dense" />
+
             </td>
           </tr>
           <tr>
@@ -63,6 +73,7 @@
 </template>
 
 <script lang="ts">
+
 import { ref } from 'vue';
 import { Patient } from '@i4mi/fhir_r4';
 
@@ -79,19 +90,26 @@ interface patObj{
 let allPatients: Patient[] = [];
 let patientsArray:patObj[] = [];
 
+
 export default {
   name: 'patSearch',
 
   setup() {
+
     return {
       model1: ref('2019-02-15'),
       date: ref('2019/02/01'),
       name: ref(''),
       nachName: ref(''),
+      namePracticioner: ref('')
     };
   },
+  data: () => ({
+    practitionerResource: {} as Practitioner,
+    flag: false,
+  }
+  ),
   methods: {
-    //patient cosntructor
     createPatient(
       ersteName: string,
       nachName: string,
@@ -110,7 +128,6 @@ export default {
         email: email,
         geburtsDatum: geburtsDatum,
       };
-
       return patient;
     },
 
@@ -119,9 +136,17 @@ export default {
       console.log('Logged out');
     },
 
-    async getPatient() {
-      allPatients = await this.$midata.getPatients();
-      console.log(allPatients)
+
+    async getPatient(){
+      const patients = await this.$midata.getPatients()
+      console.log(patients);
+    },
+
+    getPractitioner() {
+      this.practitionerResource = this.$storage.getPractitioner();
+      this.namePracticioner = [this.practitionerResource?.name[0]?.family, this.practitionerResource?.name[0]?.given[0]].join(' ')
+      console.log(this.practitionerResource);
+
     },
 
     builldPatientList() {
@@ -142,6 +167,7 @@ export default {
       });
     },
 
+
     async searchPat() {
       await this.getPatient();
       this.builldPatientList();
@@ -160,5 +186,6 @@ export default {
   // created(){
   //   this.getPatient();
   // }
+
 };
 </script>

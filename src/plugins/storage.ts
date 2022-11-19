@@ -8,7 +8,7 @@ export default class Storage {
   private currentLanguage = 'de';
   private observations = new Array<Observation>();
   private patientResource = {} as Patient;
-  private practicionerResource = {} as Practitioner;
+  private practitionerResource = {} as Practitioner;
   private currentObservation = {} as Observation;
 
   midata: MidataService;
@@ -34,7 +34,7 @@ export default class Storage {
       const storage = JSON.parse(persisted);
       this.currentLanguage = storage.currentLanguage;
       this.observations = storage.observations;
-      this.patientResource = storage.patientResource;
+      this.practitionerResource = storage.practitionerResource;
     } else if (this.midata.isLoggedIn()) {
       void this.restoreFromMidata();
     } else {
@@ -55,7 +55,7 @@ export default class Storage {
         this.midata.loadObservations(),
       ])
         .then((results) => {
-          this.practicionerResource = results[0];
+          this.practitionerResource = results[0];
           this.observations = results[1] as Array<Observation>;
           this.persist();
           resolve();
@@ -91,6 +91,7 @@ export default class Storage {
     this.currentLanguage = 'de';
     this.observations = new Array<Observation>();
     this.patientResource = {} as Patient;
+    this.practitionerResource = {} as Practitioner;
     this.currentObservation = {} as Observation;
     this.persist();
   }
@@ -104,11 +105,11 @@ export default class Storage {
   }
 
     /**
-   * Gets the practicioner resource from the store.
+   * Gets the practitioner resource from the store.
    * @returns
    */
-     public getPracticioner(): Practitioner {
-      return this.practicionerResource;
+     public getPractitioner(): Practitioner {
+      return this.practitionerResource;
     }
 
   /**

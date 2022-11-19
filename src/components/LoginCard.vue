@@ -29,8 +29,8 @@ export default defineComponent({
 
     connect() {
       this.$midata.authenticate();
+  this.$midata.getPractitionerResource();
       this.$midata.getQuestionnaireResponseResourcesAsBundle();
-  
 
     },
   },
