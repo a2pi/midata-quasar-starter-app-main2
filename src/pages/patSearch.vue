@@ -16,7 +16,7 @@
           </tr>
           <tr>
             <td>
-              <q-input outlined v-model="name" label="Name" :dense="dense" />
+              <q-input outlined v-model="name" label="Name" />
 
             </td>
           </tr>
@@ -74,10 +74,10 @@
 
 <script lang="ts">
 
-import { ref } from 'vue';
-import { Patient } from '@i4mi/fhir_r4';
+import { ComponentCustomProperties, ref } from 'vue';
+import { Patient, Practitioner } from '@i4mi/fhir_r4';
 
-interface patObj{
+type patObj = {
         ersteName: string,
         nachName: string,
         addresse: string,
@@ -86,6 +86,7 @@ interface patObj{
         email: string,
         geburtsDatum: string,
 }
+
 
 let allPatients: Patient[] = [];
 let patientsArray:patObj[] = [];
@@ -119,7 +120,7 @@ export default {
       email: string,
       geburtsDatum: string
     ) {
-      const patient:patObj = {
+      const patient: patObj = {
         ersteName: ersteName,
         nachName: nachName,
         addresse: addresse,
@@ -131,27 +132,25 @@ export default {
       return patient;
     },
 
-    logout() {
+    logout(this: ComponentCustomProperties) {
       this.$midata.logout();
       console.log('Logged out');
     },
 
 
-    async getPatient(){
+    async getPatient(this: ComponentCustomProperties){
       const patients = await this.$midata.getPatients()
       console.log(patients);
     },
 
-    getPractitioner() {
+    getPractitionerName(this: Storage) {
       this.practitionerResource = this.$storage.getPractitioner();
       this.namePracticioner = [this.practitionerResource?.name[0]?.family, this.practitionerResource?.name[0]?.given[0]].join(' ')
-      console.log(this.practitionerResource);
+      console.log('test ${this.namePracticioner}');
 
     },
 
-    builldPatientList() {
-      
-
+    buildPatientList() {
       allPatients.forEach((obj) => {
         patientsArray.push(
           this.createPatient(
@@ -168,20 +167,25 @@ export default {
     },
 
 
-    async searchPat() {
+    async searchPat(this: Storage) {
       await this.getPatient();
-      this.builldPatientList();
+      this.buildPatientList();
 
       console.log(patientsArray);
     },
 
-    getEpisodeOfCare() {
+    getEpisodeOfCare(this: ComponentCustomProperties) {
       console.log(this.$midata.getEpisodeOfCare());
     },
 
     registerPatient() {
       console.log('To be implemented');
     },
+  },
+  mounted(this: Storage) {
+      this.practitionerResource = this.$storage.getPractitioner();
+      this.namePracticioner = [this.practitionerResource?.name[0]?.family, this.practitionerResource?.name[0]?.given[0]].join(' ')
+      console.log('test ${this.namePracticioner}');
   },
   // created(){
   //   this.getPatient();
