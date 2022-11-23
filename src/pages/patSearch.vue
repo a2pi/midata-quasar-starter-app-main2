@@ -71,7 +71,7 @@
 <q-btn
           color="primary"
           label="Register Patient"
-          @click="registerPatient()"
+          to="patFile"
 
         />
       </div>

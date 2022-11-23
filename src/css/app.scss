@@ -3,6 +3,9 @@
   background-image: linear-gradient(to bottom right, #087add, #32c6b6);
 }
 
+table{
+  border: 1 ;
+}
 
 .input_form{
 	width: 35px;
@@ -14,17 +17,30 @@
 	text-align:center;
 	vertical-align:top;
 	background-color: rgb(241, 241, 241);
-	width:7%;
-	border-spacing: 50px;
   font-family:Arial, sans-serif;
 	font-size:14px;
 	font-weight:normal;
-	overflow:hidden;
-	padding:20px 20px;
-	word-break:normal;
-	border-spacing: 50px 0;
-
+	padding-top: 10px;
+  padding-bottom: 10px;
 	}
+  .number_rows{
+    text-align:center;
+    vertical-align: text-top;
+    border: 0px solid;
+    max-width: 10px;
+    overflow: hidden;
+    padding: 0px;
+    margin: 0px;
+    
+    
+    background-color: rgb(255, 255, 255);;
+    
+  font-family:Arial, sans-serif;
+    font-size:20px;
+    font-weight:bolder;
+    
+    }
+
   .col_pat{
     text-align:center;
     vertical-align:top;
@@ -40,25 +56,26 @@
     border-spacing: 50px 0;
     }
   .frage{
-    background-color: rgb(241, 241, 241);
+    background-color: rgb(255, 255, 255);
+    width:700px;
   }
 
 	.scale{
-
+    text-align:center;
 	  background-color: rgb(255, 255, 255);
 		border-collapse: collapse;
 		border-bottom: 5px solid rgb(0, 0, 0);
 		vertical-align:bottom;
-		padding:5px 10px;
+    overflow:hidden;
 		font-weight:bolder;
-
-
+    font-size:16px;
+    max-width: 20px;
 
 	}
 	.separators{
 		background-color: rgb(255, 255, 255);
-		border-color:rgb(255, 255, 255);
-		margin-top: '20px';
+		border-bottom: 2px solid rgb(214, 214, 214);
+		height: 10px;
 	}
 
 	-------------------------------------------------------------
