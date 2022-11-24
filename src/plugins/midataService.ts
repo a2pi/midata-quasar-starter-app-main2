@@ -1,11 +1,13 @@
 import { JSOnFhir } from '@i4mi/js-on-fhir';
-
-import { Patient, Bundle, ObservationStatus, Observation, Practitioner, EpisodeOfCare, Organization} from '@i4mi/fhir_r4';
+import * as promis from 'src/data/promData.json'
+import { Patient, Bundle, ObservationStatus, Observation, Practitioner, EpisodeOfCare, Organization, Questionnaire} from '@i4mi/fhir_r4';
 
 import moment from 'moment';
 
 // import moment library. More information under https://momentjs.com
 const now = moment();
+
+const prom = promis
 
 export default class MidataService {
   jsOnFhir: JSOnFhir;
@@ -173,6 +175,15 @@ export default class MidataService {
       });
     }
 
+    getQuestionnaire() {
+      return prom
+    }
+
+    setQuestionnaireData(answers: any[]) {
+      console.log(`Antworten: ${String(answers)}`);
+      
+      //throw new Error('Method not implemented.');
+    }
 
   /**
    * Gets the observation resources as bundle from the fhir endpoint.
