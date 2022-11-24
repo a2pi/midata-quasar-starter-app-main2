@@ -1,7 +1,7 @@
 <template>
   <q-page padding>
-    <div class="q-pa-md" style="max-width: 400px">
-      <h2>Patient Name</h2>
+    <div class="q-pa-md" style="max-width: 700px">
+      <h2>Register new patient</h2>
       <table>
         <tr>
           <td>

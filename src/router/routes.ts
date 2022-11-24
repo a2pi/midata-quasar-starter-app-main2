@@ -37,6 +37,13 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
+    path: '/midata/demo',
+    component: () => import('layouts/DigitalPromLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/patSearch.vue') },
+    ],
+  },
+  {
     path: '/ende',
     component: () => import('layouts/DigitalPromLayout.vue'),
     children: [

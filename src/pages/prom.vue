@@ -1,229 +1,256 @@
-<script lang="ts">
-import { ComponentCustomProperties } from 'vue';
-import { Questionnaire } from '@i4mi/fhir_r4';
-
-export default {
-  name: 'Prom',
-
-  data() {
-    return {
-      answer1: Number,
-      answer2: Number,
-      answer3: Number,
-      answer4: Number,
-      answer5: Number,
-      answer6: Number,
-      answer7: Number,
-      answer8: Number,
-      answer9: Number,
-      answer10: Number,
-    };
-  },
-  setup() {
-    return {};
-  },
-  methods: {
-    getQuestionnaire(that: ComponentCustomProperties) {
-		const answers = [
-        this.answer1,
-        this.answer2,
-        this.answer3,
-        this.answer4,
-        this.answer5,
-        this.answer6,
-        this.answer7,
-        this.answer8,
-        this.answer9,
-        this.answer10,
-      ];
-      that.$midata.setQuestionnaireData(answers);
-      const questionnaire = that.$midata.getQuestionnaire();
-      console.log('Questionnaire: ' + JSON.stringify(questionnaire));
-    },
-    completeBtnPressed() {
-      console.log('Button pressed: ' + String(this.answer1));
-    },
-  },
-  watch: {
-    answer1(value) {
-      console.log('Frage 1: ' + String(value));
-    },
-    answer2(value) {
-      console.log('Frage 2: ' + String(value));
-    },
-    answer3(value) {
-      console.log('Frage 3: ' + String(value));
-    },
-    answer4(value) {
-      console.log('Frage 4: ' + String(value));
-    },
-    answer5(value) {
-      console.log('Frage 5: ' + String(value));
-    },
-    answer6(value) {
-      console.log('Frage 6: ' + String(value));
-    },
-    answer7(value) {
-      console.log('Frage 7: ' + String(value));
-    },
-    answer8(value) {
-      console.log('Frage 8: ' + String(value));
-    },
-    answer9(value) {
-      console.log('Frage 9: ' + String(value));
-    },
-    answer10(value) {
-      console.log('Frage 10: ' + String(value));
-    },
-  },
-};
-</script>
-
-<template>
+<template >
   <q-page padding>
-    <table>
+    <table >
       <tr>
-        <td style="background-color: rgb(255, 255, 255)">
+        <td >
           <h4>Bitte kreuzen Sie zu jeder Frage ein Kästchen an.</h4>
-          <!-- Entwicklungsbutton to be deleted -->
-          <center>
-            Debugger
-            <q-btn
-              color="red"
-              id="debuggerBtn"
-              label="Do some magic pls"
-              size="30px"
-              @click="getQuestionnaire()"
+        </td>
+
+        <td class="scale">Ausge-<br />zeichnet</td>
+        <td class="scale">
+          Sehr<br />
+          gut
+        </td>
+        <td class="scale">Gut</td>
+        <td class="scale">Einiger-<br />maßen</td>
+        <td class="scale">Schlecht</td>
+      </tr>
+      <tr>
+        <td class="frage" id="frage1" name="frage1">
+          Wie würden Sie Ihren Gesundheitszustand<br />insgesamt beschreiben?<br />
+        </td>
+        <td colspan="5">
+          <div>
+            <q-option-group
+              size="155px"
+              name="accepted_genres"
+              v-model="R_Global01"
+              :options="Global01"
+              inline
+              color="grey-7"
+              dense
+              style="width: 480px;
+                border: 0px solid;
+                background-color: rgb(255, 255, 255);
+                padding-left: 10px;
+              "
             />
-          </center>
-          <!-- End of Debugger -->
+          </div>
         </td>
-        <td class="scale formtd">Ausgezeichnet</td>
-        <td class="scale formtd">Sehr gut</td>
-        <td class="scale formtd">Gut</td>
-        <td class="scale formtd">Einigermaßen</td>
-        <td class="scale formtd">Schlecht</td>
+        <!-- <td class="col_form"><q-checkbox v-model="frage1" val='5' size="20px"  /><br>5</td>
+				<td class="col_form"><q-checkbox v-model="frage1" val='4' size="20px"  /><br>4</td>
+				<td class="col_form"><q-checkbox v-model="frage1" val='3' size="20px"  /><br>3</td>
+				<td class="col_form"><q-checkbox v-model="frage1" val='2' size="20px"  /><br>2</td>
+				<td class="col_form"><q-checkbox v-model="frage1" val='1' size="20px"  /><br>1</td> -->
       </tr>
       <tr>
-        <td class="question" id="answer1" name="answer1">
-          Wie würden Sie Ihren Gesundheitszustand insgesamt beschreiben?<br />
-        </td>
-        <td class="col_form">
-          <q-radio v-model="answer1" val="5" size="80px" /><br />5
-        </td>
-        <td class="col_form">
-          <q-radio v-model="answer1" val="4" size="80px" /><br />4
-        </td>
-        <td class="col_form">
-          <q-radio v-model="answer1" val="3" size="80px" /><br />3
-        </td>
-        <td class="col_form">
-          <q-radio v-model="answer1" val="2" size="80px" /><br />2
-        </td>
-        <td class="col_form">
-          <q-radio v-model="answer1" val="1" size="80px" /><br />1
-        </td>
+        <td class="number_rows"></td>
+        <td class="number_rows">5</td>
+        <td class="number_rows">4</td>
+        <td class="number_rows">3</td>
+        <td class="number_rows">2</td>
+        <td class="number_rows">1</td>
       </tr>
+	  <tr><td colspan="6" class="separators"></td></tr>
       <tr>
-        <td colspan="6" class="separators"></td>
-      </tr>
-      <tr>
-        <td class="answer">
+        <td class="frage">
           Wie würden Sie Ihre Lebensqualität insgesamt beschreiben?
         </td>
-        <td class="col_form">
-          <q-radio v-model="answer2" val="5" size="80px" /><br />5
+        <td colspan="5">
+          <div>
+            <q-option-group
+              size="155px"
+              name="accepted_genres"
+              v-model="R_Global02"
+              :options="Global02"
+              inline
+              color="grey-7"
+              dense
+              style="
+                width: 480px;
+                border: 0px solid;
+                background-color: rgb(255, 255, 255);
+                padding-left: 10px;
+              "
+            />
+          </div>
+        </td>
+
+        <!-- <td class="col_form">
+          <q-checkbox v-model="frage2" val="5" size="20px" /><br />5
         </td>
         <td class="col_form">
-          <q-radio v-model="answer2" val="4" size="80px" /><br />4
+          <q-checkbox v-model="frage2" val="4" size="20px" /><br />4
         </td>
         <td class="col_form">
-          <q-radio v-model="answer2" val="3" size="80px" /><br />3
+          <q-checkbox v-model="frage2" val="3" size="20px" /><br />3
         </td>
         <td class="col_form">
-          <q-radio v-model="answer2" val="2" size="80px" /><br />2
+          <q-checkbox v-model="frage2" val="2" size="20px" /><br />2
         </td>
         <td class="col_form">
-          <q-radio v-model="answer2" val="1" size="80px" /><br />1
-        </td>
+          <q-checkbox v-model="frage2" val="1" size="20px" /><br />1
+        </td> -->
       </tr>
-      <tr>
-        <td colspan="6" class="separators"></td>
+	  <tr>
+        <td class="number_rows"></td>
+        <td class="number_rows">5</td>
+        <td class="number_rows">4</td>
+        <td class="number_rows">3</td>
+        <td class="number_rows">2</td>
+        <td class="number_rows">1</td>
       </tr>
+	  <tr><td colspan="6" class="separators"></td></tr>
       <tr>
-        <td class="answer">
+        <td class="frage">
           Wie würden Sie Ihren körperlichen Gesundheitszustand insgesamt
           beschreiben?
         </td>
-        <td class="col_form">
-          <q-radio v-model="answer3" val="5" size="80px" /><br />5
+        <td colspan="5">
+          <div>
+            <q-option-group
+              size="155px"
+              name="accepted_genres"
+              v-model="R_Global03"
+              :options="Global03"
+              inline
+              color="grey-7"
+              dense
+              style="
+                width: 480px;
+                border: 0px solid;
+                background-color: rgb(255, 255, 255);
+                padding-left: 10px;
+              "
+            />
+          </div>
+        </td>
+        <!-- <td class="col_form">
+          <q-checkbox v-model="frage3" val="5" size="20px" /><br />5
         </td>
         <td class="col_form">
-          <q-radio v-model="answer3" val="4" size="80px" /><br />4
+          <q-checkbox v-model="frage3" val="4" size="20px" /><br />4
         </td>
         <td class="col_form">
-          <q-radio v-model="answer3" val="3" size="80px" /><br />3
+          <q-checkbox v-model="frage3" val="3" size="20px" /><br />3
         </td>
         <td class="col_form">
-          <q-radio v-model="answer3" val="2" size="80px" /><br />2
+          <q-checkbox v-model="frage4" val="2" size="20px" /><br />2
         </td>
         <td class="col_form">
-          <q-radio v-model="answer3" val="1" size="80px" /><br />1
-        </td>
+          <q-checkbox v-model="frage5" val="1" size="20px" /><br />1
+        </td> -->
       </tr>
-      <tr>
-        <td colspan="6" class="separators"></td>
+	  <tr>
+        <td class="number_rows"></td>
+        <td class="number_rows">5</td>
+        <td class="number_rows">4</td>
+        <td class="number_rows">3</td>
+        <td class="number_rows">2</td>
+        <td class="number_rows">1</td>
       </tr>
+	  <tr><td colspan="6" class="separators"></td></tr>
       <tr>
-        <td class="answer">
+        <td class="frage">
           Wie würden Sie Ihre psychische Verfassung insgesamt beschreiben? Dazu
           zählen Ihre Stimmung und Ihre Fähigkeit, klar zu denken.
         </td>
-        <td class="col_form">
-          <q-radio v-model="answer4" val="5" size="80px" /><br />5
+        <td colspan="5">
+          <div>
+            <q-option-group
+              size="155px"
+              name="accepted_genres"
+              v-model="R_Global04"
+              :options="Global04"
+              inline
+              color="grey-7"
+              dense
+              style="
+                width: 480px;
+                border: 0px solid;
+                background-color: rgb(255, 255, 255);
+                padding-left: 10px;
+              "
+            />
+          </div>
+        </td>
+
+        <!-- <td class="col_form">
+          <q-checkbox v-model="frage4" val="5" size="20px" /><br />5
         </td>
         <td class="col_form">
-          <q-radio v-model="answer4" val="4" size="80px" /><br />4
+          <q-checkbox v-model="frage4" val="4" size="20px" /><br />4
         </td>
         <td class="col_form">
-          <q-radio v-model="answer4" val="3" size="80px" /><br />3
+          <q-checkbox v-model="frage4" val="3" size="20px" /><br />3
         </td>
         <td class="col_form">
-          <q-radio v-model="answer4" val="2" size="80px" /><br />2
+          <q-checkbox v-model="frage4" val="2" size="20px" /><br />2
         </td>
         <td class="col_form">
-          <q-radio v-model="answer4" val="1" size="80px" /><br />1
-        </td>
+          <q-checkbox v-model="frage4" val="1" size="20px" /><br />1
+        </td> -->
       </tr>
-      <tr>
-        <td colspan="6" class="separators"></td>
+	  <tr>
+        <td class="number_rows"></td>
+        <td class="number_rows">5</td>
+        <td class="number_rows">4</td>
+        <td class="number_rows">3</td>
+        <td class="number_rows">2</td>
+        <td class="number_rows">1</td>
       </tr>
+	  <tr><td colspan="6" class="separators"></td></tr>
       <tr>
-        <td class="question">
+        <td class="frage">
           Wie zufrieden sind Sie insgesamt mit Ihren Aktivitäten mit anderen
           Menschen und mit Ihren Beziehungen zu anderen?
         </td>
-        <td class="col_form">
-          <q-radio v-model="answer5" val="5" size="80px" /><br />5
+        <td colspan="5">
+          <div>
+            <q-option-group
+              size="155px"
+              name="accepted_genres"
+              v-model="R_Global05"
+              :options="Global05"
+              inline
+              color="grey-7"
+              dense
+              style="
+                width: 480px;
+                border: 0px solid;
+                background-color: rgb(255, 255, 255);
+                padding-left: 10px;
+              "
+            />
+          </div>
+        </td>
+        <!-- <td class="col_form">
+          <q-checkbox v-model="frage5" val="5" size="20px" /><br />5
         </td>
         <td class="col_form">
-          <q-radio v-model="answer5" val="4" size="80px" /><br />4
+          <q-checkbox v-model="frage5" val="4" size="20px" /><br />4
         </td>
         <td class="col_form">
-          <q-radio v-model="answer5" val="3" size="80px" /><br />3
+          <q-checkbox v-model="frage5" val="3" size="20px" /><br />3
         </td>
         <td class="col_form">
-          <q-radio v-model="answer5" val="2" size="80px" /><br />2
+          <q-checkbox v-model="frage5" val="2" size="20px" /><br />2
         </td>
         <td class="col_form">
-          <q-radio v-model="answer5" val="1" size="80px" /><br />1
-        </td>
+          <q-checkbox v-model="frage5" val="1" size="20px" /><br />1
+        </td> -->
       </tr>
-      <tr>
-        <td colspan="6" class="separators"></td>
+	  <tr>
+        <td class="number_rows"></td>
+        <td class="number_rows">5</td>
+        <td class="number_rows">4</td>
+        <td class="number_rows">3</td>
+        <td class="number_rows">2</td>
+        <td class="number_rows">1</td>
       </tr>
+	  <tr><td colspan="6" class="separators"></td></tr>
       <tr>
-        <td class="question">
+        <td class="frage">
           Wie gut sind Sie insgesamt in der Lage, Aktivitäten mit anderen
           Menschen nachzugehen und Ihre Rollen im Alltag und in der Gemeinschaft
           auszufüllen? (Dazu zählen Aktivitäten zu Hause, am Arbeitsplatz, in
@@ -231,27 +258,53 @@ export default {
           Lebenspartner/-in, im Berufsleben, in Ihrem Freundeskreis usw.)
           .........
         </td>
-        <td class="col_form">
-          <q-radio v-model="answer6" val="5" size="80px" /><br />5
+        <td colspan="5">
+          <div>
+            <q-option-group
+              size="155px"
+              name="accepted_genres"
+              v-model="R_Global09r"
+              :options="Global09r"
+              inline
+              color="grey-7"
+              dense
+              style="
+                width: 480px;
+                border: 0px solid;
+                background-color: rgb(255, 255, 255);
+                padding-left: 10px;
+              "
+            />
+          </div>
+        </td>
+        <!-- <td class="col_form">
+          <q-checkbox v-model="frage6" val="5" size="20px" /><br />5
         </td>
         <td class="col_form">
-          <q-radio v-model="answer6" val="4" size="80px" /><br />4
+          <q-checkbox v-model="frage6" val="4" size="20px" /><br />4
         </td>
         <td class="col_form">
-          <q-radio v-model="answer6" val="3" size="80px" /><br />3
+          <q-checkbox v-model="frage6" val="3" size="20px" /><br />3
         </td>
         <td class="col_form">
-          <q-radio v-model="answer6" val="2" size="80px" /><br />2
+          <q-checkbox v-model="frage6" val="2" size="20px" /><br />2
         </td>
         <td class="col_form">
-          <q-radio v-model="answer6" val="1" size="80px" /><br />1
-        </td>
+          <q-checkbox v-model="frage6" val="1" size="20px" /><br />1
+        </td> -->
       </tr>
-      <tr>
-        <td colspan="6" class="separators"></td>
+	  
+	  <tr>
+        <td class="number_rows"></td>
+        <td class="number_rows">5</td>
+        <td class="number_rows">4</td>
+        <td class="number_rows">3</td>
+        <td class="number_rows">2</td>
+        <td class="number_rows">1</td>
       </tr>
+	  <tr><td colspan="6" class="separators"></td></tr>
       <tr>
-        <td style="background-color: rgb(255, 255, 255)"><strong></strong></td>
+        <td ></td>
         <td class="scale">Vollständig</td>
         <td class="scale">Größtenteils</td>
         <td class="scale">Halbwegs</td>
@@ -260,27 +313,56 @@ export default {
       </tr>
 
       <tr>
-        <td class="question">
+        <td class="frage">
           Inwieweit sind Sie in der Lage, alltägliche körperliche Aktivitäten
           auszuführen, z. B. Gehen, Treppensteigen, Einkäufe tragen oder Stühle
           verschieben?
         </td>
-        <td class="col_form">
-          <q-radio v-model="answer7" val="5" size="80px" /><br />5
+        <td colspan="5">
+          <div>
+            <q-option-group
+              size="155px"
+              name="accepted_genres"
+              v-model="R_Global06"
+              :options="Global06"
+              inline
+              color="grey-7"
+              dense
+              style="
+                width: 480px;
+                border: 0px solid;
+                background-color: rgb(255, 255, 255);
+                padding-left: 10px;
+              "
+            />
+          </div>
+        </td>
+        <!-- <td class="col_form">
+          <q-checkbox v-model="frage7" val="5" size="20px" /><br />5
         </td>
         <td class="col_form">
-          <q-radio v-model="answer7" val="4" size="80px" /><br />4
+          <q-checkbox v-model="frage7" val="4" size="20px" /><br />4
         </td>
         <td class="col_form">
-          <q-radio v-model="answer7" val="3" size="80px" /><br />3
+          <q-checkbox v-model="frage7" val="3" size="20px" /><br />3
         </td>
         <td class="col_form">
-          <q-radio v-model="answer7" val="2" size="80px" /><br />2
+          <q-checkbox v-model="frage7" val="2" size="20px" /><br />2
         </td>
         <td class="col_form">
-          <q-radio v-model="answer7" val="1" size="80px" /><br />1
-        </td>
+          <q-checkbox v-model="frage7" val="1" size="20px" /><br />1
+        </td> -->
       </tr>
+	  <tr>
+        <td class="number_rows"></td>
+        <td class="number_rows">5</td>
+        <td class="number_rows">4</td>
+        <td class="number_rows">3</td>
+        <td class="number_rows">2</td>
+        <td class="number_rows">1</td>
+      </tr>
+	  <tr><td colspan="6" class="separators"></td></tr>
+	  
       <tr>
         <td style="background-color: rgb(255, 255, 255)">
           <h4>In den letzten 7 Tagen:</h4>
@@ -292,26 +374,54 @@ export default {
         <td class="scale">Immer</td>
       </tr>
       <tr>
-        <td class="question">
+        <td class="frage">
           Wie oft haben Ihnen seelische Probleme zu schaffen gemacht, wie z. B.
           Angstgefühle, Traurigkeit, Niedergeschlagenheit oder Reizbarkeit?
         </td>
-        <td class="col_form">
-          <q-radio v-model="answer8" val="5" size="80px" /><br />5
+        <td colspan="5">
+          <div>
+            <q-option-group
+              size="155px"
+              name="accepted_genres"
+              v-model="R_Global10r"
+              :options="Global10r"
+              inline
+              color="grey-7"
+              dense
+              style="
+                width: 480px;
+                border: 0px solid;
+                background-color: rgb(255, 255, 255);
+                padding-left: 10px;
+              "
+            />
+          </div>
+        </td>
+        <!-- <td class="col_form">
+          <q-checkbox v-model="frage8" val="5" size="20px" /><br />5
         </td>
         <td class="col_form">
-          <q-radio v-model="answer8" val="4" size="80px" /><br />4
+          <q-checkbox v-model="frage8" val="4" size="20px" /><br />4
         </td>
         <td class="col_form">
-          <q-radio v-model="answer8" val="3" size="80px" /><br />3
+          <q-checkbox v-model="frage8" val="3" size="20px" /><br />3
         </td>
         <td class="col_form">
-          <q-radio v-model="answer8" val="2" size="80px" /><br />2
+          <q-checkbox v-model="frage8" val="2" size="20px" /><br />2
         </td>
         <td class="col_form">
-          <q-radio v-model="answer8" val="1" size="80px" /><br />1
-        </td>
+          <q-checkbox v-model="frage8" val="1" size="20px" /><br />1
+        </td> -->
       </tr>
+	  <tr>
+        <td class="number_rows"></td>
+        <td class="number_rows">5</td>
+        <td class="number_rows">4</td>
+        <td class="number_rows">3</td>
+        <td class="number_rows">2</td>
+        <td class="number_rows">1</td>
+      </tr>
+	  <tr><td colspan="6" class="separators"></td></tr>
       <tr>
         <td style="background-color: rgb(255, 255, 255)"></td>
         <td class="scale">Keine Müdigkeit</td>
@@ -321,92 +431,297 @@ export default {
         <td class="scale">Sehr stark</td>
       </tr>
       <tr>
-        <td class="question">
-          Wie ausgeprägt war Ihre Müdigkeit im Allgemeinen?
+        <td class="frage">Wie ausgeprägt war Ihre Müdigkeit im Allgemeinen?</td>
+        <td colspan="5">
+          <div>
+            <q-option-group
+              size="155px"
+              name="accepted_genres"
+              v-model="R_Global08r"
+              :options="Global08r"
+              inline
+              color="grey-7"
+              dense
+              style="
+                width: 480px;
+                border: 0px solid;
+                background-color: rgb(255, 255, 255);
+                padding-left: 10px;
+              "
+            />
+          </div>
+        </td>
+        <!-- <td class="col_form">
+          <q-checkbox v-model="frage9" val="5" size="20px" /><br />5
         </td>
         <td class="col_form">
-          <q-radio v-model="answer9" val="5" size="80px" /><br />5
+          <q-checkbox v-model="frage9" val="4" size="20px" /><br />4
         </td>
         <td class="col_form">
-          <q-radio v-model="answer9" val="4" size="80px" /><br />4
+          <q-checkbox v-model="frage9" val="3" size="20px" /><br />3
         </td>
         <td class="col_form">
-          <q-radio v-model="answer9" val="3" size="80px" /><br />3
+          <q-checkbox v-model="frage9" val="2" size="20px" /><br />2
         </td>
         <td class="col_form">
-          <q-radio v-model="answer9" val="2" size="80px" /><br />2
-        </td>
-        <td class="col_form">
-          <q-radio v-model="answer9" val="1" size="80px" /><br />1
-        </td>
+          <q-checkbox v-model="frage9" val="1" size="20px" /><br />1
+        </td> -->
       </tr>
       <tr>
-        <td colspan="6" class="separators"></td>
+        <td class="number_rows"></td>
+        <td class="number_rows">5</td>
+        <td class="number_rows">4</td>
+        <td class="number_rows">3</td>
+        <td class="number_rows">2</td>
+        <td class="number_rows">1</td>
       </tr>
+	  <tr><td colspan="6" class="separators" ></td></tr>
     </table>
 
     <table width="100%">
       <tr>
-        <td class="question">
+        <td class="frage" >
           Wie würden Sie Ihre Schmerzen im Allgemeinen einschätzen?
         </td>
-
-        <td rowspan="2" class="col_form">
-          <q-radio v-model="answer10" val="0" size="80px" /><br />0
+		<div>
+            <q-option-group
+              size="95px"
+              name="accepted_genres"
+              v-model="R_Global07r"
+              :options="Global07r"
+              inline
+              color="grey-7"
+              dense
+              style="
+                width: 700px;
+                border: 0px solid;
+                background-color: rgb(255, 255, 255);
+                padding-left: 10px;
+				padding-top:20px;
+              "
+            />
+          </div>
+        <!-- <td rowspan="2" class="col_form">
+          <q-checkbox v-model="frage10" val="0" size="20px" /><br />0
           <br /><strong>Keine Schmerzen</strong>
         </td>
 
         <td class="col_form">
-          <q-radio v-model="answer10" val="1" size="80px" /><br />1
+          <q-checkbox v-model="frage10" val="1" size="20px" /><br />1
         </td>
         <td class="col_form">
-          <q-radio v-model="answer10" val="2" size="80px" /><br />2
+          <q-checkbox v-model="frage10" val="2" size="20px" /><br />2
         </td>
         <td class="col_form">
-          <q-radio v-model="answer10" val="3" size="80px" /><br />3
+          <q-checkbox v-model="frage10" val="3" size="20px" /><br />3
         </td>
         <td class="col_form">
-          <q-radio v-model="answer10" val="4" size="80px" /><br />4
+          <q-checkbox v-model="frage10" val="4" size="20px" /><br />4
         </td>
         <td class="col_form">
-          <q-radio v-model="answer10" val="5" size="80px" /><br />5
+          <q-checkbox v-model="frage10" val="5" size="20px" /><br />5
         </td>
 
         <td class="col_form">
-          <q-radio v-model="answer10" val="6" size="80px" /><br />6
+          <q-checkbox v-model="frage10" val="6" size="20px" /><br />6
         </td>
         <td class="col_form">
-          <q-radio v-model="answer10" val="7" size="80px" /><br />7
+          <q-checkbox v-model="frage10" val="7" size="20px" /><br />7
         </td>
         <td class="col_form">
-          <q-radio v-model="answer10" val="8" size="80px" /><br />8
+          <q-checkbox v-model="frage10" val="8" size="20px" /><br />8
         </td>
         <td class="col_form">
-          <q-radio v-model="answer10" val="9" size="80px" /><br />9
+          <q-checkbox v-model="frage10" val="9" size="20px" /><br />9
         </td>
         <td class="col_form">
-          <q-radio v-model="answer10" val="10" size="80px" /><br />10
+          <q-checkbox v-model="frage10" val="10" size="20px" /><br />10
           <br /><strong>Schlimmste vorstellbare Schmerzen</strong>
-        </td>
+        </td> -->
       </tr>
+	  <tr>
+        <td  class="frage" ></td>
+        <td  class="number_rows" colspan="2">
+			<table width="100%">
+				<tr>
+					<td class="number_rows">0</td>
+					<td class="number_rows">1</td>
+					<td class="number_rows">2</td>
+					<td class="number_rows">3</td>
+					<td class="number_rows">4</td>
+					<td class="number_rows">5</td>
+					<td class="number_rows">6</td>
+					<td class="number_rows">7</td>
+					<td class="number_rows">8</td>
+					<td class="number_rows">9</td>
+					<td class="number_rows">1</td>
+				</tr>
+				<tr>
+					<td class="number_rows" style="font-size:10px;">Keine Schmerzen</td>
+					<td class="number_rows"></td>
+					<td class="number_rows"></td>
+					<td class="number_rows"></td>
+					<td class="number_rows"></td>
+					<td class="number_rows"></td>
+					<td class="number_rows"></td>
+					<td class="number_rows"></td>
+					<td class="number_rows"></td>
+					<td class="number_rows"></td>
+					<td class="number_rows" style="font-size:10px;">Schlimmste vorstellbare Schmerzen</td>
+				</tr>
+				
+			</table>
+			
+		</td>
+		
+
+        
+        
+      </tr>
+	  
     </table>
     <br />
     <center>
       <q-btn
         color="primary"
-        id="completeBtn"
+        id="beendenBtn"
         label="Beenden"
         to="ende"
         size="30px"
-        @click="completeBtnPressed()"
       />
     </center>
   </q-page>
 
-  function answers(answers: any) { throw new Error('Function not implemented.');
-  }
+<script>
+import { ref } from 'vue';
 
-function answers(answers: any) {
-  throw new Error('Function not implemented.');
-}
-</template>
+export default {
+  name: 'Prom',
+
+  data() {
+    return {
+      //when checked, the answer will be sent to this array.
+      frage1b: [],
+      frage2b: [],
+      frage3b: [],
+      frage4b: [],
+      frage5b: [],
+      frage6b: [],
+      frage7b: [],
+      frage8b: [],
+      frage9b: [],
+      frage10b: [],
+    };
+  },
+
+  setup() {
+    const submitResult = ref([]);
+
+    return {
+     
+	  R_Global01: ref([]),
+	  R_Global02: ref([]),
+	  R_Global03: ref([]),
+	  R_Global04: ref([]),
+	  R_Global05: ref([]),
+	  R_Global09r: ref([]),
+	  R_Global06: ref([]),
+	  R_Global10r: ref([]),
+	  R_Global08r: ref([]),
+	  R_Global07r: ref([]),
+      submitResult,
+
+      Global01: [
+        {label: '',value: '5',},
+        {label: '',value: '4',},
+        {label: '',value: '3',},
+        {label: '',value: '2',},
+        {label: '',value: '1',},
+      ],
+	  Global02: [
+        {label: '',value: '5',},
+        {label: '',value: '4',},
+        {label: '',value: '3',},
+        {label: '',value: '2',},
+        {label: '',value: '1',},
+      ],
+	  Global03: [
+	 	{label: '',value: '5',},
+        {label: '',value: '4',},
+        {label: '',value: '3',},
+        {label: '',value: '2',},
+        {label: '',value: '1',},
+      ],
+	  Global04: [
+	    {label: '',value: '5',},
+        {label: '',value: '4',},
+        {label: '',value: '3',},
+        {label: '',value: '2',},
+        {label: '',value: '1',},
+      ],
+	  Global05: [
+	    {label: '',value: '5',},
+        {label: '',value: '4',},
+        {label: '',value: '3',},
+        {label: '',value: '2',},
+        {label: '',value: '1',},
+      ],
+	  Global09r: [
+	    {label: '',value: '5',},
+        {label: '',value: '4',},
+        {label: '',value: '3',},
+        {label: '',value: '2',},
+        {label: '',value: '1',},
+      ],
+	  Global06: [
+	    {label: '',value: '5',},
+        {label: '',value: '4',},
+        {label: '',value: '3',},
+        {label: '',value: '2',},
+        {label: '',value: '1',},
+      ],
+	  Global10r: [
+	    {label: '',value: '5',},
+        {label: '',value: '4',},
+        {label: '',value: '3',},
+        {label: '',value: '2',},
+        {label: '',value: '1',},
+      ],
+	  Global08r: [
+	    {label: '',value: '5',},
+        {label: '',value: '4',},
+        {label: '',value: '3',},
+        {label: '',value: '2',},
+        {label: '',value: '1',},
+      ],
+	  Global07r: [
+	    {label: '',value: '0',},
+        {label: '',value: '1',},
+        {label: '',value: '2',},
+        {label: '',value: '3',},
+        {label: '',value: '4',},
+        {label: '',value: '5',},
+		{label: '',value: '6',},
+		{label: '',value: '7',},
+		{label: '',value: '8',},
+		{label: '',value: '9',},
+		{label: '',value: '10',},
+      ],
+
+      onSubmit(evt) {
+        const formData = new FormData(evt.target);
+        const data = [];
+
+        for (const [name, value] of formData.entries()) {
+          data.push({
+            name,
+            value,
+          });
+        }
+
+        submitResult.value = data;
+      },
+    };
+  },
+};
+</script>
