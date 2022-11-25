@@ -1,8 +1,15 @@
 import MidataService from './midataService';
-import { Observation, ObservationStatus, Patient, Practitioner } from '@i4mi/fhir_r4';
+import {
+  Observation,
+  ObservationStatus,
+  Patient,
+  Practitioner,
+} from '@i4mi/fhir_r4';
 import { Notify } from 'quasar';
 
 const STORAGE_KEY = 'demo-app-storage';
+
+
 
 export default class Storage {
   private currentLanguage = 'de';
@@ -10,6 +17,8 @@ export default class Storage {
   private patientResource = {} as Patient;
   private practitionerResource = {} as Practitioner;
   private currentObservation = {} as Observation;
+  
+  
 
   midata: MidataService;
 
@@ -104,13 +113,13 @@ export default class Storage {
     return this.patientResource;
   }
 
-    /**
+  /**
    * Gets the practitioner resource from the store.
    * @returns
    */
-     public getPractitioner(): Practitioner {
-      return this.practitionerResource;
-    }
+  public getPractitioner(): Practitioner {
+    return this.practitionerResource;
+  }
 
   /**
    * Gets all Observation from the store.

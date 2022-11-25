@@ -2,20 +2,23 @@
   <q-page padding>
     <div>
       <H2>Patient Search</H2>
-        <q-btn color="primary" label="Login" to="/login" />
-        <q-btn color="primary" label="LogOut" @click="logout()" />
-        <q-btn color="primary" label="Episode of care status" @click="getActiveEpisodeOfCare()" />
-        <!-- <q-btn color="primary" label="Get Patient" @click="getPatient()" /> -->
-        <q-btn
-          color="primary"
-          label="Get Episode of Care"
-          @click="getEpisodeOfCare()"
-        />
+      <q-btn color="primary" label="Login" to="/login" />
+      <q-btn color="primary" label="LogOut" @click="logout()" />
+      <q-btn
+        color="primary"
+        label="Episode of care status"
+        @click="getActiveEpisodeOfCare()"
+      />
+      <!-- <q-btn color="primary" label="Get Patient" @click="getPatient()" /> -->
+      <q-btn
+        color="primary"
+        label="Get Episode of Care"
+        @click="getEpisodeOfCare()"
+      />
 
       <div class="q-pa-md" style="max-width: 700px">
-        <table width="100%" border='0'>
+        <table width="100%" border="1">
           <tr>
-
             <td>
               <div class="q-pa-md q-gutter-y-md">
                 <q-chip size="30px">
@@ -29,58 +32,33 @@
               </div>
             </td>
 
-            <td rowspan='4' width=100%>
+            <td rowspan="4" width="100%">
               <div class="q-pa-md" style="max-width: 400px">
-      <!-- <div  v-if='showFoundPatient' > -->
-        <div  v-show='showFoundPatient' >
-      <table>
-        <tr>
-          <td>
-            <q-input borderless v-model="patientName" label="Name"   disable/>
-          </td>
-          <td class="col_">
-            <q-input borderless v-model="nachName" label="Nachname" disable/>
-          </td>
-        </tr>
-        <tr>
-          <td class="col_" colspan="2">
-            <q-input borderless v-model="Addresse" label="Addresse" disable/>
-          </td>
-        </tr>
-        <tr>
-          <td class="col_"><q-input borderless v-model="PLZ" label="PLZ" disable/></td>
-          <td class="col_"><q-input borderless v-model="ORT" label="ORT" disable/></td>
-        </tr>
+                <!-- -------------------------------------------------------------------------------------------- -->
+               
+                 
+                  <div class="q-pa-md" style="max-width: 350px"  v-show="showFoundPatient">
+                   <div bordered separator>
+                    <q-item clicable v-for="item in patients" :key="item.ersteName">
+                     <q-item-section>{{item.ersteName}}</q-item-section>
+                   </q-item>
+                  </div>
 
-        <tr>
-          <td class="col_">
-            <q-input borderless v-model="email" label="email" disable />
-          </td>
-          <td class="col_">
-            <q-input borderless v-model="geburtsdatum" label="Geburtsdatum" disable/>
-          </td>
-        </tr>
-        <tr>
-          <td class="col_" >
-            <q-btn color="primary" label="start PROM" to="prom" />
-          </td>
-        </tr>
-      </table></div>
-
-      <div v-show='showPatientNotFoundLable' style='text-align: center'>
-<h5>Patient not found</h5>
-<q-btn
-          color="primary"
-          label="Register Patient"
-          to="patFile"
-
-        />
-      </div>
-
-    </div>
-
-
-
+                
+                <!-- -------------------------------------------------------------------------------------------- -->
+                </div>
+                <div
+                  v-show="showPatientNotFoundLable" 
+                  style="text-align: center"
+                >
+                  <h5>Patient not found</h5>
+                  <q-btn
+                    color="primary"
+                    label="Register Patient"
+                    to="patFile"
+                  />
+                </div>
+              </div>
             </td>
           </tr>
           <tr>
@@ -103,9 +81,15 @@
               />
             </td>
           </tr>
+
           <tr>
             <td>
-              <q-input outlined v-model="inputBirthday" mask="date" :rules="['date']">
+              <q-input
+                outlined
+                v-model="inputBirthday"
+                mask="date"
+                :rules="['date']"
+              >
                 <template v-slot:append>
                   <q-icon name="event" class="cursor-pointer">
                     <q-popup-proxy
@@ -113,7 +97,7 @@
                       transition-show="scale"
                       transition-hide="scale"
                     >
-                      <q-date v-model="inputBirthday"  >
+                      <q-date v-model="inputBirthday">
                         <div class="row items-center justify-end">
                           <q-btn
                             v-close-popup
@@ -129,19 +113,31 @@
               </q-input>
             </td>
           </tr>
+          <tr>
+            <td>
+              <q-input
+                outlined
+                v-model="patientId"
+                label="Patienten ID"
+                id="patientId"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <q-input outlined v-model="caseId" label="Fall ID" id="caseId" />
+            </td>
+          </tr>
         </table>
-        <q-btn color="primary" label="Search"   @click="searchPat()" />
+        <q-btn color="primary" label="Search" @click="searchPat()" />
+        <q-btn color="primary" label="Add" @click="searchPat()" />
 
         <!-- <q-btn
           color="primary"
           label="Register Patient"
           @click="registerPatient()"
         /> -->
-
       </div>
-
-
-
     </div>
   </q-page>
 </template>
@@ -149,8 +145,6 @@
 <script lang="ts">
 import { ComponentCustomProperties, ref } from 'vue';
 import { Patient, Practitioner } from '@i4mi/fhir_r4';
-
-
 
 
 type patObj = {
@@ -163,27 +157,29 @@ type patObj = {
   geburtsDatum: string;
 };
 
+
 //Array with patients
 let allPatientsResourcesMidata: Patient[] = [];
 let patientsArray: patObj[] = [];
-let foundPatient:patObj[] = [];
+let foundPatient: patObj[] = [];
+
+
 
 export default {
   name: 'patSearch',
 
+  
+
   setup() {
-
-
     return {
-
-      show:false,
+      show: false,
       inputBirthday: ref(''),
       inputFirstName: ref(''),
       inputSurName: ref(''),
       namePracticioner: ref(''),
 
-  // for the right Patient Container---------------------------------------
-      showFoundPatient: false,
+      // for the right Patient Container---------------------------------------
+      showFoundPatient: true,
       showPatientNotFoundLable: false,
 
       patientName: ref(''),
@@ -193,7 +189,18 @@ export default {
       ORT: ref(''),
       email: ref(''),
       geburtsdatum: ref(''),
-  // --------------------------------------------------------------
+      patientId: ref(''),
+      caseId: ref(''),
+      // --------------------------------------------------------------
+     //  testing the list
+      patients: ref([
+        {ersteName:'Jonnes'},
+        {ersteName:'Larry'},
+          ]),
+      patientsArray:ref(''),
+
+
+
 
     };
   },
@@ -202,15 +209,8 @@ export default {
     flag: false,
   }),
   methods: {
-
-    getActiveEpisodeOfCare(this: ComponentCustomProperties ){
-     const ActiveEC = this.$midata.getActiveEOC();
-     console.log(ActiveEC);
-
-     //return eCStatus;
-    },
-
-
+   
+   
     createPatient(
       ersteName: string,
       nachName: string,
@@ -267,9 +267,16 @@ export default {
       });
     },
 
-    publishFoundPatient(this: Storage , patName:string,patSurname:string, patAddress:string, patPLZ:string, patORT:string,
-    patEmail:string, patBirthDay:string)
-    {
+    publishFoundPatient(
+      this: Storage,
+      patName: string,
+      patSurname: string,
+      patAddress: string,
+      patPLZ: string,
+      patORT: string,
+      patEmail: string,
+      patBirthDay: string
+    ) {
       this.patientName = patName;
       this.nachName = patSurname;
       this.Addresse = patAddress;
@@ -278,7 +285,6 @@ export default {
       this.email = patEmail;
       this.geburtsdatum = patBirthDay;
     },
-
 
     async searchPat(this: Storage) {
       //Set patarray back to zero, so new searches wont be added to the old results already in the array.
@@ -293,8 +299,6 @@ export default {
       let foundFlag = false;
 
       console.log(this.geburtsdatum as string);
-
-
       console.log('List with all the patient in the patientsArray:');
       console.log(patientsArray);
 
@@ -308,18 +312,24 @@ export default {
           foundPatient.push(element);
         }
       });
+
       if (nameInput == '' && surNameInput == '' && birthday) {
         console.log('Search fields are empty');
-       this.showFoundPatient = false;
-       this.showPatientNotFoundLable = false;
-      //  this.publishFoundPatient('' ,'', '', '', '', '');
-       console.log(`ShowFoundPatient is: ${this.showFoundPatient as string}`);
-
-      }else
-      if (foundFlag) {
+        this.showFoundPatient = false;
+        this.showPatientNotFoundLable = false;
+        //  this.publishFoundPatient('' ,'', '', '', '', '');
+        console.log(`ShowFoundPatient is: ${this.showFoundPatient as string}`);
+      } else if (foundFlag) {
         this.showFoundPatient = true;
         this.showPatientNotFoundLable = false;
-        this.publishFoundPatient(foundPatient[0].ersteName ,foundPatient[0].nachName, foundPatient[0].addresse, foundPatient[0].plz, foundPatient[0].ort, foundPatient[0].geburtsDatum);
+        this.publishFoundPatient(
+          foundPatient[0].ersteName,
+          foundPatient[0].nachName,
+          foundPatient[0].addresse,
+          foundPatient[0].plz,
+          foundPatient[0].ort,
+          foundPatient[0].geburtsDatum
+        );
         console.log(`ShowFoundPatient is: ${this.showFoundPatient as string}`);
         console.log('Array with all the founded patients: ');
         console.log(foundPatient);
@@ -327,17 +337,19 @@ export default {
         console.log('Patient not found');
         this.showFoundPatient = false;
         this.showPatientNotFoundLable = true;
-        this.publishFoundPatient('' ,'', '', '', '', '');
+        this.publishFoundPatient('', '', '', '', '', '');
         console.log(`ShowFoundPatient is: ${this.showFoundPatient as string}`);
-
-
       }
-
-
     },
 
     getEpisodeOfCare(this: ComponentCustomProperties) {
       console.log(this.$midata.getEpisodeOfCare());
+    },
+   
+    getActiveEpisodeOfCare(this: ComponentCustomProperties) {
+      const ActiveEC = this.$midata.getActiveEOC();
+      console.log(ActiveEC);
+      return ActiveEC;
     },
 
     registerPatient() {
@@ -350,7 +362,6 @@ export default {
       this.practitionerResource?.name[0]?.family,
       this.practitionerResource?.name[0]?.given[0],
     ].join(' ');
-
   },
   // created(){
   //   this.getPatient();

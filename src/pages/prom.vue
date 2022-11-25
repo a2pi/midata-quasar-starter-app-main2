@@ -497,9 +497,9 @@
       </tr>
     </table>
 
-    <table width="100%">
+    <table  style=" border:0px solid">
       <tr>
-        <td class="frage">
+        <td class="frage" style="border:0px solid">
           Wie würden Sie Ihre Schmerzen im Allgemeinen einschätzen?
         </td>
         <div>
@@ -561,7 +561,7 @@
       <tr>
         <td class="frage"></td>
         <td class="number_rows" colspan="2">
-          <table width="100%">
+          <table width="690">
             <tr>
               <td class="number_rows">0</td>
               <td class="number_rows">1</td>
@@ -616,17 +616,7 @@ export default {
 
   data() {
     return {
-      //when checked, the answer will be sent to this array.
-      frage1b: [],
-      frage2b: [],
-      frage3b: [],
-      frage4b: [],
-      frage5b: [],
-      frage6b: [],
-      frage7b: [],
-      frage8b: [],
-      frage9b: [],
-      frage10b: [],
+     
     };
   },
 
@@ -723,19 +713,7 @@ export default {
         { label: '', value: '10' },
       ],
 
-      onSubmit(evt: { target: HTMLFormElement; }) {
-        const formData = new FormData(evt.target);
-        const data = [];
-
-        for (const [name, value] of formData.entries()) {
-          data.push({
-            name,
-            value,
-          });
-        }
-
-        submitResult.value = data;
-      },
+   
     };
   },
 };
