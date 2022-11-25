@@ -4,7 +4,7 @@
       <q-card-section>
         <img src="../assets/digitalprom/Logo.png"  class="logo">
       </q-card-section>
-      <q-separator inset />
+      <q-separator inset/>
       <q-card-actions>
         <q-btn
           flat
@@ -21,17 +21,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-
-
 export default defineComponent({
   name: 'LoginCard',
   methods: {
 
     connect() {
       this.$midata.authenticate();
-      this.$storage.getPractitioner();
-      this.$midata.getQuestionnaireResponseResourcesAsBundle();
-
+      this.$storage.getPractitioner();    
     },
   },
 });

@@ -1,8 +1,8 @@
-<template >
+<template>
   <q-page padding>
-    <table >
+    <table>
       <tr>
-        <td >
+        <td>
           <h4>Bitte kreuzen Sie zu jeder Frage ein Kästchen an.</h4>
         </td>
 
@@ -29,7 +29,8 @@
               inline
               color="grey-7"
               dense
-              style="width: 480px;
+              style="
+                width: 480px;
                 border: 0px solid;
                 background-color: rgb(255, 255, 255);
                 padding-left: 10px;
@@ -51,7 +52,9 @@
         <td class="number_rows">2</td>
         <td class="number_rows">1</td>
       </tr>
-	  <tr><td colspan="6" class="separators"></td></tr>
+      <tr>
+        <td colspan="6" class="separators"></td>
+      </tr>
       <tr>
         <td class="frage">
           Wie würden Sie Ihre Lebensqualität insgesamt beschreiben?
@@ -92,7 +95,7 @@
           <q-checkbox v-model="frage2" val="1" size="20px" /><br />1
         </td> -->
       </tr>
-	  <tr>
+      <tr>
         <td class="number_rows"></td>
         <td class="number_rows">5</td>
         <td class="number_rows">4</td>
@@ -100,7 +103,9 @@
         <td class="number_rows">2</td>
         <td class="number_rows">1</td>
       </tr>
-	  <tr><td colspan="6" class="separators"></td></tr>
+      <tr>
+        <td colspan="6" class="separators"></td>
+      </tr>
       <tr>
         <td class="frage">
           Wie würden Sie Ihren körperlichen Gesundheitszustand insgesamt
@@ -141,7 +146,7 @@
           <q-checkbox v-model="frage5" val="1" size="20px" /><br />1
         </td> -->
       </tr>
-	  <tr>
+      <tr>
         <td class="number_rows"></td>
         <td class="number_rows">5</td>
         <td class="number_rows">4</td>
@@ -149,7 +154,9 @@
         <td class="number_rows">2</td>
         <td class="number_rows">1</td>
       </tr>
-	  <tr><td colspan="6" class="separators"></td></tr>
+      <tr>
+        <td colspan="6" class="separators"></td>
+      </tr>
       <tr>
         <td class="frage">
           Wie würden Sie Ihre psychische Verfassung insgesamt beschreiben? Dazu
@@ -191,7 +198,7 @@
           <q-checkbox v-model="frage4" val="1" size="20px" /><br />1
         </td> -->
       </tr>
-	  <tr>
+      <tr>
         <td class="number_rows"></td>
         <td class="number_rows">5</td>
         <td class="number_rows">4</td>
@@ -199,7 +206,9 @@
         <td class="number_rows">2</td>
         <td class="number_rows">1</td>
       </tr>
-	  <tr><td colspan="6" class="separators"></td></tr>
+      <tr>
+        <td colspan="6" class="separators"></td>
+      </tr>
       <tr>
         <td class="frage">
           Wie zufrieden sind Sie insgesamt mit Ihren Aktivitäten mit anderen
@@ -240,7 +249,7 @@
           <q-checkbox v-model="frage5" val="1" size="20px" /><br />1
         </td> -->
       </tr>
-	  <tr>
+      <tr>
         <td class="number_rows"></td>
         <td class="number_rows">5</td>
         <td class="number_rows">4</td>
@@ -248,7 +257,9 @@
         <td class="number_rows">2</td>
         <td class="number_rows">1</td>
       </tr>
-	  <tr><td colspan="6" class="separators"></td></tr>
+      <tr>
+        <td colspan="6" class="separators"></td>
+      </tr>
       <tr>
         <td class="frage">
           Wie gut sind Sie insgesamt in der Lage, Aktivitäten mit anderen
@@ -293,8 +304,8 @@
           <q-checkbox v-model="frage6" val="1" size="20px" /><br />1
         </td> -->
       </tr>
-	  
-	  <tr>
+
+      <tr>
         <td class="number_rows"></td>
         <td class="number_rows">5</td>
         <td class="number_rows">4</td>
@@ -302,9 +313,11 @@
         <td class="number_rows">2</td>
         <td class="number_rows">1</td>
       </tr>
-	  <tr><td colspan="6" class="separators"></td></tr>
       <tr>
-        <td ></td>
+        <td colspan="6" class="separators"></td>
+      </tr>
+      <tr>
+        <td></td>
         <td class="scale">Vollständig</td>
         <td class="scale">Größtenteils</td>
         <td class="scale">Halbwegs</td>
@@ -353,7 +366,7 @@
           <q-checkbox v-model="frage7" val="1" size="20px" /><br />1
         </td> -->
       </tr>
-	  <tr>
+      <tr>
         <td class="number_rows"></td>
         <td class="number_rows">5</td>
         <td class="number_rows">4</td>
@@ -361,8 +374,10 @@
         <td class="number_rows">2</td>
         <td class="number_rows">1</td>
       </tr>
-	  <tr><td colspan="6" class="separators"></td></tr>
-	  
+      <tr>
+        <td colspan="6" class="separators"></td>
+      </tr>
+
       <tr>
         <td style="background-color: rgb(255, 255, 255)">
           <h4>In den letzten 7 Tagen:</h4>
@@ -413,7 +428,7 @@
           <q-checkbox v-model="frage8" val="1" size="20px" /><br />1
         </td> -->
       </tr>
-	  <tr>
+      <tr>
         <td class="number_rows"></td>
         <td class="number_rows">5</td>
         <td class="number_rows">4</td>
@@ -421,7 +436,9 @@
         <td class="number_rows">2</td>
         <td class="number_rows">1</td>
       </tr>
-	  <tr><td colspan="6" class="separators"></td></tr>
+      <tr>
+        <td colspan="6" class="separators"></td>
+      </tr>
       <tr>
         <td style="background-color: rgb(255, 255, 255)"></td>
         <td class="scale">Keine Müdigkeit</td>
@@ -475,32 +492,34 @@
         <td class="number_rows">2</td>
         <td class="number_rows">1</td>
       </tr>
-	  <tr><td colspan="6" class="separators" ></td></tr>
+      <tr>
+        <td colspan="6" class="separators"></td>
+      </tr>
     </table>
 
     <table width="100%">
       <tr>
-        <td class="frage" >
+        <td class="frage">
           Wie würden Sie Ihre Schmerzen im Allgemeinen einschätzen?
         </td>
-		<div>
-            <q-option-group
-              size="95px"
-              name="accepted_genres"
-              v-model="R_Global07r"
-              :options="Global07r"
-              inline
-              color="grey-7"
-              dense
-              style="
-                width: 700px;
-                border: 0px solid;
-                background-color: rgb(255, 255, 255);
-                padding-left: 10px;
-				padding-top:20px;
-              "
-            />
-          </div>
+        <div>
+          <q-option-group
+            size="95px"
+            name="accepted_genres"
+            v-model="R_Global07r"
+            :options="Global07r"
+            inline
+            color="grey-7"
+            dense
+            style="
+              width: 700px;
+              border: 0px solid;
+              background-color: rgb(255, 255, 255);
+              padding-left: 10px;
+              padding-top: 20px;
+            "
+          />
+        </div>
         <!-- <td rowspan="2" class="col_form">
           <q-checkbox v-model="frage10" val="0" size="20px" /><br />0
           <br /><strong>Keine Schmerzen</strong>
@@ -539,46 +558,43 @@
           <br /><strong>Schlimmste vorstellbare Schmerzen</strong>
         </td> -->
       </tr>
-	  <tr>
-        <td  class="frage" ></td>
-        <td  class="number_rows" colspan="2">
-			<table width="100%">
-				<tr>
-					<td class="number_rows">0</td>
-					<td class="number_rows">1</td>
-					<td class="number_rows">2</td>
-					<td class="number_rows">3</td>
-					<td class="number_rows">4</td>
-					<td class="number_rows">5</td>
-					<td class="number_rows">6</td>
-					<td class="number_rows">7</td>
-					<td class="number_rows">8</td>
-					<td class="number_rows">9</td>
-					<td class="number_rows">1</td>
-				</tr>
-				<tr>
-					<td class="number_rows" style="font-size:10px;">Keine Schmerzen</td>
-					<td class="number_rows"></td>
-					<td class="number_rows"></td>
-					<td class="number_rows"></td>
-					<td class="number_rows"></td>
-					<td class="number_rows"></td>
-					<td class="number_rows"></td>
-					<td class="number_rows"></td>
-					<td class="number_rows"></td>
-					<td class="number_rows"></td>
-					<td class="number_rows" style="font-size:10px;">Schlimmste vorstellbare Schmerzen</td>
-				</tr>
-				
-			</table>
-			
-		</td>
-		
-
-        
-        
+      <tr>
+        <td class="frage"></td>
+        <td class="number_rows" colspan="2">
+          <table width="100%">
+            <tr>
+              <td class="number_rows">0</td>
+              <td class="number_rows">1</td>
+              <td class="number_rows">2</td>
+              <td class="number_rows">3</td>
+              <td class="number_rows">4</td>
+              <td class="number_rows">5</td>
+              <td class="number_rows">6</td>
+              <td class="number_rows">7</td>
+              <td class="number_rows">8</td>
+              <td class="number_rows">9</td>
+              <td class="number_rows">1</td>
+            </tr>
+            <tr>
+              <td class="number_rows" style="font-size: 10px">
+                Keine Schmerzen
+              </td>
+              <td class="number_rows"></td>
+              <td class="number_rows"></td>
+              <td class="number_rows"></td>
+              <td class="number_rows"></td>
+              <td class="number_rows"></td>
+              <td class="number_rows"></td>
+              <td class="number_rows"></td>
+              <td class="number_rows"></td>
+              <td class="number_rows"></td>
+              <td class="number_rows" style="font-size: 10px">
+                Schlimmste vorstellbare Schmerzen
+              </td>
+            </tr>
+          </table>
+        </td>
       </tr>
-	  
     </table>
     <br />
     <center>
@@ -592,8 +608,7 @@
     </center>
   </q-page>
 </template>
-
-<script>
+<script lang="ts">
 import { ref } from 'vue';
 
 export default {
@@ -619,97 +634,96 @@ export default {
     const submitResult = ref([]);
 
     return {
-     
-	  R_Global01: ref([]),
-	  R_Global02: ref([]),
-	  R_Global03: ref([]),
-	  R_Global04: ref([]),
-	  R_Global05: ref([]),
-	  R_Global09r: ref([]),
-	  R_Global06: ref([]),
-	  R_Global10r: ref([]),
-	  R_Global08r: ref([]),
-	  R_Global07r: ref([]),
+      R_Global01: ref([]),
+      R_Global02: ref([]),
+      R_Global03: ref([]),
+      R_Global04: ref([]),
+      R_Global05: ref([]),
+      R_Global09r: ref([]),
+      R_Global06: ref([]),
+      R_Global10r: ref([]),
+      R_Global08r: ref([]),
+      R_Global07r: ref([]),
       submitResult,
 
       Global01: [
-        {label: '',value: '5',},
-        {label: '',value: '4',},
-        {label: '',value: '3',},
-        {label: '',value: '2',},
-        {label: '',value: '1',},
+        { label: '', value: '5' },
+        { label: '', value: '4' },
+        { label: '', value: '3' },
+        { label: '', value: '2' },
+        { label: '', value: '1' },
       ],
-	  Global02: [
-        {label: '',value: '5',},
-        {label: '',value: '4',},
-        {label: '',value: '3',},
-        {label: '',value: '2',},
-        {label: '',value: '1',},
+      Global02: [
+        { label: '', value: '5' },
+        { label: '', value: '4' },
+        { label: '', value: '3' },
+        { label: '', value: '2' },
+        { label: '', value: '1' },
       ],
-	  Global03: [
-	 	{label: '',value: '5',},
-        {label: '',value: '4',},
-        {label: '',value: '3',},
-        {label: '',value: '2',},
-        {label: '',value: '1',},
+      Global03: [
+        { label: '', value: '5' },
+        { label: '', value: '4' },
+        { label: '', value: '3' },
+        { label: '', value: '2' },
+        { label: '', value: '1' },
       ],
-	  Global04: [
-	    {label: '',value: '5',},
-        {label: '',value: '4',},
-        {label: '',value: '3',},
-        {label: '',value: '2',},
-        {label: '',value: '1',},
+      Global04: [
+        { label: '', value: '5' },
+        { label: '', value: '4' },
+        { label: '', value: '3' },
+        { label: '', value: '2' },
+        { label: '', value: '1' },
       ],
-	  Global05: [
-	    {label: '',value: '5',},
-        {label: '',value: '4',},
-        {label: '',value: '3',},
-        {label: '',value: '2',},
-        {label: '',value: '1',},
+      Global05: [
+        { label: '', value: '5' },
+        { label: '', value: '4' },
+        { label: '', value: '3' },
+        { label: '', value: '2' },
+        { label: '', value: '1' },
       ],
-	  Global09r: [
-	    {label: '',value: '5',},
-        {label: '',value: '4',},
-        {label: '',value: '3',},
-        {label: '',value: '2',},
-        {label: '',value: '1',},
+      Global09r: [
+        { label: '', value: '5' },
+        { label: '', value: '4' },
+        { label: '', value: '3' },
+        { label: '', value: '2' },
+        { label: '', value: '1' },
       ],
-	  Global06: [
-	    {label: '',value: '5',},
-        {label: '',value: '4',},
-        {label: '',value: '3',},
-        {label: '',value: '2',},
-        {label: '',value: '1',},
+      Global06: [
+        { label: '', value: '5' },
+        { label: '', value: '4' },
+        { label: '', value: '3' },
+        { label: '', value: '2' },
+        { label: '', value: '1' },
       ],
-	  Global10r: [
-	    {label: '',value: '5',},
-        {label: '',value: '4',},
-        {label: '',value: '3',},
-        {label: '',value: '2',},
-        {label: '',value: '1',},
+      Global10r: [
+        { label: '', value: '5' },
+        { label: '', value: '4' },
+        { label: '', value: '3' },
+        { label: '', value: '2' },
+        { label: '', value: '1' },
       ],
-	  Global08r: [
-	    {label: '',value: '5',},
-        {label: '',value: '4',},
-        {label: '',value: '3',},
-        {label: '',value: '2',},
-        {label: '',value: '1',},
+      Global08r: [
+        { label: '', value: '5' },
+        { label: '', value: '4' },
+        { label: '', value: '3' },
+        { label: '', value: '2' },
+        { label: '', value: '1' },
       ],
-	  Global07r: [
-	    {label: '',value: '0',},
-        {label: '',value: '1',},
-        {label: '',value: '2',},
-        {label: '',value: '3',},
-        {label: '',value: '4',},
-        {label: '',value: '5',},
-		{label: '',value: '6',},
-		{label: '',value: '7',},
-		{label: '',value: '8',},
-		{label: '',value: '9',},
-		{label: '',value: '10',},
+      Global07r: [
+        { label: '', value: '0' },
+        { label: '', value: '1' },
+        { label: '', value: '2' },
+        { label: '', value: '3' },
+        { label: '', value: '4' },
+        { label: '', value: '5' },
+        { label: '', value: '6' },
+        { label: '', value: '7' },
+        { label: '', value: '8' },
+        { label: '', value: '9' },
+        { label: '', value: '10' },
       ],
 
-      onSubmit(evt) {
+      onSubmit(evt: { target: HTMLFormElement; }) {
         const formData = new FormData(evt.target);
         const data = [];
 
