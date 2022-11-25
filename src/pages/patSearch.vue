@@ -4,6 +4,7 @@
       <H2>Patient Search</H2>
         <q-btn color="primary" label="Login" to="/login" />
         <q-btn color="primary" label="LogOut" @click="logout()" />
+        <q-btn color="primary" label="Episode of care status" @click="getActiveEpisodeOfCare()" />
         <!-- <q-btn color="primary" label="Get Patient" @click="getPatient()" /> -->
         <q-btn
           color="primary"
@@ -202,7 +203,12 @@ export default {
   }),
   methods: {
 
+    getActiveEpisodeOfCare(this: ComponentCustomProperties ){
+     const ActiveEC = this.$midata.getActiveEOC();
+     console.log(ActiveEC);
 
+     //return eCStatus;
+    },
 
 
     createPatient(

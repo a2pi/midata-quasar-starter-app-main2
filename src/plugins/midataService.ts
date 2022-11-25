@@ -139,6 +139,26 @@ export default class MidataService {
     });
   }
 
+  public getActiveEOC(): Promise<EpisodeOfCare> {
+    return new Promise((resolve, reject) => {
+      this.jsOnFhir
+        .search('EpisodeOfCare', 'status=active')
+        .then((result) => {
+          // const episodeBundle = result as Bundle;
+          const episodeBundle = result;
+          // (patientBundle.entry?.length !== undefined && patientBundle.entry?.length > 0 && patientBundle.entry[0].resource)
+          //   ? resolve(patientBundle.entry[0].resource as Patient)
+          //   : reject('No entry in patient bundle found!');
+          console.log(episodeBundle);
+
+        })
+        .catch((error) => reject(error));
+    });
+  }
+
+
+
+
   public getOrganization(id: number): Promise<Organization> {
     return new Promise((resolve, reject) => {
       this.jsOnFhir
