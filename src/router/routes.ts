@@ -1,3 +1,5 @@
+
+import { openURL } from 'quasar';
 import { RouteRecordRaw } from 'vue-router';
 
 const routes: RouteRecordRaw[] = [
@@ -20,6 +22,14 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/DigitalPromLayout.vue'),
     children: [
       { path: '', component: () => import('pages/prom.vue') },
+    ],
+  },
+  {
+    path: '/register',
+    component: () => import('layouts/DigitalPromLayout.vue'),
+    children: [
+      { path: '', component: () => openURL('https://test.midata.coop/#/provider/patientsearch') },
+      
     ],
   },
   {

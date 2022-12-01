@@ -1,4 +1,5 @@
 <template>
+  
   <q-page padding>
     <div>
       <H2>Patient Search</H2>
@@ -62,14 +63,21 @@
                         <q-item-label>
                           {{ item.caseID }}
                         </q-item-label>
+                        <q-item-label overline> Linkt to Page or registration </q-item-label>
+                        <q-item-label>
+                          <div id="link"></div>
+                        </q-item-label>
                       </q-item-section>
+                      
+                      
                       <q-item-section>
                         <q-btn
                           push
                           color="primary"
-                          label="PROM Answer"
+                          v-bind:label="item.registered ? 'PROM beantworten' : 'Pat. registrieren'"
                           size="10px"
-                          to="prom"
+                          v-bind:to="item.registered ? '/prom' : 'register'"
+                          
                         />
                       </q-item-section>
                       <q-item-section> </q-item-section>
@@ -95,6 +103,7 @@
                 v-model="inputFirstName"
                 label="Name"
                 id="name"
+                @input="searchPat()"
               />
             </td>
           </tr>
@@ -167,9 +176,8 @@
           <q-card>
             <q-card-section class="row items-center">
               <span class="q-ml-sm"
-                >Der Patient wurde nicht gefunden. Wollen Sie den Patienten
-                registrieren?
-                <br />
+                ><h6> Möchten Sie den Patienten in die Liste aufnehmen?</h6> <strong>Dieser Patient muss in Midata registriert werden, bevor der PROM beantwortet werden kann.</strong>
+                
 
                 <q-input v-model="inputFirstName" label="Name" />
                 <q-input v-model="inputSurName" label="Nachname" />
@@ -212,7 +220,7 @@
               <q-btn flat label="Cancel" color="primary" v-close-popup />
               <q-btn
                 flat
-                label="Patient registrieren"
+                label="In der Liste aufnehmen"
                 color="primary"
                 @click="addNewPatToDayList()"
                 v-close-popup
@@ -231,6 +239,7 @@
 <script lang="ts">
 import { ComponentCustomProperties, ref } from 'vue';
 import { Patient, Practitioner } from '@i4mi/fhir_r4';
+import { openURL } from 'quasar';
 
 type patObj = {
   ersteName: string;
@@ -242,6 +251,7 @@ type patObj = {
   geburtsDatum: string;
   patID: string;
   caseID: string;
+  registered:boolean;
 };
 
 //Array with patients
@@ -254,7 +264,7 @@ export default {
 
   setup() {
     return {
-      // show: false,
+     
       inputFirstName: ref(''),
       inputSurName: ref(''),
       inputBirthday: ref(''),
@@ -265,26 +275,25 @@ export default {
       inputOrt: ref(''),
       inputEmail: ref(''),
       inputAddress: ref(''),
-
       showFoundPatient: true,
-
-      /**
-       * receives the result of the found patients and is used to
-       * publish their names on the right painel at the search website
-       **/
       patientsList: ref(foundPatient),
+      registerOrProm:true,
     };
   },
   data: () => ({
     practitionerResource: {} as Practitioner,
     flag: false,
     showNotFoundDialog: false,
+    
+    
   }),
 
   computed:{
 
   },
   methods: {
+ 
+   
     removeLastEntry(){
       foundPatient.pop();
     },
@@ -297,7 +306,8 @@ export default {
       email: string,
       geburtsDatum: string,
       patID: string,
-      caseID: string
+      caseID: string,
+      registered:boolean,
     ) {
       const patient: patObj = {
         ersteName: ersteName,
@@ -309,6 +319,7 @@ export default {
         geburtsDatum: geburtsDatum,
         patID: patID,
         caseID: caseID,
+        registered:registered
       };
       return patient;
     },
@@ -336,7 +347,8 @@ export default {
             obj.telecom[0].value,
             '12-12-1946',
             '',
-            ''
+            '',
+            true
           )
         );
       });
@@ -355,18 +367,7 @@ export default {
       // console.log('test ${this.namePracticioner}');
     },
 
-    //used in the searchPat method (Deprecated)
-    // publishFoundPatient(this: Storage,patName: string,patSurname: string,patAddress: string,patPLZ: string,
-    //   patORT: string,patEmail: string,patBirthDay: string) {
-    //   this.patientName = patName;
-    //   this.nachName = patSurname;
-    //   this.Addresse = patAddress;
-    //   this.PLZ = patPLZ;
-    //   this.ORT = patORT;
-    //   this.email = patEmail;
-    //   this.geburtsdatum = patBirthDay;
-
-    // },
+  
 
     async searchPat(this: Storage) {
       //Set patarray back to zero, so new searches wont be added to the old results already in the array.
@@ -378,13 +379,13 @@ export default {
       const nameInput = this.inputFirstName as string;
       const surNameInput = this.inputSurName as string;
       const birthday = this.inputBirthday as string;
-      const Address = this.inputAddress as string;
-      const plz = this.inputPlz as string;
-      const ort = this.intputOrt as string;
-      const email = this.intputEmail as string;
-      const patID = this.inputPatientId as string;
-      const caseID = this.inputCaseId as string;
       let foundFlag = false;
+      // const Address = this.inputAddress as string;
+      // const plz = this.inputPlz as string;
+      // const ort = this.intputOrt as string;
+      // const email = this.intputEmail as string;
+      // const patID = this.inputPatientId as string;
+      // const caseID = this.inputCaseId as string;
 
       console.log(this.geburtsdatum as string);
       console.log('List with all the patients: patientsArray:');
@@ -396,16 +397,18 @@ export default {
           element.ersteName == nameInput ||
           element.nachName == surNameInput ||
           element.geburtsDatum == birthday
+          
         ) {
           foundFlag = true;
           element.patID= this.inputPatientId;
           element.caseID = this.inputCaseId
+          element.registered=true;
           foundPatient.push(element);
+         
 
-          console.log('foundPatient array: ');
-          console.log(foundPatient);
         }
       });
+      
 
       if (nameInput == '' && surNameInput == '' && birthday) {
         console.log('Search fields are empty');
@@ -413,12 +416,13 @@ export default {
         this.showPatientNotFoundLable = false;
       } else if (foundFlag) {
         this.showFoundPatient = true;
-        // this.showPatientNotFoundLable = false;
+        this.registerOrProm =true;
 
         console.log(`ShowFoundPatient is: ${this.showFoundPatient as string}`);
         console.log('Array with all the founded patients: ');
         console.log(foundPatient);
       } else {
+        this.registerOrProm=false;
         this.showNotFoundDialog = true;
         console.log('Patient not found');
         this.showFoundPatient = true;
@@ -437,8 +441,11 @@ export default {
           this.inputEmail,
           this.inputBirthday,
           this.inputPatientId,
-          this.inputCaseId
+          this.inputCaseId,
+          false,
+          
         )
+      
 
       );
 
