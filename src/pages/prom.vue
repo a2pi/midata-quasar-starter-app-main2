@@ -101,17 +101,7 @@ export default {
       <tr>
         <td style="background-color: rgb(255, 255, 255)">
           <h4>Bitte kreuzen Sie zu jeder Frage ein Kästchen an.</h4>
-          <!-- Entwicklungsbutton to be deleted -->
-          <center>
-            Debugger
-            <q-btn
-              color="red"
-              id="debuggerBtn"
-              label="Do some magic pls"
-              size="30px"
-            />
-          </center>
-          <!-- End of Debugger -->
+
         </td>
         <td class="scale formtd">Ausgezeichnet</td>
         <td class="scale formtd">Sehr gut</td>
