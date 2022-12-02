@@ -27,8 +27,22 @@ export default {
   methods: {
 
     setQuestionaire(){
-      const prom = PROM;
-
+    const prom = PROM;
+    // "id": 
+     prom.id=Math.floor(Math.random()*90000) + 10000;
+      // "encounter": {"reference": "Encounter/id3"},
+      prom.encounter.reference = Math.floor(Math.random()*90000) + 10000; 
+     
+    /**
+    *   "subject": {
+    *     "reference": "Patient/6229f573ef86a8613c662197", // Here put the Patient variable DisplaName/ID
+    *     "display": "Lukas Dev"
+    *    },
+    */
+      
+          // prom.subject.reference = this.$midata.getPatienName()+'/'+this.$midata.getPatientFHIRID(),
+          // prom.subject.display= this.$midata.getPatientName();
+      
       prom.item[0].answer= this.answer1
       prom.item[1].answer= this.answer2
       prom.item[2].answer= this.answer3
@@ -41,25 +55,28 @@ export default {
       prom.item[9].answer= this.answer10
 
 
+      // this.createEncounter(encounterID){
+      //   
+      // };
 
     },
 
 
-    getQuestionnaire() {
-        const answers = [
-        this.answer1,
-        this.answer2,
-        this.answer3,
-        this.answer4,
-        this.answer5,
-        this.answer6,
-        this.answer7,
-        this.answer8,
-        this.answer9,
-        this.answer10,
-      ];
+    // getQuestionnaire() {
+    //     const answers = [
+    //     this.answer1,
+    //     this.answer2,
+    //     this.answer3,
+    //     this.answer4,
+    //     this.answer5,
+    //     this.answer6,
+    //     this.answer7,
+    //     this.answer8,
+    //     this.answer9,
+    //     this.answer10,
+    //   ];
 
-    },
+    // },
     completeBtnPressed() {
       console.log('Button pressed: ' + String(this.answer1));
     },
