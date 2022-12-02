@@ -1,5 +1,4 @@
 <template>
-
   <q-page padding>
     <div>
       <H2>Patient Search</H2>
@@ -69,30 +68,31 @@
                         </q-item-label>
                       </q-item-section>
 
-
                       <q-item-section>
                         <q-btn
                           push
                           color="primary"
-                          v-bind:label="item.registered ? 'PROM beantworten' : 'Pat. registrieren'"
+                          v-bind:label="
+                            item.registered
+                              ? 'PROM beantworten'
+                              : 'Pat. registrieren'
+                          "
                           size="10px"
                           v-bind:to="item.registered ? '/prom' : 'register'"
-
                         />
                       </q-item-section>
                       <q-item-section> </q-item-section>
                     </q-item>
                   </div>
                   <q-btn
-                          push
-                          color="primary"
-                          label="remove last entry"
-                          size="10px"
-                          @click='removeLastEntry()'
-                        />
+                    push
+                    color="primary"
+                    label="remove last entry"
+                    size="10px"
+                    @click="removeLastEntry()"
+                  />
                   <!-- -------------------------------------------------------------------------------------------- -->
                 </div>
-
               </div>
             </td>
           </tr>
@@ -176,8 +176,11 @@
           <q-card>
             <q-card-section class="row items-center">
               <span class="q-ml-sm"
-                ><h6> Möchten Sie den Patienten in die Liste aufnehmen?</h6> <strong>Dieser Patient muss in Midata registriert werden, bevor der PROM beantwortet werden kann.</strong>
-
+                ><h6>Möchten Sie den Patienten in die Liste aufnehmen?</h6>
+                <strong
+                  >Dieser Patient muss in Midata registriert werden, bevor der
+                  PROM beantwortet werden kann.</strong
+                >
 
                 <q-input v-model="inputFirstName" label="Name" />
                 <q-input v-model="inputSurName" label="Nachname" />
@@ -222,7 +225,7 @@
                 flat
                 label="In der Liste aufnehmen"
                 color="primary"
-                @click="addNewPatToDayList()"
+                @click="null"
                 v-close-popup
               />
             </q-card-actions>
@@ -230,7 +233,6 @@
         </q-dialog>
 
         <q-btn color="primary" label="Suchen" @click="searchPat()" />
-
       </div>
     </div>
   </q-page>
@@ -239,7 +241,6 @@
 <script lang="ts">
 import { ComponentCustomProperties, ref } from 'vue';
 import { Patient, Practitioner } from '@i4mi/fhir_r4';
-
 
 type patObj = {
   ersteName: string;
@@ -252,20 +253,21 @@ type patObj = {
   patID: string;
   patFHIRID: string;
   caseID: string;
-  registered:boolean;
+  registered: boolean;
 };
 
 //Array with patients
 let allPatientsResourcesMidata: Patient[] = [];
-let patientsArray: patObj[] = [];
+// let patientsArray: patObj[] = [];
 let foundPatient: patObj[] = [];
+let foundFlag = false;
+
 
 export default {
   name: 'patSearch',
-
+  notFoundPatient:'Test',
   setup() {
     return {
-
       inputFirstName: ref(''),
       inputSurName: ref(''),
       inputBirthday: ref(''),
@@ -278,22 +280,22 @@ export default {
       inputAddress: ref(''),
       showFoundPatient: true,
       patientsList: ref(foundPatient),
-      registerOrProm:true,
+      registerOrProm: true,
     };
   },
   data: () => ({
     practitionerResource: {} as Practitioner,
     flag: false,
     showNotFoundDialog: false,
+    
   }),
 
-  computed:{
+  computed: {
 
+    
   },
   methods: {
-
-
-    removeLastEntry(){
+    removeLastEntry() {
       foundPatient.pop();
     },
     createPatient(
@@ -306,7 +308,7 @@ export default {
       geburtsDatum: string,
       patID: string,
       caseID: string,
-      registered:boolean,
+      registered: boolean,
       fhirID: string
     ) {
       const patient: patObj = {
@@ -320,29 +322,41 @@ export default {
         patID: patID,
         patFHIRID: fhirID,
         caseID: caseID,
-        registered:registered
-      }
+        registered: registered,
+      };
 
-      this.$midata.setPatient(patient)
+      this.$midata.setPatient(patient);
 
       return patient;
     },
 
-    // get all patient resources from midata and save it in an array
+    // get all patient resources from midata and save it in an array  
     async getPatient() {
       // const patients = await this.$midata.getPatients();
       // allPatientsResourcesMidata = patients;
-      const patient = await this.$midata.getSinglePatientResource(this.inputFirstName)
-      allPatientsResourcesMidata.push(patient)
-      console.log('All patients resources in Midata: ');
-      console.log(allPatientsResourcesMidata);
+      const patient = await this.$midata.getSinglePatientResource(
+        this.inputFirstName
+      );
+      
+      if (patient.name[0].given[0] === this.inputFirstName) {  //PROVISORY IF: Error: If no name is given in the inputFirstName, Frau Brönnimann will be saved in the "const patient". Check this problem
+        foundFlag = true;
+        allPatientsResourcesMidata.push(patient); //array of patient as a Bundle
+            console.log('Patient was found by running getPatient()')
+            console.log('All patients resources in Midata: ');
+            console.log(allPatientsResourcesMidata);
+      } else {
+        console.log('NO Patient was found by running getPatient()')
+        foundFlag = false;
+      }
+    
     },
 
     //get the array resulte from the search at midata and create and array of patient Objects
     //with only th information we need from the patients
     buildPatientList() {
       allPatientsResourcesMidata.forEach((patientRessource) => {
-        patientsArray.push(
+        // patientsArray.push(
+        foundPatient.push(
           this.createPatient(
             patientRessource.name[0].given[0],
             patientRessource.name[0].family,
@@ -364,6 +378,7 @@ export default {
       console.log('Logged out');
     },
 
+    
     getPractitionerName(this: Storage) {
       this.practitionerResource = this.$storage.getPractitioner();
       this.namePracticioner = [
@@ -375,15 +390,24 @@ export default {
 
     async searchPat() {
       //Set patarray back to zero, so new searches wont be added to the old results already in the array.
-      patientsArray.length = 0;
+      // patientsArray.length = 0;
+      allPatientsResourcesMidata.length = 0;
 
-      await this.getPatient();
-      this.buildPatientList();
+      await this.getPatient(); // Search the patients in midata based on the Name surname and Birthday given in the frontend.
+      this.buildPatientList(); //Build the foundPatients array with the results from getPatient
 
-      const nameInput = this.inputFirstName as string;
-      const surNameInput = this.inputSurName as string;
-      const birthday = this.inputBirthday as string;
-      let foundFlag = false;
+      //Insert given FallID and PatientID on last found Patient.
+      if(foundPatient.length>0){
+      foundPatient[foundPatient.length].patID = this.inputPatientId;
+      foundPatient[foundPatient.length].caseID = this.inputCaseId;
+      }
+
+      // foundPatient[foundPatient.length].registered=true;
+      // const nameInput = this.inputFirstName as string;
+      // const surNameInput = this.inputSurName as string;
+      // const birthday = this.inputBirthday as string;
+      // let foundFlag = false;
+
       // const Address = this.inputAddress as string;
       // const plz = this.inputPlz as string;
       // const ort = this.intputOrt as string;
@@ -391,67 +415,52 @@ export default {
       // const patID = this.inputPatientId as string;
       // const caseID = this.inputCaseId as string;
 
-      console.log('List with all the patients: patientsArray:');
-      console.log(patientsArray);
+      // console.log('List with all the patients: patientsArray:');
+      // console.log(patientsArray);
 
-      //Compare the inPut name with the names on the patientsArray to add the found name to the foundPatient array
-      patientsArray.forEach((element) => {
-        if (
-          element.ersteName == nameInput ||
-          element.nachName == surNameInput ||
-          element.geburtsDatum == birthday
+      //Set the PatientID and FallID to the founded patient
 
-        ) {
-          foundFlag = true;
-          element.patID= this.inputPatientId;
-          element.caseID = this.inputCaseId
-          element.registered=true;
-          foundPatient.push(element);
+      // foundFlag = true;
 
-
-        }
-      });
-
-
-      if (nameInput == '' && surNameInput == '' && birthday) {
+      if (
+        this.inputFirstName == '' &&
+        this.inputSurName == '' &&
+        this.inputBirthday
+      ) {
         console.log('Search fields are empty');
         this.showFoundPatient = false;
       } else if (foundFlag) {
+//showFoundPatient controled the v-show in the html
         this.showFoundPatient = true;
-
         console.log('Array with all the founded patients: ');
         console.log(foundPatient);
       } else {
-
         this.showNotFoundDialog = true;
         console.log('Patient not found');
-        this.showFoundPatient = true;
-        // this.showPatientNotFoundLable = true;
+        
+       
       }
     },
 
-    addNewPatToDayList(this: Storage) {
-      foundPatient.push(
-        this.createPatient(
-          this.inputFirstName,
-          this.inputSurName,
-          this.inputAddress,
-          this.inputPlz,
-          this.inputOrt,
-          this.inputEmail,
-          this.inputBirthday,
-          this.inputPatientId,
-          this.inputCaseId,
-          false,
+    // addNewPatToDayList(this: Storage) {
+    //   foundPatient.push(
+    //     this.createPatient(
+    //       this.inputFirstName,
+    //       this.inputSurName,
+    //       this.inputAddress,
+    //       this.inputPlz,
+    //       this.inputOrt,
+    //       this.inputEmail,
+    //       this.inputBirthday,
+    //       this.inputPatientId,
+    //       this.inputCaseId,
+    //       false
+    //     )
+    //   );
 
-        )
-      );
-
-      console.log('Array with all the founded patients: '),
-        console.log(foundPatient);
-    },
-
-
+    //   console.log('Array with all the founded patients: '),
+    //     console.log(foundPatient);
+    // },
 
     getActiveEpisodeOfCare(this: ComponentCustomProperties) {
       const ActiveEC = this.$midata.getEpisodeOfCare();

@@ -2,6 +2,7 @@ import { JSOnFhir } from '@i4mi/js-on-fhir'
 import { Patient, Bundle, ObservationStatus, Observation, Practitioner, EpisodeOfCare, Organization} from '@i4mi/fhir_r4';
 import { EPISODE_OF_CARE } from '../data/episodeOfCare'
 
+
 import moment from 'moment';
 
 // import moment library. More information under https://momentjs.com
@@ -101,6 +102,9 @@ export default class MidataService {
     });
   }
 
+  
+
+
   /**
    * Gets the patient resource from the fhir endpoint.
    * @returns patient resource as JSON
@@ -113,7 +117,9 @@ export default class MidataService {
           const patientBundle = result as Bundle;
           (patientBundle.entry?.length !== undefined && patientBundle.entry?.length > 0 && patientBundle.entry[0].resource)
             ? resolve(patientBundle.entry[0].resource as Patient)
+            // : reject(this.createNotFoundPatient() as Patient);
             : reject('No entry in patient bundle found!');
+            
         })
         .catch((error) => reject(error));
     });
