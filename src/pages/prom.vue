@@ -1,6 +1,4 @@
 <script >
-import { ComponentCustomProperties } from 'vue';
-import { Questionnaire } from '@i4mi/fhir_r4';
 import {PROM} from '../data/promData'
 import {ENCOUNTER} from '../data/encounter'
 export default {
@@ -28,8 +26,15 @@ export default {
   methods: {
 
     setQuestionaire(){
-      const prom = PROM
-      const encounterID = 0
+
+    const prom = PROM;
+
+     const encounterFHIRID = this.$midata.makeid(12)
+
+     prom.id = encounterFHIRID
+
+     const questionnaireFHIRID = this.$midata.makeid(12)
+      prom.encounter.reference = questionnaireFHIRID
 
       prom.item[0].answer= this.answer1
       prom.item[1].answer= this.answer2
