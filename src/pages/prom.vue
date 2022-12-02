@@ -1,13 +1,11 @@
 <script >
-import {PROM} from '../data/promData'
-import {ENCOUNTER} from '../data/encounter'
+import { PROM } from '../data/promData';
+import { ENCOUNTER } from '../data/encounter';
 export default {
   name: 'Prom',
 
-
   data() {
     return {
-
       answer1: Number,
       answer2: Number,
       answer3: Number,
@@ -24,38 +22,34 @@ export default {
     return {};
   },
   methods: {
+    setQuestionaire() {
+      const prom = PROM;
 
-    setQuestionaire(){
+      const encounterFHIRID = this.$midata.makeid(12);
+      const questionnaireFHIRID = this.$midata.makeid(12);
 
-    const prom = PROM;
+      prom.id = questionnaireFHIRID;
+      prom.encounter.reference = encounterFHIRID;
 
-     const encounterFHIRID = this.$midata.makeid(12)
+      prom.item[0].answer = this.answer1;
+      prom.item[1].answer = this.answer2;
+      prom.item[2].answer = this.answer3;
+      prom.item[3].answer = this.answer4;
+      prom.item[4].answer = this.answer5;
+      prom.item[5].answer = this.answer6;
+      prom.item[6].answer = this.answer7;
+      prom.item[7].answer = this.answer8;
+      prom.item[8].answer = this.answer9;
+      prom.item[9].answer = this.answer10;
 
-     prom.id = encounterFHIRID
-
-     const questionnaireFHIRID = this.$midata.makeid(12)
-      prom.encounter.reference = questionnaireFHIRID
-
-      prom.item[0].answer= this.answer1
-      prom.item[1].answer= this.answer2
-      prom.item[2].answer= this.answer3
-      prom.item[3].answer= this.answer4
-      prom.item[4].answer= this.answer5
-      prom.item[5].answer= this.answer6
-      prom.item[6].answer= this.answer7
-      prom.item[7].answer= this.answer8
-      prom.item[8].answer= this.answer9
-      prom.item[9].answer= this.answer10
-
-
-      this.createEncounter(encounterID)
+      this.createEncounter(encounterFHIRID);
     },
 
-    createEncounter(id){
-      const encounter = ENCOUNTER
+    createEncounter(encounterFHIRID) {
+      const encounter = ENCOUNTER;
 
-      encounter.id = id
-      encounter.episodeOfCare.first().reference = this.$midata.fhirCaseID
+      encounter.id = encounterFHIRID;
+      encounter.episodeOfCare[0].reference = this.$midata.getEpisodeOfCareFHIRID();
     },
     completeBtnPressed() {
       console.log('Button pressed: ' + String(this.answer1));
@@ -101,7 +95,6 @@ export default {
       <tr>
         <td style="background-color: rgb(255, 255, 255)">
           <h4>Bitte kreuzen Sie zu jeder Frage ein Kästchen an.</h4>
-
         </td>
         <td class="scale formtd">Ausgezeichnet</td>
         <td class="scale formtd">Sehr gut</td>

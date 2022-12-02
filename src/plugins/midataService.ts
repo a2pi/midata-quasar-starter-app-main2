@@ -10,6 +10,7 @@ const now = moment();
 
 export default class MidataService {
 
+
   jsOnFhir: JSOnFhir;
   currentPatient: Record<string, unknown>;
   fhirCaseID: string;
@@ -100,6 +101,28 @@ export default class MidataService {
     });
   }
 
+  /**
+   * Gets the patient resource from the fhir endpoint.
+   * @returns patient resource as JSON
+   */
+   public getSinglePatientResource(name: string): Promise<Patient> {
+    return new Promise((resolve, reject) => {
+      this.jsOnFhir
+        .search('Patient', `name=${name}`)
+        .then((result) => {
+          const patientBundle = result as Bundle;
+          (patientBundle.entry?.length !== undefined && patientBundle.entry?.length > 0 && patientBundle.entry[0].resource)
+            ? resolve(patientBundle.entry[0].resource as Patient)
+            : reject('No entry in patient bundle found!');
+        })
+        .catch((error) => reject(error));
+    });
+  }
+
+  setPatient(patient: { ersteName: string; nachName: string; addresse: string; plz: string; ort: string; email: string; geburtsDatum: string; patID: string; patFHIRID: string; caseID: string; registered: boolean; }) {
+    this.currentPatient = patient
+  }
+
     /**
    * Gets the patient resource from the fhir endpoint.
    * @returns patient resource as JSON
@@ -119,9 +142,6 @@ export default class MidataService {
       });
     }
 
-    public setPatient(patient: { ersteName: string; nachName: string; addresse: string; plz: string; ort: string; email: string; geburtsDatum: string; patID: string; caseID: string; registered: boolean; }) {
-      this.currentPatient = patient
-    }
 
     public getPatientName(){
       return 'andre'
@@ -134,7 +154,7 @@ export default class MidataService {
   public getEpisodeOfCare(): Promise<EpisodeOfCare> {
     return new Promise((resolve, reject) => {
       this.jsOnFhir
-        .search('EpisodeOfCare')
+        .search('EpisodeOfCare', `patient=${this.currentPatient.patFHIRID as string}&status=active`)
         .then((result) => {
           // const episodeBundle = result as Bundle;
           const episodeBundle = result;
@@ -152,9 +172,14 @@ export default class MidataService {
     const episodeOfCare = EPISODE_OF_CARE
     this.fhirCaseID = this.makeid(12)
 
-    episodeOfCare.identifier[0].value = this.fhirCaseID
+    episodeOfCare.id = this.fhirCaseID
+    episodeOfCare.identifier[0].value = this.currentPatient.caseID as string
     episodeOfCare.identifier[0].assigner.display = 'Reha Bern AG'
     episodeOfCare.identifier[0].assigner.reference =  'Organization/63777a87ab51910677069bfe' // would be solved with this.getOrganization() but it isnt possible to reference an organization to a practicioner in midata, which is why its simulated here
+  }
+
+  getEpisodeOfCareFHIRID(){
+    return this.fhirCaseID
   }
 
   public makeid(length: number) {
@@ -166,26 +191,6 @@ export default class MidataService {
     }
     return result
 }
-
-  public getActiveEOC(): Promise<EpisodeOfCare> {
-    return new Promise((resolve, reject) => {
-      this.jsOnFhir
-        .search('EpisodeOfCare', 'status=active')
-        .then((result) => {
-          // const episodeBundle = result as Bundle;
-          const episodeBundle = result;
-          // (patientBundle.entry?.length !== undefined && patientBundle.entry?.length > 0 && patientBundle.entry[0].resource)
-          //   ? resolve(patientBundle.entry[0].resource as Patient)
-          //   : reject('No entry in patient bundle found!');
-          console.log(episodeBundle);
-
-        })
-        .catch((error) => reject(error));
-    });
-  }
-
-
-
 
   public getOrganization(id: number): Promise<Organization> {
     return new Promise((resolve, reject) => {

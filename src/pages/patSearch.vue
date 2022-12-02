@@ -63,7 +63,7 @@
                         <q-item-label>
                           {{ item.caseID }}
                         </q-item-label>
-                        
+
                         <q-item-label>
                           <div id="link"></div>
                         </q-item-label>
@@ -307,6 +307,7 @@ export default {
       patID: string,
       caseID: string,
       registered:boolean,
+      fhirID: string
     ) {
       const patient: patObj = {
         ersteName: ersteName,
@@ -317,7 +318,7 @@ export default {
         email: email,
         geburtsDatum: geburtsDatum,
         patID: patID,
-        patFHIRID: '',
+        patFHIRID: fhirID,
         caseID: caseID,
         registered:registered
       }
@@ -328,10 +329,11 @@ export default {
     },
 
     // get all patient resources from midata and save it in an array
-    async getPatient(this: ComponentCustomProperties) {
+    async getPatient() {
       // const patients = await this.$midata.getPatients();
       // allPatientsResourcesMidata = patients;
-      allPatientsResourcesMidata = await this.$midata.getPatients();
+      const patient = await this.$midata.getSinglePatientResource(this.inputFirstName)
+      allPatientsResourcesMidata.push(patient)
       console.log('All patients resources in Midata: ');
       console.log(allPatientsResourcesMidata);
     },
@@ -339,19 +341,20 @@ export default {
     //get the array resulte from the search at midata and create and array of patient Objects
     //with only th information we need from the patients
     buildPatientList() {
-      allPatientsResourcesMidata.forEach((obj) => {
+      allPatientsResourcesMidata.forEach((patientRessource) => {
         patientsArray.push(
           this.createPatient(
-            obj.name[0].given[0],
-            obj.name[0].family,
-            obj.address[0].country,
+            patientRessource.name[0].given[0],
+            patientRessource.name[0].family,
+            patientRessource.address[0].country,
             'PLZ',
             'ORT',
-            obj.telecom[0].value,
+            patientRessource.telecom[0].value,
             '12-12-1946',
             '',
             '',
-            true
+            true,
+            patientRessource.id
           )
         );
       });
@@ -370,12 +373,10 @@ export default {
       // console.log('test ${this.namePracticioner}');
     },
 
-
-
-    async searchPat(this: Storage) {
+    async searchPat() {
       //Set patarray back to zero, so new searches wont be added to the old results already in the array.
       patientsArray.length = 0;
-      // foundPatient.length = 0;
+
       await this.getPatient();
       this.buildPatientList();
 
@@ -390,7 +391,6 @@ export default {
       // const patID = this.inputPatientId as string;
       // const caseID = this.inputCaseId as string;
 
-      console.log(this.geburtsdatum as string);
       console.log('List with all the patients: patientsArray:');
       console.log(patientsArray);
 
@@ -416,16 +416,13 @@ export default {
       if (nameInput == '' && surNameInput == '' && birthday) {
         console.log('Search fields are empty');
         this.showFoundPatient = false;
-        this.showPatientNotFoundLable = false;
       } else if (foundFlag) {
         this.showFoundPatient = true;
-        
 
-        console.log(`ShowFoundPatient is: ${this.showFoundPatient as string}`);
         console.log('Array with all the founded patients: ');
         console.log(foundPatient);
       } else {
-     
+
         this.showNotFoundDialog = true;
         console.log('Patient not found');
         this.showFoundPatient = true;
@@ -448,8 +445,6 @@ export default {
           false,
 
         )
-
-
       );
 
       console.log('Array with all the founded patients: '),
@@ -459,7 +454,7 @@ export default {
 
 
     getActiveEpisodeOfCare(this: ComponentCustomProperties) {
-      const ActiveEC = this.$midata.getActiveEOC();
+      const ActiveEC = this.$midata.getEpisodeOfCare();
       console.log(ActiveEC);
       return ActiveEC;
     },
@@ -475,8 +470,5 @@ export default {
       this.practitionerResource?.name[0]?.given[0],
     ].join(' ');
   },
-  // created(){
-  //   this.getPatient();
-  // }
 };
 </script>
