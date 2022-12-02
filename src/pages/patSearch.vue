@@ -63,7 +63,7 @@
                         <q-item-label>
                           {{ item.caseID }}
                         </q-item-label>
-                        <q-item-label overline> Linkt to Page or registration </q-item-label>
+                        
                         <q-item-label>
                           <div id="link"></div>
                         </q-item-label>
@@ -416,13 +416,13 @@ export default {
         this.showPatientNotFoundLable = false;
       } else if (foundFlag) {
         this.showFoundPatient = true;
-        this.registerOrProm =true;
+        
 
         console.log(`ShowFoundPatient is: ${this.showFoundPatient as string}`);
         console.log('Array with all the founded patients: ');
         console.log(foundPatient);
       } else {
-        this.registerOrProm=false;
+     
         this.showNotFoundDialog = true;
         console.log('Patient not found');
         this.showFoundPatient = true;
