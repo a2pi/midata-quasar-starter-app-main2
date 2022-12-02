@@ -28,8 +28,8 @@ const routes: RouteRecordRaw[] = [
     path: '/register',
     component: () => import('layouts/DigitalPromLayout.vue'),
     children: [
-      { path: '', component: () => openURL('https://test.midata.coop/#/provider/patientsearch') },
-      
+      { path: '', component: () => openURL('http://localhost:8080/#/login') },
+
     ],
   },
   {

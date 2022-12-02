@@ -1,5 +1,5 @@
 <template>
-  
+
   <q-page padding>
     <div>
       <H2>Patient Search</H2>
@@ -14,7 +14,7 @@
       <q-btn
         color="primary"
         label="Get Episode of Care"
-        @click="getEpisodeOfCare()"
+        @click="getActiveEpisodeOfCare()"
       />
 
       <div class="q-pa-md" style="max-width: 700px">
@@ -68,8 +68,8 @@
                           <div id="link"></div>
                         </q-item-label>
                       </q-item-section>
-                      
-                      
+
+
                       <q-item-section>
                         <q-btn
                           push
@@ -77,7 +77,7 @@
                           v-bind:label="item.registered ? 'PROM beantworten' : 'Pat. registrieren'"
                           size="10px"
                           v-bind:to="item.registered ? '/prom' : 'register'"
-                          
+
                         />
                       </q-item-section>
                       <q-item-section> </q-item-section>
@@ -177,7 +177,7 @@
             <q-card-section class="row items-center">
               <span class="q-ml-sm"
                 ><h6> Möchten Sie den Patienten in die Liste aufnehmen?</h6> <strong>Dieser Patient muss in Midata registriert werden, bevor der PROM beantwortet werden kann.</strong>
-                
+
 
                 <q-input v-model="inputFirstName" label="Name" />
                 <q-input v-model="inputSurName" label="Nachname" />
@@ -239,7 +239,7 @@
 <script lang="ts">
 import { ComponentCustomProperties, ref } from 'vue';
 import { Patient, Practitioner } from '@i4mi/fhir_r4';
-import { openURL } from 'quasar';
+
 
 type patObj = {
   ersteName: string;
@@ -264,7 +264,7 @@ export default {
 
   setup() {
     return {
-     
+
       inputFirstName: ref(''),
       inputSurName: ref(''),
       inputBirthday: ref(''),
@@ -284,16 +284,16 @@ export default {
     practitionerResource: {} as Practitioner,
     flag: false,
     showNotFoundDialog: false,
-    
-    
+
+
   }),
 
   computed:{
 
   },
   methods: {
- 
-   
+
+
     removeLastEntry(){
       foundPatient.pop();
     },
@@ -367,7 +367,7 @@ export default {
       // console.log('test ${this.namePracticioner}');
     },
 
-  
+
 
     async searchPat(this: Storage) {
       //Set patarray back to zero, so new searches wont be added to the old results already in the array.
@@ -397,18 +397,18 @@ export default {
           element.ersteName == nameInput ||
           element.nachName == surNameInput ||
           element.geburtsDatum == birthday
-          
+
         ) {
           foundFlag = true;
           element.patID= this.inputPatientId;
           element.caseID = this.inputCaseId
           element.registered=true;
           foundPatient.push(element);
-         
+
 
         }
       });
-      
+
 
       if (nameInput == '' && surNameInput == '' && birthday) {
         console.log('Search fields are empty');
@@ -443,9 +443,9 @@ export default {
           this.inputPatientId,
           this.inputCaseId,
           false,
-          
+
         )
-      
+
 
       );
 
@@ -453,9 +453,7 @@ export default {
         console.log(foundPatient);
     },
 
-    getEpisodeOfCare(this: ComponentCustomProperties) {
-      console.log(this.$midata.getEpisodeOfCare());
-    },
+
 
     getActiveEpisodeOfCare(this: ComponentCustomProperties) {
       const ActiveEC = this.$midata.getActiveEOC();

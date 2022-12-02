@@ -1,41 +1,18 @@
+export const PROM=
 {
     "resourceType": "QuestionnaireResponse",
-    "id": "637288805f83d970f5ba8c53",
-    "meta": {
-        "extension": [
-            {
-                "url": "http://midata.coop/extensions/metadata",
-                "extension": [
-                    {
-                        "url": "app",
-                        "valueCoding": {
-                            "system": "http://midata.coop/codesystems/app",
-                            "code": "digital prom",
-                            "display": "Digital PROM"
-                        }
-                    },
-                    {
-                        "url": "creator",
-                        "valueReference": {
-                            "reference": "Patient/365b187ee9ed6e1b63a90ef1",
-                            "display": "Elizabeth Brönimann"
-                        }
-                    }
-                ]
-            }
-        ],
-        "versionId": "0",
-        "lastUpdated": "2022-11-14T18:27:12.000+00:00"
-    },
-    "identifier": {
+    "id": "637288805f83d970f5ba8c53", // Dynamic generated
+    "encounter": {"reference": "Encounter/id3"}, // the ID hast to be the same as the encounter
+
+    "identifier": { //irrelevant Löschen
         "value": "1"
     },
     "status": "in-progress",
     "subject": {
-        "reference": "RelatedPerson/6229f573ef86a8613c662197",
+        "reference": "Patient/6229f573ef86a8613c662197", // Here put the Patient variable DisplaName/ID
         "display": "Lukas Dev"
     },
-    "item": [
+    "item": [ // here is the answers , gezt them from the arrays in the prom.vue
         {
             "linkId": "1",
             "definition": "Global01",
@@ -128,3 +105,4 @@
         }
     ]
 }
+
