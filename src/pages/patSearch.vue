@@ -250,6 +250,7 @@ type patObj = {
   email: string;
   geburtsDatum: string;
   patID: string;
+  patFHIRID: string;
   caseID: string;
   registered:boolean;
 };
@@ -284,8 +285,6 @@ export default {
     practitionerResource: {} as Practitioner,
     flag: false,
     showNotFoundDialog: false,
-
-
   }),
 
   computed:{
@@ -318,9 +317,13 @@ export default {
         email: email,
         geburtsDatum: geburtsDatum,
         patID: patID,
+        patFHIRID: '',
         caseID: caseID,
         registered:registered
-      };
+      }
+
+      this.$midata.setPatient(patient)
+
       return patient;
     },
 

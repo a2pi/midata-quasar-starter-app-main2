@@ -1,5 +1,6 @@
 import { JSOnFhir } from '@i4mi/js-on-fhir'
 import { Patient, Bundle, ObservationStatus, Observation, Practitioner, EpisodeOfCare, Organization} from '@i4mi/fhir_r4';
+import { EPISODE_OF_CARE } from '../data/episodeOfCare'
 
 import moment from 'moment';
 
@@ -8,7 +9,10 @@ const now = moment();
 
 
 export default class MidataService {
+
   jsOnFhir: JSOnFhir;
+  currentPatient: Record<string, unknown>;
+  fhirCaseID: string;
 
   constructor() {
     this.jsOnFhir = new JSOnFhir(
@@ -114,13 +118,18 @@ export default class MidataService {
           .catch((error) => reject(error));
       });
     }
-    // //load the patient into an array and delivers this array
-    // async loadPatients(){
-    //   const allPatients = await this.getPatients();
-    //   console.log('Patients loaded to AllPatients array');
-    //   return allPatients;
-    // }
 
+    public setPatient(patient: { ersteName: string; nachName: string; addresse: string; plz: string; ort: string; email: string; geburtsDatum: string; patID: string; caseID: string; registered: boolean; }) {
+      this.currentPatient = patient
+    }
+
+    public getPatientName(){
+      return 'andre'
+    }
+
+    public getPatientFHIRID(){
+      return
+    }
 
   public getEpisodeOfCare(): Promise<EpisodeOfCare> {
     return new Promise((resolve, reject) => {
@@ -138,6 +147,25 @@ export default class MidataService {
         .catch((error) => reject(error));
     });
   }
+
+  public createEpisodeOfCare(){
+    const episodeOfCare = EPISODE_OF_CARE
+    this.fhirCaseID = this.makeid(12)
+
+    episodeOfCare.identifier[0].value = this.fhirCaseID
+    episodeOfCare.identifier[0].assigner.display = 'Reha Bern AG'
+    episodeOfCare.identifier[0].assigner.reference =  'Organization/63777a87ab51910677069bfe' // would be solved with this.getOrganization() but it isnt possible to reference an organization to a practicioner in midata, which is why its simulated here
+  }
+
+  public makeid(length: number) {
+    let result: string = null
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXZY0123456789'
+    const charactersLength = characters.length
+    for ( let i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength))
+    }
+    return result
+}
 
   public getActiveEOC(): Promise<EpisodeOfCare> {
     return new Promise((resolve, reject) => {

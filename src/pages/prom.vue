@@ -2,6 +2,7 @@
 import { ComponentCustomProperties } from 'vue';
 import { Questionnaire } from '@i4mi/fhir_r4';
 import {PROM} from '../data/promData'
+import {ENCOUNTER} from '../data/encounter'
 export default {
   name: 'Prom',
 
@@ -27,7 +28,8 @@ export default {
   methods: {
 
     setQuestionaire(){
-      const prom = PROM;
+      const prom = PROM
+      const encounterID = 0
 
       prom.item[0].answer= this.answer1
       prom.item[1].answer= this.answer2
@@ -41,24 +43,14 @@ export default {
       prom.item[9].answer= this.answer10
 
 
-
+      this.createEncounter(encounterID)
     },
 
+    createEncounter(id){
+      const encounter = ENCOUNTER
 
-    getQuestionnaire() {
-        const answers = [
-        this.answer1,
-        this.answer2,
-        this.answer3,
-        this.answer4,
-        this.answer5,
-        this.answer6,
-        this.answer7,
-        this.answer8,
-        this.answer9,
-        this.answer10,
-      ];
-
+      encounter.id = id
+      encounter.episodeOfCare.first().reference = this.$midata.fhirCaseID
     },
     completeBtnPressed() {
       console.log('Button pressed: ' + String(this.answer1));
@@ -112,7 +104,6 @@ export default {
               id="debuggerBtn"
               label="Do some magic pls"
               size="30px"
-
             />
           </center>
           <!-- End of Debugger -->
@@ -417,5 +408,5 @@ export default {
     </center>
   </q-page>
 
-}
+  }
 </template>
