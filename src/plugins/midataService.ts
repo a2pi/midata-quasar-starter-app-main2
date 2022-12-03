@@ -1,17 +1,21 @@
-import { JSOnFhir } from '@i4mi/js-on-fhir'
-import { Patient, Bundle, ObservationStatus, Observation, Practitioner, EpisodeOfCare, Organization} from '@i4mi/fhir_r4';
-import { EPISODE_OF_CARE } from '../data/episodeOfCare'
-
+import { JSOnFhir } from '@i4mi/js-on-fhir';
+import {
+  Patient,
+  Bundle,
+  ObservationStatus,
+  Observation,
+  Practitioner,
+  EpisodeOfCare,
+  Organization,
+} from '@i4mi/fhir_r4';
+import { EPISODE_OF_CARE } from '../data/episodeOfCare';
 
 import moment from 'moment';
 
 // import moment library. More information under https://momentjs.com
 const now = moment();
 
-
 export default class MidataService {
-
-
   jsOnFhir: JSOnFhir;
   currentPatient: Record<string, unknown>;
   fhirCaseID: string;
@@ -65,102 +69,84 @@ export default class MidataService {
     return this.jsOnFhir.handleAuthResponse();
   }
 
-    /**
+  public setPatient(patient: Record<string, unknown>){
+    this.currentPatient = patient
+  }
+  /**
    * Gets the Practitioner resource from the fhir endpoint.
    * @returns Practitioner resource as JSON
    */
-     public getPractitionerResource(): Promise<Practitioner> {
-      return new Promise((resolve, reject) => {
-        this.jsOnFhir
-          .search('Practitioner', { _id: this.jsOnFhir.getPatient() })
-          .then((result) => {
-            const practitionerBundle = result as Bundle;
-            (practitionerBundle.entry?.length !== undefined && practitionerBundle.entry?.length > 0 && practitionerBundle.entry[0].resource)
-              ? resolve(practitionerBundle.entry[0].resource as Practitioner)
-              : reject('No entry in Practitioner bundle found!');
-          })
-          .catch((error) => reject(error));
-      });
-    }
-
-  /**
-   * Gets the patient resource from the fhir endpoint.
-   * @returns patient resource as JSON
-   */
-  public getPatientResource(): Promise<Patient> {
+  public getPractitionerResource(): Promise<Practitioner> {
     return new Promise((resolve, reject) => {
       this.jsOnFhir
-        // .search('Patient', { _id: this.jsOnFhir.getPatient() })
-        .search('Patient')
+        .search('Practitioner', { _id: this.jsOnFhir.getPatient() })
         .then((result) => {
-          const patientBundle = result as Bundle;
-          (patientBundle.entry?.length !== undefined && patientBundle.entry?.length > 0 && patientBundle.entry[0].resource)
-            ? resolve(patientBundle.entry[0].resource as Patient)
-            : reject('No entry in patient bundle found!');
+          const practitionerBundle = result as Bundle;
+          practitionerBundle.entry?.length !== undefined &&
+          practitionerBundle.entry?.length > 0 &&
+          practitionerBundle.entry[0].resource
+            ? resolve(practitionerBundle.entry[0].resource as Practitioner)
+            : reject('No entry in Practitioner bundle found!');
         })
         .catch((error) => reject(error));
     });
   }
 
-  
-
-
   /**
    * Gets the patient resource from the fhir endpoint.
    * @returns patient resource as JSON
    */
-   public getSinglePatientResource(name: string): Promise<Patient> {
+  public getPatient(name: string): Promise<Patient> {
     return new Promise((resolve, reject) => {
       this.jsOnFhir
         .search('Patient', `name=${name}`)
         .then((result) => {
           const patientBundle = result as Bundle;
-          (patientBundle.entry?.length !== undefined && patientBundle.entry?.length > 0 && patientBundle.entry[0].resource)
+          patientBundle.entry?.length !== undefined &&
+          patientBundle.entry?.length > 0 &&
+          patientBundle.entry[0].resource
             ? resolve(patientBundle.entry[0].resource as Patient)
-            // : reject(this.createNotFoundPatient() as Patient);
             : reject('No entry in patient bundle found!');
-            
         })
         .catch((error) => reject(error));
     });
   }
 
-  setPatient(patient: { ersteName: string; nachName: string; addresse: string; plz: string; ort: string; email: string; geburtsDatum: string; patID: string; patFHIRID: string; caseID: string; registered: boolean; }) {
-    this.currentPatient = patient
-  }
-
-    /**
+  /**
    * Gets the patient resource from the fhir endpoint.
    * @returns patient resource as JSON
    */
-     public getPatients(): Promise<Patient[]> {
-      return new Promise((resolve, reject) => {
-        this.jsOnFhir
-          // .search('Patient', { _id: this.jsOnFhir.getPatient() })
-          .search('Patient')
-          .then((result) => {
-            const patientBundle = result as Bundle;
-            (patientBundle.entry?.length !== undefined && patientBundle.entry?.length > 0 && patientBundle.entry[0].resource)
-              ? resolve(patientBundle.entry.map(x => x.resource as Patient))
-              : reject('No entry in patient bundle found!');
-          })
-          .catch((error) => reject(error));
-      });
-    }
+  public getPatients(): Promise<Patient[]> {
+    return new Promise((resolve, reject) => {
+      this.jsOnFhir
+        .search('Patient')
+        .then((result) => {
+          const patientBundle = result as Bundle;
+          patientBundle.entry?.length !== undefined &&
+          patientBundle.entry?.length > 0 &&
+          patientBundle.entry[0].resource
+            ? resolve(patientBundle.entry.map((x) => x.resource as Patient))
+            : reject('No entry in patient bundle found!');
+        })
+        .catch((error) => reject(error));
+    });
+  }
 
+  public getPatientName() {
+    return this.currentPatient.name
+  }
 
-    public getPatientName(){
-      return 'andre'
-    }
-
-    public getPatientFHIRID(){
-      return
-    }
+  public getPatientFHIRID() {
+    return;
+  }
 
   public getEpisodeOfCare(): Promise<EpisodeOfCare> {
     return new Promise((resolve, reject) => {
       this.jsOnFhir
-        .search('EpisodeOfCare', `patient=${this.currentPatient.patFHIRID as string}&status=active`)
+        .search(
+          'EpisodeOfCare',
+          `patient=${this.currentPatient.patFHIRID as string}&status=active`
+        )
         .then((result) => {
           // const episodeBundle = result as Bundle;
           const episodeBundle = result;
@@ -168,79 +154,79 @@ export default class MidataService {
           //   ? resolve(patientBundle.entry[0].resource as Patient)
           //   : reject('No entry in patient bundle found!');
           console.log(episodeBundle);
-
         })
         .catch((error) => reject(error));
     });
   }
 
-  public createEpisodeOfCare(){
-    const episodeOfCare = EPISODE_OF_CARE
-    this.fhirCaseID = this.makeid(12)
+  public createEpisodeOfCare() {
+    const episodeOfCare = EPISODE_OF_CARE;
+    this.fhirCaseID = this.makeid(12);
 
-    episodeOfCare.id = this.fhirCaseID
-    episodeOfCare.identifier[0].value = this.currentPatient.caseID as string
-    episodeOfCare.identifier[0].assigner.display = 'Reha Bern AG'
-    episodeOfCare.identifier[0].assigner.reference =  'Organization/63777a87ab51910677069bfe' // would be solved with this.getOrganization() but it isnt possible to reference an organization to a practicioner in midata, which is why its simulated here
+    episodeOfCare.id = this.fhirCaseID;
+    episodeOfCare.identifier[0].value = this.currentPatient.caseID as string;
+    episodeOfCare.identifier[0].assigner.display = 'Reha Bern AG';
+    episodeOfCare.identifier[0].assigner.reference =
+      'Organization/63777a87ab51910677069bfe'; // would be solved with this.getOrganization() but it isnt possible to reference an organization to a practicioner in midata, which is why its simulated here
   }
 
-  getEpisodeOfCareFHIRID(){
-    return this.fhirCaseID
+  getEpisodeOfCareFHIRID() {
+    return this.fhirCaseID;
   }
 
   public makeid(length: number) {
-    let result: string = null
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXZY0123456789'
-    const charactersLength = characters.length
-    for ( let i = 0; i < length; i++ ) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength))
+    let result: string = null;
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXZY0123456789';
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
-    return result
-}
+    return result;
+  }
 
   public getOrganization(id: number): Promise<Organization> {
     return new Promise((resolve, reject) => {
       this.jsOnFhir
         .search('Organization', id)
         .then((result) => {
-          const organizationBundle = result as Bundle
-           (organizationBundle.entry?.length !== undefined && organizationBundle.entry?.length > 0 && organizationBundle.entry[0].resource)
-             ? resolve(organizationBundle.entry[0].resource as Organization)
-             : reject('No entry in patient bundle found!');
+          const organizationBundle = result as Bundle;
+          organizationBundle.entry?.length !== undefined &&
+          organizationBundle.entry?.length > 0 &&
+          organizationBundle.entry[0].resource
+            ? resolve(organizationBundle.entry[0].resource as Organization)
+            : reject('No entry in patient bundle found!');
         })
         .catch((error) => reject(error));
     });
   }
 
-
-
   /**
    * Gets the questionnaire response resources as bundle from the fhir endpoint.
    * @returns bundle with questionnaire response resources as JSON.
    */
-     getQuestionnaireResponseResourcesAsBundle(): Promise<Bundle> {
-      return new Promise((resolve, reject) => {
-        this.jsOnFhir
-          .search('Questionnaire Response')
-          .then((result) => {
-            const questionnaireResponseBundle = result as Bundle;
-            questionnaireResponseBundle.entry?.length > 0
-              ? resolve(questionnaireResponseBundle)
-              : reject('No entries in questionnaire response bundle found!');
-          })
-          .catch((error) => reject(error));
-      });
-    }
+  getQuestionnaireResponseResourcesAsBundle(): Promise<Bundle> {
+    return new Promise((resolve, reject) => {
+      this.jsOnFhir
+        .search('Questionnaire Response')
+        .then((result) => {
+          const questionnaireResponseBundle = result as Bundle;
+          questionnaireResponseBundle.entry?.length > 0
+            ? resolve(questionnaireResponseBundle)
+            : reject('No entries in questionnaire response bundle found!');
+        })
+        .catch((error) => reject(error));
+    });
+  }
 
-    // getQuestionnaire() {
-    //   // return prom
-    // }
+  // getQuestionnaire() {
+  //   // return prom
+  // }
 
-    setQuestionnaireData(answers: any[]) {
-      console.log(`Antworten: ${String(answers)}`);
+  setQuestionnaireData(answers: any[]) {
+    console.log(`Antworten: ${String(answers)}`);
 
-      //throw new Error('Method not implemented.');
-    }
+    //throw new Error('Method not implemented.');
+  }
 
   /**
    * Gets the observation resources as bundle from the fhir endpoint.
@@ -266,15 +252,17 @@ export default class MidataService {
    */
   public loadObservations() {
     return new Promise((resolve, reject) => {
-      this.jsOnFhir.search('Observation').then((result) => {
-        result
-          ? resolve(
-              (result as Bundle).entry?.map(
-                (entry) => entry.resource as Observation
-              ) || []
-            )
-          : reject('Error');
-      }).catch((error)=> reject(error));
+      this.jsOnFhir
+        .search('Observation')
+        .then((result) => {
+          result
+            ? resolve(
+                (result as Bundle).entry?.map((entry) => entry.resource as Observation) ||
+                  []
+              )
+            : reject('Error');
+        })
+        .catch((error) => reject(error));
     });
   }
 
@@ -288,9 +276,12 @@ export default class MidataService {
    */
   search(resourceType: any, params?: any): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.jsOnFhir.search(resourceType, params).then((result) => {
-        result ? resolve(result) : reject('Error');
-      }).catch((error)=> reject(error));
+      this.jsOnFhir
+        .search(resourceType, params)
+        .then((result) => {
+          result ? resolve(result) : reject('Error');
+        })
+        .catch((error) => reject(error));
     });
   }
 
@@ -310,9 +301,12 @@ export default class MidataService {
   ): Promise<Observation> {
     return new Promise((resolve, reject) => {
       const observation = this.newBtObservation(_status, bodySite, value);
-      this.jsOnFhir.create(observation).then((result) => {
-        result ? resolve(result as Observation) : reject('internal error');
-      }).catch((error)=> reject(error));
+      this.jsOnFhir
+        .create(observation)
+        .then((result) => {
+          result ? resolve(result as Observation) : reject('internal error');
+        })
+        .catch((error) => reject(error));
     });
   }
 
@@ -325,36 +319,33 @@ export default class MidataService {
    *              - if successfull -> response with the updated resource as JSON
    *              - if not successfull -> error message
    */
-  updateObservation(
-    _id: string,
-    bodySite: string,
-    value: number
-  ): Promise<Observation> {
+  updateObservation(_id: string, bodySite: string, value: number): Promise<Observation> {
     return new Promise((resolve, reject) => {
-      this.jsOnFhir.search('Observation/' + _id).then((result) => {
-        if (result) {
-          const fhirObservation = result as Observation;
-          fhirObservation.valueQuantity.value = value;
-          fhirObservation.bodySite = this.getBodySite(bodySite);
-          fhirObservation.method = this.getMethod(bodySite);
-          fhirObservation.issued = now.format();
-          this.jsOnFhir
-            .update(fhirObservation)
-            .then((res) => {
-              resolve(res as Observation);
-            })
-            .catch((error: Error) => {
-              console.warn('Could not update observation ' + _id, error);
-              reject(error);
-            });
-        } else {
-          reject(
-            new Error(
-              'Invalid observation id: Observation ' + _id + ' was not found.'
-            )
-          );
-        }
-      }).catch((error)=> reject(error));
+      this.jsOnFhir
+        .search('Observation/' + _id)
+        .then((result) => {
+          if (result) {
+            const fhirObservation = result as Observation;
+            fhirObservation.valueQuantity.value = value;
+            fhirObservation.bodySite = this.getBodySite(bodySite);
+            fhirObservation.method = this.getMethod(bodySite);
+            fhirObservation.issued = now.format();
+            this.jsOnFhir
+              .update(fhirObservation)
+              .then((res) => {
+                resolve(res as Observation);
+              })
+              .catch((error: Error) => {
+                console.warn('Could not update observation ' + _id, error);
+                reject(error);
+              });
+          } else {
+            reject(
+              new Error('Invalid observation id: Observation ' + _id + ' was not found.')
+            );
+          }
+        })
+        .catch((error) => reject(error));
     });
   }
 
@@ -377,8 +368,7 @@ export default class MidataService {
         {
           coding: [
             {
-              system:
-                'http://terminology.hl7.org/CodeSystem/observation-category',
+              system: 'http://terminology.hl7.org/CodeSystem/observation-category',
               code: 'vital-signs',
               display: 'Vital Signs',
             },
