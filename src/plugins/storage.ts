@@ -60,7 +60,7 @@ export default class Storage {
   public restoreFromMidata(): Promise<void> {
     return new Promise((resolve, reject) => {
       Promise.all([
-        this.midata.getPractitionerResource(),
+        this.midata.getPractitioner(),
         this.midata.loadObservations(),
       ])
         .then((results) => {

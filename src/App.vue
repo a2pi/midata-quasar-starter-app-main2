@@ -27,7 +27,7 @@ export default defineComponent({
         if (response && this.$midata.isLoggedIn()) {
           Promise.all([
             this.$storage.restoreFromMidata(),
-            this.$midata.getPractitionerResource(),
+            this.$midata.getPractitioner(),
           ])
             .then((results) => {
               /* const preferredCom = results[1].communication.find((coms) => {

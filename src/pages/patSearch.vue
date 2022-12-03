@@ -1,5 +1,6 @@
 <script>
 import { ref } from 'vue';
+import { EPISODE_OF_CARE } from 'src/data/episodeOfCare';
 
 export default {
   setup() {
@@ -14,14 +15,14 @@ export default {
       inputOrt: ref(''),
       inputEmail: ref(''),
       inputAddress: ref(''),
-      showFoundPatient: true,
+      showPatientList: true,
       patientsList: ref(''),
       registerOrProm: true,
     };
   },
   data() {
     return {
-      foundPatient: [],
+      patients: [],
       foundFlag: false,
     };
   },
@@ -29,7 +30,7 @@ export default {
   computed: {},
   methods: {
     removeLastEntry() {
-      this.foundPatient.pop();
+      this.patients.pop();
     },
     createPatient(
       firstName,
@@ -74,7 +75,7 @@ export default {
         console.log('Patient found:');
         console.log(patient);
         this.foundFlag = true;
-        this.foundPatient.push(
+        this.patients.push(
           this.createPatient(
             patient.name[0].given[0],
             patient.name[0].family,
@@ -86,20 +87,21 @@ export default {
       }
 
       if (this.foundFlag) {
-        //showFoundPatient controlled the v-show in the html
+        //showpatients controlled the v-show in the html
         this.showNotFoundDialog = false;
         console.log('Array with all the founded patients: ');
-        console.log(this.foundPatient);
+        console.log(this.patients);
       } else {
         this.showNotFoundDialog = true;
         console.log('Patient not found');
       }
     },
 
-    getActiveEpisodeOfCare() {
-      const activeEC = this.$midata.getEpisodeOfCare();
-      console.log(activeEC);
-      return activeEC;
+    getActiveEpisodeOfCare(caseID) {
+      const activeEOC = this.$midata.getEpisodeOfCare(caseID);
+      const episodeOfCare = activeEOC ? activeEOC : EPISODE_OF_CARE;
+      console.log(`episodeOfCare: ${JSON.stringify(episodeOfCare)}`);
+      return episodeOfCare;
     },
 
     registerPatient() {
@@ -158,7 +160,7 @@ export default {
                 <div
                   class="q-pa-md"
                   style="width: 500px"
-                  v-show="showFoundPatient"
+                  v-show="showPatientList"
                 >
                   <div bordered separator>
                     <q-item
@@ -253,7 +255,7 @@ export default {
                 outlined
                 v-model="inputCaseId"
                 label="Fall ID"
-                id="caseId"
+                id="caseID"
               />
             </td>
           </tr>
@@ -303,7 +305,7 @@ export default {
 
                 <q-input v-model="inputFirstName" label="Vorname" />
                 <q-input v-model="inputSurName" label="Nachname" />
-                <q-input v-model="inputAddress" label="Addresse" />
+                <q-input v-model="inputAddress" label="Adresse" />
                 <q-input v-model="inputPlz" label="PLZ" />
                 <q-input v-model="inputOrt" label="ORT" />
                 <q-input v-model="inputEmail" label="E-mail" />

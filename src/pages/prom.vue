@@ -1,6 +1,8 @@
 <script >
-import { PROM } from '../data/promData';
-import { ENCOUNTER } from '../data/encounter';
+import { PROM } from '../data/promData'
+import { ENCOUNTER } from '../data/encounter'
+import { EPISODE_OF_CARE } from 'src/data/episodeOfCare'
+
 export default {
   name: 'Prom',
 
@@ -16,78 +18,95 @@ export default {
       answer8: Number,
       answer9: Number,
       answer10: Number,
-    };
+    }
   },
   setup() {
-    return {};
+    return {}
   },
   methods: {
-    setQuestionaire() {
-      const prom = PROM;
+    async setQuestionaire() {
+      const prom = PROM
 
-      const encounterFHIRID = this.$midata.makeid(12);
-      const questionnaireFHIRID = this.$midata.makeid(12);
+      const encounterFHIRID = `${this.$midata.makeid(12)}`
+      const questionnaireFHIRID = `${this.$midata.makeid(12)}`
 
-      prom.id = questionnaireFHIRID;
-      prom.encounter.reference = encounterFHIRID;
+      prom.id = questionnaireFHIRID
+      prom.encounter.reference = `Encounter/${encounterFHIRID}`
 
-      prom.item[0].answer = this.answer1;
-      prom.item[1].answer = this.answer2;
-      prom.item[2].answer = this.answer3;
-      prom.item[3].answer = this.answer4;
-      prom.item[4].answer = this.answer5;
-      prom.item[5].answer = this.answer6;
-      prom.item[6].answer = this.answer7;
-      prom.item[7].answer = this.answer8;
-      prom.item[8].answer = this.answer9;
-      prom.item[9].answer = this.answer10;
+      prom.item[0].answer = this.answer1
+      prom.item[1].answer = this.answer2
+      prom.item[2].answer = this.answer3
+      prom.item[3].answer = this.answer4
+      prom.item[4].answer = this.answer5
+      prom.item[5].answer = this.answer6
+      prom.item[6].answer = this.answer7
+      prom.item[7].answer = this.answer8
+      prom.item[8].answer = this.answer9
+      prom.item[9].answer = this.answer10
 
-      this.createEncounter(encounterFHIRID);
+      const episodeOfCare = await this.getActiveEpisodeOfCare()
+      const encounter = this.createEncounter(encounterFHIRID)
+      
+      console.log(
+        `prom: ${JSON.stringify(prom)}\n\nencounter: ${JSON.stringify(
+          encounter
+        )}\n\nepisodeOfCare: ${JSON.stringify(
+          episodeOfCare
+        )}`
+      )
     },
-
     createEncounter(encounterFHIRID) {
-      const encounter = ENCOUNTER;
+      const encounter = ENCOUNTER
 
-      encounter.id = encounterFHIRID;
-      encounter.episodeOfCare[0].reference = this.$midata.getEpisodeOfCareFHIRID();
+      encounter.id = encounterFHIRID
+      encounter.episodeOfCare[0].reference = `EpisodeOfCare/${this.$midata.getEpisodeOfCareFHIRID()}`
+
+      return encounter
+    },
+    async getActiveEpisodeOfCare() {
+      const activeEOC = await this.$midata.getEpisodeOfCare()
+      const episodeOfCare = activeEOC ? activeEOC : EPISODE_OF_CARE
+      console.log(`episodeOfCare: ${JSON.stringify(episodeOfCare)}`)
+      return episodeOfCare
     },
     completeBtnPressed() {
-      console.log('Button pressed: ' + String(this.answer1));
+      console.log('Button pressed')
+      this.setQuestionaire()
     },
   },
   watch: {
     answer1(value) {
-      console.log('Frage 1: ' + String(value));
+      console.log('Frage 1: ' + String(value))
     },
     answer2(value) {
-      console.log('Frage 2: ' + String(value));
+      console.log('Frage 2: ' + String(value))
     },
     answer3(value) {
-      console.log('Frage 3: ' + String(value));
+      console.log('Frage 3: ' + String(value))
     },
     answer4(value) {
-      console.log('Frage 4: ' + String(value));
+      console.log('Frage 4: ' + String(value))
     },
     answer5(value) {
-      console.log('Frage 5: ' + String(value));
+      console.log('Frage 5: ' + String(value))
     },
     answer6(value) {
-      console.log('Frage 6: ' + String(value));
+      console.log('Frage 6: ' + String(value))
     },
     answer7(value) {
-      console.log('Frage 7: ' + String(value));
+      console.log('Frage 7: ' + String(value))
     },
     answer8(value) {
-      console.log('Frage 8: ' + String(value));
+      console.log('Frage 8: ' + String(value))
     },
     answer9(value) {
-      console.log('Frage 9: ' + String(value));
+      console.log('Frage 9: ' + String(value))
     },
     answer10(value) {
-      console.log('Frage 10: ' + String(value));
+      console.log('Frage 10: ' + String(value))
     },
   },
-};
+}
 </script>
 <template>
   <q-page padding>
@@ -385,16 +404,21 @@ export default {
     </table>
     <br />
     <center>
-      <q-btn
+      <!--       <q-btn
         color="primary"
         id="completeBtn"
         label="Beenden"
         to="ende"
         size="30px"
         @click="completeBtnPressed()"
+      /> -->
+      <q-btn
+        color="primary"
+        id="completeBtn"
+        label="Beenden"
+        size="30px"
+        @click="completeBtnPressed()"
       />
     </center>
   </q-page>
-
-  }
 </template>
