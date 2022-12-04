@@ -9,7 +9,7 @@ export const EPISODE_OF_CARE=
   'id': 'id1',
   'identifier': [
     {
-      'value': '',
+      'value': 'caseID',
       'assigner': {
         'display': '',
         'reference': 'Organization/id3'

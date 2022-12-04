@@ -65,8 +65,9 @@ export default {
     },
     async getActiveEpisodeOfCare() {
       const activeEOC = await this.$midata.getEpisodeOfCare()
-      const episodeOfCare = activeEOC ? activeEOC : EPISODE_OF_CARE
+      const episodeOfCare = activeEOC ? activeEOC : this.$midata.createEpisodeOfCare()
       console.log(`episodeOfCare: ${JSON.stringify(episodeOfCare)}`)
+      // bei activeEOC status update
       return episodeOfCare
     },
     completeBtnPressed() {

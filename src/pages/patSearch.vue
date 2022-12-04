@@ -1,6 +1,7 @@
 <script>
 import { ref } from 'vue';
 import { EPISODE_OF_CARE } from 'src/data/episodeOfCare';
+import { PATIENT } from 'src/data/patient';
 
 export default {
   setup() {
@@ -52,7 +53,6 @@ export default {
       };
 
       this.$midata.setPatient(patient);
-
       return patient;
     },
 
