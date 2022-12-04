@@ -16,8 +16,6 @@ export default {
       inputEmail: ref(''),
       inputAddress: ref(''),
       showPatientList: true,
-      patientsList: ref(''),
-      registerOrProm: true,
     };
   },
   data() {
@@ -64,6 +62,7 @@ export default {
     },
 
     async enterPatient() {
+
       const patient = await this.$midata
         .getPatient(this.inputFirstName)
         .catch((e) => console.log(e)); // Search the patients in midata based on the Name surname and Birthday given in the frontend.
@@ -80,7 +79,10 @@ export default {
             patient.name[0].given[0],
             patient.name[0].family,
             patient.address[0].country,
+            null,
+            this.inputPatientId,
             this.inputCaseId,
+            true,
             patient.id
           )
         );
@@ -107,6 +109,10 @@ export default {
     registerPatient() {
       console.log('To be implemented');
     },
+
+    savePatientToStorage(item) { 
+      this.$storage.setCurrentPatient(item)
+    }
   },
 
   mounted() {
@@ -165,7 +171,7 @@ export default {
                   <div bordered separator>
                     <q-item
                       clickable
-                      v-for="item in patientsList"
+                      v-for="item in patients"
                       :key="item.familyName"
                     >
                       <q-item-section>
@@ -200,6 +206,7 @@ export default {
                           "
                           size="10px"
                           v-bind:to="item.registered ? '/prom' : 'register'"
+                          @click="savePatientToStorage(item)"
                         />
                       </q-item-section>
                       <q-item-section> </q-item-section>
@@ -300,7 +307,7 @@ export default {
                 ><h6>Möchten Sie den Patienten in die Liste aufnehmen?</h6>
                 <strong
                   >Dieser Patient muss in Midata registriert werden, bevor der
-                  PROM beantwortet werden kann.</strong
+                  Fragebogen beantwortet werden kann.</strong
                 >
 
                 <q-input v-model="inputFirstName" label="Vorname" />

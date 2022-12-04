@@ -145,7 +145,7 @@ export default class MidataService {
       this.jsOnFhir
         .search(
           'EpisodeOfCare',
-          `patient=365b187ee9ed6e1b63a90ef1&status=active`
+          `patient=365b187ee9ed6e1b63a90ef1&status=active` // Brönniman for debugging
           //`patient=${this.currentPatient.patFHIRID as string}&status=active`
         )
         .then((result) => {

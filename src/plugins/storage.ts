@@ -51,6 +51,10 @@ export default class Storage {
     }
   }
 
+  public setCurrentPatient(patientItem: any){
+    null
+  }
+
   /**
    *
    * @returns a promise:
