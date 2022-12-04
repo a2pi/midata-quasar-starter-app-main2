@@ -1,7 +1,7 @@
 <script >
 import { PROM } from '../data/promData'
 import { ENCOUNTER } from '../data/encounter'
-import { EPISODE_OF_CARE } from 'src/data/episodeOfCare'
+//import { EPISODE_OF_CARE } from 'src/data/episodeOfCare'
 
 export default {
   name: 'Prom',
@@ -18,6 +18,7 @@ export default {
       answer8: Number,
       answer9: Number,
       answer10: Number,
+      patient : this.$storage.getPatient()
     }
   },
   setup() {
@@ -45,26 +46,26 @@ export default {
       prom.item[9].answer = this.answer10
 
       const episodeOfCare = await this.getActiveEpisodeOfCare()
-      const encounter = this.createEncounter(encounterFHIRID)
+      const encounter = this.createEncounter(encounterFHIRID, episodeOfCare.id)
       
       console.log(
         `prom: ${JSON.stringify(prom)}\n\nencounter: ${JSON.stringify(
           encounter
         )}\n\nepisodeOfCare: ${JSON.stringify(
           episodeOfCare
-        )}`
+        )}\n\nPatient: ${this.$storage.getPatient()}`
       )
     },
-    createEncounter(encounterFHIRID) {
+    createEncounter(encounterFHIRID, episodeOfCareFHIRID) {
       const encounter = ENCOUNTER
 
       encounter.id = encounterFHIRID
-      encounter.episodeOfCare[0].reference = `EpisodeOfCare/${this.$midata.getEpisodeOfCareFHIRID()}`
+      encounter.episodeOfCare[0].reference = `EpisodeOfCare/${episodeOfCareFHIRID}`
 
       return encounter
     },
     async getActiveEpisodeOfCare() {
-      const activeEOC = await this.$midata.getEpisodeOfCare()
+      const activeEOC = await this.$midata.getEpisodeOfCare(this.patient.id)
       const episodeOfCare = activeEOC ? activeEOC : this.$midata.createEpisodeOfCare()
       console.log(`episodeOfCare: ${JSON.stringify(episodeOfCare)}`)
       // bei activeEOC status update

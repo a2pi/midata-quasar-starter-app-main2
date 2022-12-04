@@ -140,13 +140,13 @@ export default class MidataService {
     return
   }
 
-  public getEpisodeOfCare(): Promise<EpisodeOfCare> {
+  public getEpisodeOfCare(patientFhirID: string): Promise<EpisodeOfCare> {
     return new Promise((resolve, reject) => {
       this.jsOnFhir
         .search(
           'EpisodeOfCare',
-          `patient=365b187ee9ed6e1b63a90ef1&status=active` // Brönniman for debugging
-          //`patient=${this.currentPatient.patFHIRID as string}&status=active`
+          //`patient=365b187ee9ed6e1b63a90ef1&status=active` // Brönniman for debugging
+          `patient=${ patientFhirID }&status=active`
         )
         .then((result) => {
           const episodeBundle = result as Bundle
@@ -169,11 +169,6 @@ export default class MidataService {
     episodeOfCare.identifier[0].assigner.reference =
       'Organization/63777a87ab51910677069bfe' // would be solved with this.getOrganization() but it isnt possible to reference an organization to a practicioner in midata, which is why its simulated here
     return episodeOfCare
-  }
-
-
-  public getEpisodeOfCareFHIRID() {
-    return this.fhirCaseID
   }
 
   public makeid(length: number) {

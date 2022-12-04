@@ -1,7 +1,5 @@
 <script>
 import { ref } from 'vue';
-import { EPISODE_OF_CARE } from 'src/data/episodeOfCare';
-import { PATIENT } from 'src/data/patient';
 
 export default {
   setup() {
@@ -34,7 +32,7 @@ export default {
     createPatient(
       firstName,
       familyName,
-      adress,
+      address,
       birthdate,
       patID,
       caseID,
@@ -44,15 +42,13 @@ export default {
       const patient = {
         firstName: firstName,
         familyName: familyName,
-        adress: adress,
+        address: address,
         birthdate: birthdate,
         patID: patID,
         caseID: caseID,
         registered: registered,
         patFHIRID: fhirID,
       };
-
-      this.$midata.setPatient(patient);
       return patient;
     },
 
@@ -66,7 +62,7 @@ export default {
       const patient = await this.$midata
         .getPatient(this.inputFirstName)
         .catch((e) => console.log(e)); // Search the patients in midata based on the Name surname and Birthday given in the frontend.
-
+      console.log(`Patient ID: ${patient.id}`);
       if (!patient) {
         console.log('NO Patient was found by running getPatient()');
         this.foundFlag = false;
@@ -79,7 +75,7 @@ export default {
             patient.name[0].given[0],
             patient.name[0].family,
             patient.address[0].country,
-            null,
+            this.inputBirthday,
             this.inputPatientId,
             this.inputCaseId,
             true,
@@ -99,18 +95,19 @@ export default {
       }
     },
 
-    getActiveEpisodeOfCare(caseID) {
+    /* getActiveEpisodeOfCare(caseID) {
       const activeEOC = this.$midata.getEpisodeOfCare(caseID);
       const episodeOfCare = activeEOC ? activeEOC : EPISODE_OF_CARE;
       console.log(`episodeOfCare: ${JSON.stringify(episodeOfCare)}`);
       return episodeOfCare;
-    },
+    }, */
 
     registerPatient() {
       console.log('To be implemented');
     },
 
     savePatientToStorage(item) { 
+      console.log(`Patient: ${item}`);
       this.$storage.setCurrentPatient(item)
     }
   },
@@ -131,17 +128,16 @@ export default {
       <H2>Patient Search</H2>
       <q-btn color="primary" label="Login" to="/login" />
       <q-btn color="primary" label="LogOut" @click="logout()" />
-      <q-btn
+<!--       <q-btn
         color="primary"
         label="Episode of care status"
         @click="getActiveEpisodeOfCare()"
       />
-      <!-- <q-btn color='primary' label='Get Patient' @click='getPatient()' /> -->
       <q-btn
         color="primary"
         label="Get Episode of Care"
         @click="getActiveEpisodeOfCare()"
-      />
+      /> -->
 
       <div class="q-pa-md" style="max-width: 700px">
         <table width="100%" border="0">

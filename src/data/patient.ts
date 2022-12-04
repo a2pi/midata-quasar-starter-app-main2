@@ -1,24 +1,24 @@
 export const PATIENT = {
-    "resourceType": "Patient",
-    "id": "FHIR ID (generated)",
-    "identifier": [
+    'resourceType': 'Patient',
+    'id': 'FHIR ID (generated)',
+    'identifier': [
         {
-            "value": "Patienten ID"
+            'value': 'Patienten ID'
         }
     ],
-    "name": [
+    'name': [
         {
-            "family": "",
-            "given": [
-                ""
+            'family': '',
+            'given': [
+                ''
             ]
         }
     ],
-    "gender": "",
-    "address": [
+    'gender': '',
+    'address': [
         {
-            "country": "Switzerland"
+            'country': 'Switzerland'
         }
     ],
-    "birthDate": "YYYY"
+    'birthDate': 'YYYY'
 }

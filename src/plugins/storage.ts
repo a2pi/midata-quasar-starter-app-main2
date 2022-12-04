@@ -9,6 +9,16 @@ import { Notify } from 'quasar';
 
 const STORAGE_KEY = 'demo-app-storage';
 
+type patient = {
+  firstName: string,
+  familyName: string,
+  address: string,
+  birthdate: string,
+  patID: string,
+  caseID: string,
+  registered: string,
+  patFHIRID: string
+}
 
 
 export default class Storage {
@@ -17,8 +27,6 @@ export default class Storage {
   private patientResource = {} as Patient;
   private practitionerResource = {} as Practitioner;
   private currentObservation = {} as Observation;
-  
-  
 
   midata: MidataService;
 
@@ -51,8 +59,16 @@ export default class Storage {
     }
   }
 
-  public setCurrentPatient(patientItem: any){
-    null
+  public setCurrentPatient(currentPatient: patient) {
+    console.log(`Patient: ${currentPatient.patFHIRID}\n         ${currentPatient.address}\n         ${currentPatient.patID}\n         ${currentPatient.familyName}\n         ${currentPatient.firstName}\n`);
+    
+    this.patientResource.id = currentPatient.patFHIRID
+    this.patientResource.address[0].country = currentPatient.address
+    this.patientResource.identifier[0].value = currentPatient.patID
+    this.patientResource.name[0].family = currentPatient.familyName
+    this.patientResource.name[0].given[0] = currentPatient.firstName
+
+    console.log(`Patientenresource: ${JSON.stringify(this.patientResource)}`);
   }
 
   /**
