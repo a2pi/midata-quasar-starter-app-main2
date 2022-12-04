@@ -150,9 +150,9 @@ export default class MidataService {
         )
         .then((result) => {
           const episodeBundle = result as Bundle
-           (episodeBundle.entry?.length !== undefined && episodeBundle.entry?.length > 0 && episodeBundle.entry[0].resource)
-             ? resolve(episodeBundle.entry[0].resource as EpisodeOfCare)
-             : reject('No entry in EpisodeOfCare bundle found!')
+          (episodeBundle.entry?.length !== undefined && episodeBundle.entry?.length > 0 && episodeBundle.entry[0].resource)
+            ? resolve(episodeBundle.entry[0].resource as EpisodeOfCare)
+            : reject('No entry in EpisodeOfCare bundle found!')
           console.log(episodeBundle)
         })
         .catch((error) => reject(error))
@@ -168,6 +168,7 @@ export default class MidataService {
     episodeOfCare.identifier[0].assigner.display = 'Reha Bern AG'
     episodeOfCare.identifier[0].assigner.reference =
       'Organization/63777a87ab51910677069bfe' // would be solved with this.getOrganization() but it isnt possible to reference an organization to a practicioner in midata, which is why its simulated here
+    return episodeOfCare
   }
 
 
