@@ -26,15 +26,9 @@ export default {
 
   computed: {},
   methods: {
-    printPatients() {
-      console.log('this is patients[]');
-      console.log(this.patients);
-    },
-
     removeLastEntry() {
       this.patients.pop();
       localStorage.setItem('patientsArray', JSON.stringify(this.patients));
-
     },
     createPatient(
       firstName,
@@ -44,7 +38,8 @@ export default {
       patID,
       caseID,
       registered,
-      fhirID
+      fhirID,
+      questionnaireCompletedFlag
     ) {
       const patient = {
         firstName: firstName,
@@ -55,6 +50,7 @@ export default {
         caseID: caseID,
         registered: registered,
         patFHIRID: fhirID,
+        questionnaireCompletedFlag: questionnaireCompletedFlag,
       };
       return patient;
     },
@@ -83,10 +79,10 @@ export default {
               e.identifier[0].value,
               this.inputCaseId,
               false,
-              '66666666666'
+              '66666666666',
+              false
             )
           );
-          console.log(this.patients);
         });
 
       // console.log(`Patient ID: ${patient.id}`);
@@ -102,19 +98,16 @@ export default {
               this.inputPatientId,
               this.inputCaseId,
               true,
-              patient.id
+              patient.id,
+              false
             )
           );
-
 
           // this.$storage.setItem('patientsArray', stringifiedPatArray)
         } else {
           console.log('Bundle not delivered. no patient added to patients[]');
         }
       }
-
-        localStorage.setItem('patientsArray', JSON.stringify(this.patients));
-
     },
 
     /* getActiveEpisodeOfCare(caseID) {
@@ -129,9 +122,19 @@ export default {
     },
 
     savePatientToStorage(item) {
-      this.$storage.setCurrentPatient(item)
-      this.$midata.setCaseID(item.caseID)
-    }
+      this.$storage.setCurrentPatient(item);
+      this.$midata.setCaseID(item.caseID);
+
+      const patientIndex = this.patients.findIndex((patient) => {
+        return patient.firstName === item.firstName;
+      });
+
+      if (patientIndex !== -1) {
+        this.patients[patientIndex].questionnaireCompletedFlag = true;
+      }
+
+      localStorage.setItem('patientsArray', JSON.stringify(this.patients));
+    },
   },
 
   mounted() {
@@ -143,13 +146,10 @@ export default {
 
     const stringifiedPatients = localStorage.getItem('patientsArray');
 
-    if(stringifiedPatients!=null){
-    this.patients = JSON.parse(stringifiedPatients);
+    if (stringifiedPatients != null) {
+      this.patients = JSON.parse(stringifiedPatients);
     }
-    console.log('This is patients[] loaded from LocalStorage');
-    console.log(this.patients);
   },
-
 };
 </script>
 
@@ -157,20 +157,6 @@ export default {
   <q-page padding>
     <div>
       <H2>Patient Search</H2>
-      <q-btn color="primary" label="Login" to="/login" />
-      <q-btn color="primary" label="LogOut" @click="logout()" />
-      <q-btn color="primary" label="patients[]" @click="printPatients" />
-      <!--       <q-btn
-        color="primary"
-        label="Episode of care status"
-        @click="getActiveEpisodeOfCare()"
-      />
-      <q-btn
-        color="primary"
-        label="Get Episode of Care"
-        @click="getActiveEpisodeOfCare()"
-      /> -->
-
       <div class="q-pa-md" style="max-width: 700px">
         <table width="100%" border="0">
           <tr>
@@ -189,7 +175,7 @@ export default {
 
             <td rowspan="6" width="100%">
               <div class="q-pa-md" style="max-width: 400px">
-                <!-- -------------------------------------------------------------------------------------------- -->
+                <!--  List of Patients ----------------------------------------------------------------- -->
 
                 <div
                   class="q-pa-md"
@@ -217,6 +203,10 @@ export default {
                         <q-item-label>
                           {{ item.caseID }}
                         </q-item-label>
+                        <q-item-label overline> Completed? </q-item-label>
+                        <q-item-label>
+                          {{ item.questionnaireCompletedFlag }}
+                        </q-item-label>
                       </q-item-section>
 
                       <q-item-section>
@@ -243,8 +233,8 @@ export default {
                     size="10px"
                     @click="removeLastEntry()"
                   />
-                  <!-- -------------------------------------------------------------------------------------------- -->
                 </div>
+                <!-- -------------------------------------------------------------------------------------------- -->
               </div>
             </td>
           </tr>
@@ -323,66 +313,6 @@ export default {
             </td>
           </tr>
         </table>
-        <!-- here is the Dialog that will appear if the patient was not found -->
-        <q-dialog v-model="showNotFoundDialog" persistent>
-          <q-card>
-            <q-card-section class="row items-center">
-              <span class="q-ml-sm"
-                ><h6>Möchten Sie den Patienten in die Liste aufnehmen?</h6>
-                <strong
-                  >Dieser Patient muss in Midata registriert werden, bevor der
-                  Fragebogen beantwortet werden kann.</strong
-                >
-
-                <q-input v-model="inputFirstName" label="Vorname" />
-                <q-input v-model="inputSurName" label="Nachname" />
-                <q-input v-model="inputAddress" label="Adresse" />
-                <q-input v-model="inputPlz" label="PLZ" />
-                <q-input v-model="inputOrt" label="ORT" />
-                <q-input v-model="inputEmail" label="E-mail" />
-                <q-input
-                  outlined
-                  v-model="inputBirthday"
-                  mask="date"
-                  :rules="['date']"
-                >
-                  <template v-slot:append>
-                    <q-icon name="event" class="cursor-pointer">
-                      <q-popup-proxy
-                        cover
-                        transition-show="scale"
-                        transition-hide="scale"
-                      >
-                        <q-date v-model="inputBirthday">
-                          <div class="row items-center justify-end">
-                            <q-btn
-                              v-close-popup
-                              label="Close"
-                              color="primary"
-                              flat
-                            />
-                          </div>
-                        </q-date>
-                      </q-popup-proxy>
-                    </q-icon>
-                  </template>
-                </q-input>
-                <q-input v-model="inputPatientId" label="Patient ID" />
-                <q-input v-model="inputCaseId" label="Fall ID" />
-              </span>
-            </q-card-section>
-            <q-card-actions align="right">
-              <q-btn flat label="Cancel" color="primary" v-close-popup />
-              <q-btn
-                flat
-                label="In der Liste aufnehmen"
-                color="primary"
-                @click="registerPatient()"
-                v-close-popup
-              />
-            </q-card-actions>
-          </q-card>
-        </q-dialog>
 
         <q-btn color="primary" label="Erfassen" @click="enterPatient()" />
       </div>

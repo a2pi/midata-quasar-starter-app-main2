@@ -71,6 +71,7 @@ export default {
 
       this.$midata.createEncounterMidata(encounter);
       this.$midata.createQuestionnaireResponseMidata(questionnaireResponse);
+
     },
     createEncounter(encounterFHIRID, episodeOfCareFHIRID) {
       const encounter = ENCOUNTER;
