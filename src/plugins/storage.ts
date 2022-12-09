@@ -60,11 +60,7 @@ export default class Storage {
     }
   }
 
-
-
   public setCurrentPatient(currentPatient: PatientObject) {
-    console.log(`Patient: ${currentPatient.patFHIRID}\nAddress: ${currentPatient.address}\nPatID: ${currentPatient.patID}\nFamilyName: ${currentPatient.familyName}\nFirstNAme: ${currentPatient.firstName}\nCaseID: ${currentPatient.caseID}\n`);
-
     this.patientResource.id = currentPatient.patFHIRID
     this.patientResource.address[0].country = currentPatient.address
     this.patientResource.identifier[0].value = currentPatient.patID
@@ -72,6 +68,8 @@ export default class Storage {
     this.patientResource.name[0].given[0] = currentPatient.firstName
     console.log(`Patientenresource: ${JSON.stringify(this.patientResource)}`);
   }
+
+
 
   /**
    *

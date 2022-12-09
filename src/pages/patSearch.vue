@@ -26,8 +26,15 @@ export default {
 
   computed: {},
   methods: {
+    printPatients() {
+      console.log('this is patients[]');
+      console.log(this.patients);
+    },
+
     removeLastEntry() {
       this.patients.pop();
+      localStorage.setItem('patientsArray', JSON.stringify(this.patients));
+
     },
     createPatient(
       firstName,
@@ -58,40 +65,56 @@ export default {
     },
 
     async enterPatient() {
-
       const patient = await this.$midata
-        .getPatient(this.inputFirstName)
-        .catch((e) => console.log(e));
-      if (!patient) {
-        console.log('NO Patient was found by running getPatient()');
-        this.foundFlag = false;
-      } else {
-        console.log('Patient found:');
-        console.log(patient);
-        this.foundFlag = true;
-        this.patients.push(
-          this.createPatient(
-            patient.name[0].given[0],
-            patient.name[0].family,
-            patient.address[0].country,
-            this.inputBirthday,
-            this.inputPatientId,
-            this.inputCaseId,
-            true,
-            patient.id
-          )
-        );
+        .getPatient(this.inputFirstName) // Search the patients in midata based on the Name surname and Birthday given in the frontend.
+        .catch((e) => {
+          e.name[0].given[0] = this.inputFirstName;
+          e.name[0].family = this.inputSurName;
+          e.address[0].country = 'CH';
+          e.birthDate = this.inputBirthday;
+          e.identifier[0].value = this.inputPatientId;
+
+          this.patients.push(
+            this.createPatient(
+              e.name[0].given[0],
+              e.name[0].family,
+              e.address[0].country,
+              e.birthDate,
+              e.identifier[0].value,
+              this.inputCaseId,
+              false,
+              '66666666666'
+            )
+          );
+          console.log(this.patients);
+        });
+
+      // console.log(`Patient ID: ${patient.id}`);
+      if (patient) {
+        if (patient.name[0].given == this.inputFirstName) {
+          this.foundFlag = true;
+          this.patients.push(
+            this.createPatient(
+              patient.name[0].given[0],
+              patient.name[0].family,
+              patient.address[0].country,
+              this.inputBirthday,
+              this.inputPatientId,
+              this.inputCaseId,
+              true,
+              patient.id
+            )
+          );
+
+
+          // this.$storage.setItem('patientsArray', stringifiedPatArray)
+        } else {
+          console.log('Bundle not delivered. no patient added to patients[]');
+        }
       }
 
-      if (this.foundFlag) {
-        //showpatients controlled the v-show in the html
-        this.showNotFoundDialog = false;
-        console.log('Array with all the founded patients: ');
-        console.log(this.patients);
-      } else {
-        this.showNotFoundDialog = true;
-        console.log('Patient not found');
-      }
+        localStorage.setItem('patientsArray', JSON.stringify(this.patients));
+
     },
 
     /* getActiveEpisodeOfCare(caseID) {
@@ -117,6 +140,14 @@ export default {
       practitionerResource?.name[0]?.family,
       practitionerResource?.name[0]?.given[0],
     ].join(' ');
+
+    const stringifiedPatients = localStorage.getItem('patientsArray');
+
+    if(stringifiedPatients!=null){
+    this.patients = JSON.parse(stringifiedPatients);
+    }
+    console.log('This is patients[] loaded from LocalStorage');
+    console.log(this.patients);
   },
 
 };
@@ -128,7 +159,8 @@ export default {
       <H2>Patient Search</H2>
       <q-btn color="primary" label="Login" to="/login" />
       <q-btn color="primary" label="LogOut" @click="logout()" />
-<!--       <q-btn
+      <q-btn color="primary" label="patients[]" @click="printPatients" />
+      <!--       <q-btn
         color="primary"
         label="Episode of care status"
         @click="getActiveEpisodeOfCare()"
@@ -185,10 +217,6 @@ export default {
                         <q-item-label>
                           {{ item.caseID }}
                         </q-item-label>
-
-                        <q-item-label>
-                          <div id="link"></div>
-                        </q-item-label>
                       </q-item-section>
 
                       <q-item-section>
@@ -201,7 +229,7 @@ export default {
                               : 'Pat. registrieren'
                           "
                           size="10px"
-                          v-bind:to="item.registered ? '/prom' : 'register'"
+                          v-bind:to="item.registered ? '/prom' : 'patfile'"
                           @click="savePatientToStorage(item)"
                         />
                       </q-item-section>
