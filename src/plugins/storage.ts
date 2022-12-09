@@ -6,6 +6,8 @@ import {
   Practitioner,
 } from '@i4mi/fhir_r4';
 import { Notify } from 'quasar';
+import { PATIENT } from 'src/data/patient';
+
 
 const STORAGE_KEY = 'demo-app-storage';
 
@@ -24,7 +26,7 @@ type patient = {
 export default class Storage {
   private currentLanguage = 'de';
   private observations = new Array<Observation>();
-  private patientResource = {} as Patient;
+  private patientResource = PATIENT as Patient;
   private practitionerResource = {} as Practitioner;
   private currentObservation = {} as Observation;
 
@@ -61,7 +63,7 @@ export default class Storage {
 
   public setCurrentPatient(currentPatient: patient) {
     console.log(`Patient: ${currentPatient.patFHIRID}\n         ${currentPatient.address}\n         ${currentPatient.patID}\n         ${currentPatient.familyName}\n         ${currentPatient.firstName}\n`);
-    
+
     this.patientResource.id = currentPatient.patFHIRID
     this.patientResource.address[0].country = currentPatient.address
     this.patientResource.identifier[0].value = currentPatient.patID
@@ -70,6 +72,8 @@ export default class Storage {
 
     console.log(`Patientenresource: ${JSON.stringify(this.patientResource)}`);
   }
+
+  
 
   /**
    *

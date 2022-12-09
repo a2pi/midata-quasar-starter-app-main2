@@ -9,16 +9,22 @@ import {
   Organization,
 } from '@i4mi/fhir_r4'
 import { EPISODE_OF_CARE } from '../data/episodeOfCare'
+import {PATIENT} from '../data/patient'
+
+
 
 import moment from 'moment'
 
 // import moment library. More information under https://momentjs.com
 const now = moment()
 
+
+
 export default class MidataService {
   jsOnFhir: JSOnFhir
   currentPatient: Record<string, unknown>
   fhirCaseID: string
+  currentCaseID: string
 
   constructor() {
     this.jsOnFhir = new JSOnFhir(
@@ -92,25 +98,43 @@ export default class MidataService {
     })
   }
 
+
+  // Compleat this method setting the paramethers to the same value of the InputFileds on the patSearch and you will be able to set new Patients to the patienst array
+  // setNFP PatientsArray(this: void, name?:string, family?:string, identifier?:string,gender?:string,country?:string,){
+  //  const newPatient= NFPATIENT;
+  //  newPatient.name[0].given[0]= name
+  //  newPatient.name[0].family=family
+  //  newPatient.identifier[0].value = identifier
+  //  newPatient.gender=gender
+  //  newPatient.address[0].country=country
+  //  return newPatient
+  // }
+
+
+
   /**
    * Gets the patient resource from the fhir endpoint.
    * @returns patient resource as JSON
    */
   public getPatient(name: string): Promise<Patient> {
+
     return new Promise((resolve, reject) => {
       this.jsOnFhir
         .search('Patient', `name=${name}`)
         .then((result) => {
+          const notFoundPatient = PATIENT
           const patientBundle = result as Bundle
-          patientBundle.entry?.length !== undefined &&
-            patientBundle.entry?.length > 0 &&
-            patientBundle.entry[0].resource
+          patientBundle.entry?.length !== undefined && patientBundle.entry?.length > 0
             ? resolve(patientBundle.entry[0].resource as Patient)
-            : reject('No entry in patient bundle found!')
+            // : reject('No entry in patient bundle found!')
+            : reject(notFoundPatient as Patient)
         })
         .catch((error) => reject(error))
+       2
     })
+
   }
+
 
   /**
    * Gets the patient resource from the fhir endpoint.
@@ -134,6 +158,12 @@ export default class MidataService {
 
   public getPatientName() {
     return this.currentPatient.name
+  }
+  public setCaseID(caseID: string){
+    this.currentCaseID = caseID
+  }
+  public getCaseID(){
+    return this.currentCaseID
   }
 
   public getPatientFHIRID() {

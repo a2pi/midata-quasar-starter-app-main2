@@ -20,5 +20,12 @@ export const PATIENT = {
             'country': 'Switzerland'
         }
     ],
-    'birthDate': 'YYYY'
+    'birthDate': 'YYYY',
+    'telecom': [
+        {
+          'system': 'email',
+          'value': '',
+        
+        }
+      ],
 }
