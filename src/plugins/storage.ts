@@ -73,6 +73,8 @@ export default class Storage {
     console.log(`Patientenresource: ${JSON.stringify(this.patientResource)}`);
   }
 
+  
+
   /**
    *
    * @returns a promise:

@@ -24,6 +24,7 @@ export default class MidataService {
   jsOnFhir: JSOnFhir
   currentPatient: Record<string, unknown>
   fhirCaseID: string
+  currentCaseID: string
 
   constructor() {
     this.jsOnFhir = new JSOnFhir(
@@ -99,7 +100,7 @@ export default class MidataService {
 
 
   // Compleat this method setting the paramethers to the same value of the InputFileds on the patSearch and you will be able to set new Patients to the patienst array
-  // setNFPtoPatientsArray(this: void, name?:string, family?:string, identifier?:string,gender?:string,country?:string,){
+  // setNFP PatientsArray(this: void, name?:string, family?:string, identifier?:string,gender?:string,country?:string,){
   //  const newPatient= NFPATIENT;
   //  newPatient.name[0].given[0]= name
   //  newPatient.name[0].family=family
@@ -135,9 +136,6 @@ export default class MidataService {
   }
 
 
-
-
-
   /**
    * Gets the patient resource from the fhir endpoint.
    * @returns patient resource as JSON
@@ -160,6 +158,12 @@ export default class MidataService {
 
   public getPatientName() {
     return this.currentPatient.name
+  }
+  public setCaseID(caseID: string){
+    this.currentCaseID = caseID
+  }
+  public getCaseID(){
+    return this.currentCaseID
   }
 
   public getPatientFHIRID() {

@@ -420,6 +420,7 @@ export default {
         id="completeBtn"
         label="Beenden"
         size="30px"
+        to='/search'
         @click="completeBtnPressed()"
       />
     </center>
