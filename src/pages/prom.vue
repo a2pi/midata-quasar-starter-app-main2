@@ -19,6 +19,7 @@ export default {
       answer9: Number,
       answer10: Number,
       patient : this.$storage.getPatient()
+
     }
   },
   setup() {
@@ -47,7 +48,7 @@ export default {
 
       const episodeOfCare = await this.getActiveEpisodeOfCare()
       const encounter = this.createEncounter(encounterFHIRID, episodeOfCare.id)
-      
+
       console.log(
         `prom: ${JSON.stringify(prom)}\n\nencounter: ${JSON.stringify(
           encounter

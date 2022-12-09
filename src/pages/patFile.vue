@@ -12,6 +12,17 @@
           </td>
         </tr>
         <tr>
+          <td colspan=2>
+            <div class="q-gutter-sm">
+      <q-radio v-model="m" val="line" label="Mänlich" />
+      <q-radio v-model= "f" val="rectangle" label="Weiblich" />
+      <q-radio v-model="o" val="ellipse" label="Andere" />
+
+    </div>
+          </td>
+
+        </tr>
+        <tr>
           <td class="col_">
             <q-input outlined v-model="email" label="email" />
           </td>
@@ -39,6 +50,8 @@
 <script>
 import { ref } from 'vue';
 
+
+
 export default {
   // name: 'PageName',
   setup() {
@@ -51,9 +64,26 @@ export default {
       email: ref(''),
       geburtsdatum: ref(''),
       text: ref(''),
-      ph: ref(''),
-      dense: ref(false),
+
     };
   },
+  data() {
+    return {
+      patient : this.$storage.getPatient()
+
+    }
+  },
+
+  mounted(){
+    this.patientName = this.patient.name[0].given[0]
+    this.nachName = this.patient.name[0].family
+    this.Addresse = this.patient.address[0].country
+    this.Patient_ID = this.patient.Patient_ID
+    this.Case_ID = this.patient.Case_ID
+    this.geburtsdatum =this.patient.birthDate
+
+
+
+  }
 };
 </script>
