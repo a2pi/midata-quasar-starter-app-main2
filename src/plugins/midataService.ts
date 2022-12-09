@@ -7,6 +7,8 @@ import {
   Practitioner,
   EpisodeOfCare,
   Organization,
+  Encounter,
+  QuestionnaireResponse,
 } from '@i4mi/fhir_r4'
 import { EPISODE_OF_CARE } from '../data/episodeOfCare'
 
@@ -19,6 +21,7 @@ export default class MidataService {
   jsOnFhir: JSOnFhir
   currentPatient: Record<string, unknown>
   fhirCaseID: string
+  currentCaseID: string
 
   constructor() {
     this.jsOnFhir = new JSOnFhir(
@@ -69,9 +72,6 @@ export default class MidataService {
     return this.jsOnFhir.handleAuthResponse()
   }
 
-  public setPatient(patient: Record<string, unknown>) {
-    this.currentPatient = patient
-  }
   /**
    * Gets the Practitioner resource from the fhir endpoint.
    * @returns Practitioner resource as JSON
@@ -83,8 +83,8 @@ export default class MidataService {
         .then((result) => {
           const practitionerBundle = result as Bundle
           practitionerBundle.entry?.length !== undefined &&
-            practitionerBundle.entry?.length > 0 &&
-            practitionerBundle.entry[0].resource
+          practitionerBundle.entry?.length > 0 &&
+          practitionerBundle.entry[0].resource
             ? resolve(practitionerBundle.entry[0].resource as Practitioner)
             : reject('No entry in Practitioner bundle found!')
         })
@@ -103,8 +103,8 @@ export default class MidataService {
         .then((result) => {
           const patientBundle = result as Bundle
           patientBundle.entry?.length !== undefined &&
-            patientBundle.entry?.length > 0 &&
-            patientBundle.entry[0].resource
+          patientBundle.entry?.length > 0 &&
+          patientBundle.entry[0].resource
             ? resolve(patientBundle.entry[0].resource as Patient)
             : reject('No entry in patient bundle found!')
         })
@@ -123,21 +123,13 @@ export default class MidataService {
         .then((result) => {
           const patientBundle = result as Bundle
           patientBundle.entry?.length !== undefined &&
-            patientBundle.entry?.length > 0 &&
-            patientBundle.entry[0].resource
+          patientBundle.entry?.length > 0 &&
+          patientBundle.entry[0].resource
             ? resolve(patientBundle.entry.map((x) => x.resource as Patient))
             : reject('No entry in patient bundle found!')
         })
         .catch((error) => reject(error))
     })
-  }
-
-  public getPatientName() {
-    return this.currentPatient.name
-  }
-
-  public getPatientFHIRID() {
-    return
   }
 
   public getEpisodeOfCare(patientFhirID: string): Promise<EpisodeOfCare> {
@@ -146,11 +138,13 @@ export default class MidataService {
         .search(
           'EpisodeOfCare',
           //`patient=365b187ee9ed6e1b63a90ef1&status=active` // Brönniman for debugging
-          `patient=${ patientFhirID }&status=active`
+          `patient=${patientFhirID}&status=active`
         )
         .then((result) => {
           const episodeBundle = result as Bundle
-          (episodeBundle.entry?.length !== undefined && episodeBundle.entry?.length > 0 && episodeBundle.entry[0].resource)
+          episodeBundle.entry?.length !== undefined &&
+          episodeBundle.entry?.length > 0 &&
+          episodeBundle.entry[0].resource
             ? resolve(episodeBundle.entry[0].resource as EpisodeOfCare)
             : reject('No entry in EpisodeOfCare bundle found!')
           console.log(episodeBundle)
@@ -159,23 +153,108 @@ export default class MidataService {
     })
   }
 
-  public createEpisodeOfCare() {
+  public setCaseID(caseID: string) {
+    this.currentCaseID = caseID
+  }
+
+  public getCaseID() {
+    return this.currentCaseID
+  }
+
+  public getNewEpisodeOfCare() {
     const episodeOfCare = EPISODE_OF_CARE
     this.fhirCaseID = this.makeid(12)
-
+    episodeOfCare.status = 'planned'
     episodeOfCare.id = this.fhirCaseID
-    episodeOfCare.identifier[0].value = this.currentPatient.caseID as string
+    episodeOfCare.identifier[0].value = this.currentCaseID
+
+    // would be solved with this.getOrganization() but it isnt possible to reference an organization to a practicioner in midata, which is why its simulated here
     episodeOfCare.identifier[0].assigner.display = 'Reha Bern AG'
     episodeOfCare.identifier[0].assigner.reference =
-      'Organization/63777a87ab51910677069bfe' // would be solved with this.getOrganization() but it isnt possible to reference an organization to a practicioner in midata, which is why its simulated here
+      'Organization/63777a87ab51910677069bfe'
     return episodeOfCare
   }
 
+  /**
+   * Creates a episodeOfCare resource on the fhir server
+   * @returns a promise:
+   *              - if successfull -> response with the created resource as JSON
+   *              - if not successfull -> error message
+   */
+  public createEpisodeOfCareMidata(
+    episodeOfCare: EpisodeOfCare
+  ): Promise<EpisodeOfCare> {
+    return new Promise((resolve, reject) => {
+      this.jsOnFhir
+        .create(episodeOfCare)
+        .then((result) => {
+          result ? resolve(result as EpisodeOfCare) : reject('Couldn\'t create Episode of Care! Check the logs!')
+        })
+        .catch((error) => reject(error))
+    })
+  }
+  /**
+   * Creates a episodeOfCare resource on the fhir server
+   * @returns a promise:
+   *              - if successfull -> response with the created resource as JSON
+   *              - if not successfull -> error message
+   */
+  public updateEpisodeOfCareMidata(
+    episodeOfCare: EpisodeOfCare
+  ): Promise<EpisodeOfCare> {
+    return new Promise((resolve, reject) => {
+      this.jsOnFhir
+        .update(episodeOfCare)
+        .then((result) => {
+          result ? resolve(result as EpisodeOfCare) : reject('Couldn\'t update Episode of Care! Check the logs!')
+        })
+        .catch((error) => reject(error))
+    })
+  }
+
+    /**
+   * Creates a episodeOfCare resource on the fhir server
+   * @returns a promise:
+   *              - if successfull -> response with the created resource as JSON
+   *              - if not successfull -> error message
+   */
+     public createEncounterMidata(
+      encounter: Encounter
+    ): Promise<Encounter> {
+      return new Promise((resolve, reject) => {
+        this.jsOnFhir
+          .create(encounter)
+          .then((result) => {
+            result ? resolve(result as Encounter) : reject('Couldn\'t create Encounter! Check the logs!')
+          })
+          .catch((error) => reject(error))
+      })
+    }
+
+      /**
+   * Creates a episodeOfCare resource on the fhir server
+   * @returns a promise:
+   *              - if successfull -> response with the created resource as JSON
+   *              - if not successfull -> error message
+   */
+  public createQuestionnaireResponseMidata(
+    questionnaireResponse: QuestionnaireResponse
+  ): Promise<QuestionnaireResponse> {
+
+    return new Promise((resolve, reject) => {
+      this.jsOnFhir
+        .create(questionnaireResponse)
+        .then((result) => {
+          result ? resolve(result as QuestionnaireResponse) : reject('Couldn\'t create QuestionnaireResponse! Check the logs!')
+        })
+        .catch((error) => reject(error))
+    })
+  }
   public makeid(length: number) {
     let result = '0'
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXZY0123456789'
     const charactersLength = characters.length
-    for (let i = 0; i < length; i++) {
+    for (let i = 0 ; i < length ; i++) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength))
     }
     return result
@@ -188,8 +267,8 @@ export default class MidataService {
         .then((result) => {
           const organizationBundle = result as Bundle
           organizationBundle.entry?.length !== undefined &&
-            organizationBundle.entry?.length > 0 &&
-            organizationBundle.entry[0].resource
+          organizationBundle.entry?.length > 0 &&
+          organizationBundle.entry[0].resource
             ? resolve(organizationBundle.entry[0].resource as Organization)
             : reject('No entry in patient bundle found!')
         })
@@ -254,9 +333,10 @@ export default class MidataService {
         .then((result) => {
           result
             ? resolve(
-              (result as Bundle).entry?.map((entry) => entry.resource as Observation) ||
-              []
-            )
+                (result as Bundle).entry?.map(
+                  (entry) => entry.resource as Observation
+                ) || []
+              )
             : reject('Error')
         })
         .catch((error) => reject(error))
@@ -316,7 +396,11 @@ export default class MidataService {
    *              - if successfull -> response with the updated resource as JSON
    *              - if not successfull -> error message
    */
-  updateObservation(_id: string, bodySite: string, value: number): Promise<Observation> {
+  updateObservation(
+    _id: string,
+    bodySite: string,
+    value: number
+  ): Promise<Observation> {
     return new Promise((resolve, reject) => {
       this.jsOnFhir
         .search('Observation/' + _id)
@@ -338,7 +422,9 @@ export default class MidataService {
               })
           } else {
             reject(
-              new Error('Invalid observation id: Observation ' + _id + ' was not found.')
+              new Error(
+                'Invalid observation id: Observation ' + _id + ' was not found.'
+              )
             )
           }
         })
@@ -365,7 +451,8 @@ export default class MidataService {
         {
           coding: [
             {
-              system: 'http://terminology.hl7.org/CodeSystem/observation-category',
+              system:
+                'http://terminology.hl7.org/CodeSystem/observation-category',
               code: 'vital-signs',
               display: 'Vital Signs',
             },

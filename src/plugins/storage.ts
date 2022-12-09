@@ -6,10 +6,11 @@ import {
   Practitioner,
 } from '@i4mi/fhir_r4';
 import { Notify } from 'quasar';
+import { PATIENT } from 'src/data/patient';
 
 const STORAGE_KEY = 'demo-app-storage';
 
-type patient = {
+type PatientObject = {
   firstName: string,
   familyName: string,
   address: string,
@@ -24,7 +25,7 @@ type patient = {
 export default class Storage {
   private currentLanguage = 'de';
   private observations = new Array<Observation>();
-  private patientResource = {} as Patient;
+  private patientResource = PATIENT as Patient;
   private practitionerResource = {} as Practitioner;
   private currentObservation = {} as Observation;
 
@@ -59,15 +60,16 @@ export default class Storage {
     }
   }
 
-  public setCurrentPatient(currentPatient: patient) {
-    console.log(`Patient: ${currentPatient.patFHIRID}\n         ${currentPatient.address}\n         ${currentPatient.patID}\n         ${currentPatient.familyName}\n         ${currentPatient.firstName}\n`);
-    
+
+
+  public setCurrentPatient(currentPatient: PatientObject) {
+    console.log(`Patient: ${currentPatient.patFHIRID}\nAddress: ${currentPatient.address}\nPatID: ${currentPatient.patID}\nFamilyName: ${currentPatient.familyName}\nFirstNAme: ${currentPatient.firstName}\nCaseID: ${currentPatient.caseID}\n`);
+
     this.patientResource.id = currentPatient.patFHIRID
     this.patientResource.address[0].country = currentPatient.address
     this.patientResource.identifier[0].value = currentPatient.patID
     this.patientResource.name[0].family = currentPatient.familyName
     this.patientResource.name[0].given[0] = currentPatient.firstName
-
     console.log(`Patientenresource: ${JSON.stringify(this.patientResource)}`);
   }
 

@@ -61,8 +61,7 @@ export default {
 
       const patient = await this.$midata
         .getPatient(this.inputFirstName)
-        .catch((e) => console.log(e)); // Search the patients in midata based on the Name surname and Birthday given in the frontend.
-      console.log(`Patient ID: ${patient.id}`);
+        .catch((e) => console.log(e));
       if (!patient) {
         console.log('NO Patient was found by running getPatient()');
         this.foundFlag = false;
@@ -106,9 +105,9 @@ export default {
       console.log('To be implemented');
     },
 
-    savePatientToStorage(item) { 
-      console.log(`Patient: ${item}`);
+    savePatientToStorage(item) {
       this.$storage.setCurrentPatient(item)
+      this.$midata.setCaseID(item.caseID)
     }
   },
 
@@ -119,6 +118,7 @@ export default {
       practitionerResource?.name[0]?.given[0],
     ].join(' ');
   },
+
 };
 </script>
 

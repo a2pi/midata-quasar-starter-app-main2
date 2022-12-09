@@ -1,7 +1,7 @@
 export const EPISODE_OF_CARE=
 {
   'resourceType': 'EpisodeOfCare',
-  'status': 'active',
+  'status': 'planned',
   'patient': {
     'display': '',
     'reference': 'Patient/id2'

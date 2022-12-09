@@ -8,5 +8,8 @@ export const ENCOUNTER=
       'display': '',
       'reference': 'EpisodeOfCare/id4'
     }
-  ]
-}
+  ],
+  'subject': {
+    'display': '',
+    'reference': 'Patient/id2'
+  }}

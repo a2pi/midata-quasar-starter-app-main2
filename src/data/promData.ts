@@ -1,4 +1,4 @@
-export const PROM=
+export const PROM =
 {
     'resourceType': 'QuestionnaireResponse',
     'id': '637288805f83d970f5ba8c53', // Dynamic generated
@@ -9,7 +9,7 @@ export const PROM=
     },
     'status': 'in-progress',
     'subject': {
-        'reference': 'Patient/6229f573ef86a8613c662197', // Here put the Patient variable DisplaName/ID
+        'reference': 'Patient/ID', // Here put the Patient variable DisplaName/ID
         'display': 'Lukas Dev'
     },
     'item': [ // here is the answers , gezt them from the arrays in the prom.vue

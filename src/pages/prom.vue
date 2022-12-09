@@ -1,6 +1,7 @@
 <script >
-import { PROM } from '../data/promData'
-import { ENCOUNTER } from '../data/encounter'
+import { PROM } from '../data/promData';
+import { ENCOUNTER } from '../data/encounter';
+
 //import { EPISODE_OF_CARE } from 'src/data/episodeOfCare'
 
 export default {
@@ -18,97 +19,117 @@ export default {
       answer8: Number,
       answer9: Number,
       answer10: Number,
-      patient : this.$storage.getPatient()
-    }
+      patient: this.$storage.getPatient(),
+    };
   },
   setup() {
-    return {}
+    return {};
   },
   methods: {
     async setQuestionaire() {
-      const prom = PROM
+      const questionnaireResponse = PROM;
 
-      const encounterFHIRID = `${this.$midata.makeid(12)}`
-      const questionnaireFHIRID = `${this.$midata.makeid(12)}`
+      const encounterFHIRID = `${this.$midata.makeid(12)}`;
+      const questionnaireFHIRID = `${this.$midata.makeid(12)}`;
 
-      prom.id = questionnaireFHIRID
-      prom.encounter.reference = `Encounter/${encounterFHIRID}`
+      questionnaireResponse.id = questionnaireFHIRID;
+      questionnaireResponse.encounter.reference = `Encounter/${encounterFHIRID}`;
+      questionnaireResponse.status = 'completed';
+      questionnaireResponse.subject.reference = `Patient/${this.patient.id}`;
+      questionnaireResponse.subject.display = `${this.patient.name[0].family} ${this.patient.name[0].given[0]}`;
+      questionnaireResponse.item[0].answer[0].valueInteger = this.answer1;
+      questionnaireResponse.item[1].answer[0].valueInteger = this.answer2;
+      questionnaireResponse.item[2].answer[0].valueInteger = this.answer3;
+      questionnaireResponse.item[3].answer[0].valueInteger = this.answer4;
+      questionnaireResponse.item[4].answer[0].valueInteger = this.answer5;
+      questionnaireResponse.item[5].answer[0].valueInteger = this.answer6;
+      questionnaireResponse.item[6].answer[0].valueInteger = this.answer7;
+      questionnaireResponse.item[7].answer[0].valueInteger = this.answer8;
+      questionnaireResponse.item[8].answer[0].valueInteger = this.answer9;
+      questionnaireResponse.item[9].answer[0].valueInteger = this.answer10;
 
-      prom.item[0].answer = this.answer1
-      prom.item[1].answer = this.answer2
-      prom.item[2].answer = this.answer3
-      prom.item[3].answer = this.answer4
-      prom.item[4].answer = this.answer5
-      prom.item[5].answer = this.answer6
-      prom.item[6].answer = this.answer7
-      prom.item[7].answer = this.answer8
-      prom.item[8].answer = this.answer9
-      prom.item[9].answer = this.answer10
+      const episodeOfCare = await this.getActiveEpisodeOfCare();
+      const encounter = this.createEncounter(encounterFHIRID, episodeOfCare.id);
 
-      const episodeOfCare = await this.getActiveEpisodeOfCare()
-      const encounter = this.createEncounter(encounterFHIRID, episodeOfCare.id)
-      
       console.log(
-        `prom: ${JSON.stringify(prom)}\n\nencounter: ${JSON.stringify(
+        `QuestionnaireResponse: ${JSON.stringify(
+          questionnaireResponse
+        )}\n\nEncounter: ${JSON.stringify(
           encounter
-        )}\n\nepisodeOfCare: ${JSON.stringify(
+        )}\n\nEpisodeOfCare: ${JSON.stringify(
           episodeOfCare
-        )}\n\nPatient: ${this.$storage.getPatient()}`
-      )
+        )}\n\nPatient: ${JSON.stringify(this.$storage.getPatient())}`
+      );
+
+      if (episodeOfCare.status == 'planned') {
+        episodeOfCare.status = 'active';
+        this.$midata.createEpisodeOfCareMidata(episodeOfCare);
+      } else {
+        episodeOfCare.status = 'finished';
+        this.$midata.updateEpisodeOfCareMidata(episodeOfCare);
+      }
+
+      this.$midata.createEncounterMidata(encounter);
+      this.$midata.createQuestionnaireResponseMidata(questionnaireResponse);
     },
     createEncounter(encounterFHIRID, episodeOfCareFHIRID) {
-      const encounter = ENCOUNTER
+      const encounter = ENCOUNTER;
 
-      encounter.id = encounterFHIRID
-      encounter.episodeOfCare[0].reference = `EpisodeOfCare/${episodeOfCareFHIRID}`
-
-      return encounter
+      encounter.id = encounterFHIRID;
+      encounter.episodeOfCare[0].reference = `EpisodeOfCare/${episodeOfCareFHIRID}`;
+      encounter.subject.display = `${this.patient.name[0].family} ${this.patient.name[0].given[0]}`;
+      encounter.subject.reference = `Patient/${this.patient.id}`;
+      return encounter;
     },
     async getActiveEpisodeOfCare() {
-      const activeEOC = await this.$midata.getEpisodeOfCare(this.patient.id)
-      const episodeOfCare = activeEOC ? activeEOC : this.$midata.createEpisodeOfCare()
-      console.log(`episodeOfCare: ${JSON.stringify(episodeOfCare)}`)
-      // bei activeEOC status update
-      return episodeOfCare
+      const activeEOC = await this.$midata
+        .getEpisodeOfCare(this.patient.id)
+        .catch((e) => console.log(e));
+      const episodeOfCare = activeEOC
+        ? activeEOC
+        : this.$midata.getNewEpisodeOfCare();
+      episodeOfCare.patient.display = `${this.patient.name[0].family} ${this.patient.name[0].given[0]}`;
+      episodeOfCare.patient.reference = `Patient/${this.patient.id}`;
+      return episodeOfCare;
     },
     completeBtnPressed() {
-      console.log('Button pressed')
-      this.setQuestionaire()
+      console.log('Button pressed');
+      this.setQuestionaire();
     },
   },
   watch: {
     answer1(value) {
-      console.log('Frage 1: ' + String(value))
+      console.log('Frage 1: ' + String(value));
     },
     answer2(value) {
-      console.log('Frage 2: ' + String(value))
+      console.log('Frage 2: ' + String(value));
     },
     answer3(value) {
-      console.log('Frage 3: ' + String(value))
+      console.log('Frage 3: ' + String(value));
     },
     answer4(value) {
-      console.log('Frage 4: ' + String(value))
+      console.log('Frage 4: ' + String(value));
     },
     answer5(value) {
-      console.log('Frage 5: ' + String(value))
+      console.log('Frage 5: ' + String(value));
     },
     answer6(value) {
-      console.log('Frage 6: ' + String(value))
+      console.log('Frage 6: ' + String(value));
     },
     answer7(value) {
-      console.log('Frage 7: ' + String(value))
+      console.log('Frage 7: ' + String(value));
     },
     answer8(value) {
-      console.log('Frage 8: ' + String(value))
+      console.log('Frage 8: ' + String(value));
     },
     answer9(value) {
-      console.log('Frage 9: ' + String(value))
+      console.log('Frage 9: ' + String(value));
     },
     answer10(value) {
-      console.log('Frage 10: ' + String(value))
+      console.log('Frage 10: ' + String(value));
     },
   },
-}
+};
 </script>
 <template>
   <q-page padding>
