@@ -8,7 +8,7 @@ import {
   Encounter,
   QuestionnaireResponse,
 } from '@i4mi/fhir_r4'
-import { EPISODE_OF_CARE, PATIENT } from '../data/FHIRressources'
+import { PATIENT } from '../data/FHIRressources'
 
 export default class MidataService {
   jsOnFhir: JSOnFhir
@@ -70,8 +70,6 @@ export default class MidataService {
    * @returns Practitioner resource as JSON
    */
   public async getPractitioner(): Promise<Practitioner> {
-    console.log("Practicioner gotten");
-    
     return await new Promise((resolve, reject) => {
       this.jsOnFhir
         .search('Practitioner', { _id: this.jsOnFhir.getPatient() })
@@ -148,20 +146,6 @@ export default class MidataService {
         })
         .catch((error) => reject(error))
     })
-  }
-
-  public getNewEpisodeOfCare() {
-    const episodeOfCare = EPISODE_OF_CARE
-    this.fhirCaseID = this.makeid(12)
-    episodeOfCare.status = 'planned'
-    episodeOfCare.id = this.fhirCaseID
-    episodeOfCare.identifier[0].value = this.currentCaseID
-
-    // would be solved with this.getOrganization() but it isnt possible to reference an organization to a practicioner in midata, which is why its simulated here
-    episodeOfCare.identifier[0].assigner.display = 'Reha Bern AG'
-    episodeOfCare.identifier[0].assigner.reference =
-      'Organization/63777a87ab51910677069bfe'
-    return episodeOfCare
   }
 
   /**
@@ -241,9 +225,10 @@ export default class MidataService {
   }
   public makeid(length: number) {
     let result = '0'
+    const i = 0
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXZY0123456789'
     const charactersLength = characters.length
-    for (let i = 0; i < length; i++) {
+    while ( i <= length) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength))
     }
     return result
