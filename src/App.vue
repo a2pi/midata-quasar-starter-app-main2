@@ -29,16 +29,7 @@ export default defineComponent({
             this.$storage.restoreFromMidata(),
             this.$midata.getPractitioner(),
           ])
-            .then((results) => {
-              /* const preferredCom = results[1].communication.find((coms) => {
-                return coms.preferred;
-              });
-              if (preferredCom) {
-                const lang = preferredCom.language.coding[0].code;
-                if (lang) {
-                  this.setLanguage(lang);
-                }
-              }*/
+            .then(() => {
               this.$router.push('/search');
             })
             .catch();

@@ -106,3 +106,69 @@ export const PROM =
     ]
 }
 
+export const ENCOUNTER=
+{
+  'resourceType': 'Encounter',
+  'status': 'finished',
+  'id': 'id3',
+  'episodeOfCare': [
+    {
+      'display': '',
+      'reference': 'EpisodeOfCare/id4'
+    }
+  ],
+  'subject': {
+    'display': '',
+    'reference': 'Patient/id2'
+  }}
+
+  export const EPISODE_OF_CARE=
+{
+  'resourceType': 'EpisodeOfCare',
+  'status': 'planned',
+  'patient': {
+    'display': '',
+    'reference': 'Patient/id2'
+  },
+  'id': 'id1',
+  'identifier': [
+    {
+      'value': 'caseID',
+      'assigner': {
+        'display': '',
+        'reference': 'Organization/id3'
+      }
+    }
+  ]
+}
+export const PATIENT = {
+    'resourceType': 'Patient',
+    'id': 'FHIR ID (generated)',
+    'identifier': [
+        {
+            'value': 'Patienten ID'
+        }
+    ],
+    'name': [
+        {
+            'family': '',
+            'given': [
+                ''
+            ]
+        }
+    ],
+    'gender': '',
+    'address': [
+        {
+            'country': 'Switzerland'
+        }
+    ],
+    'birthDate': 'YYYY',
+    'telecom': [
+        {
+          'system': 'email',
+          'value': '',
+        
+        }
+      ],
+}

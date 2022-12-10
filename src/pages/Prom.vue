@@ -1,8 +1,5 @@
 <script >
-import { PROM } from '../data/promData';
-import { ENCOUNTER } from '../data/encounter';
-
-//import { EPISODE_OF_CARE } from 'src/data/episodeOfCare'
+import { PROM, ENCOUNTER } from '../data/FHIRressources'
 
 export default {
   name: 'Prom',
@@ -19,37 +16,64 @@ export default {
       answer8: Number,
       answer9: Number,
       answer10: Number,
-      patient: this.$storage.getPatient(),
-    };
+      patientName: `${this.patient.name[0].family} ${this.patient.name[0].given[0]}`,
+    }
   },
   setup() {
-    return {};
+    return { patient: this.$storage.getPatient() }
   },
   methods: {
     async setQuestionaire() {
-      const questionnaireResponse = PROM;
+      const questionnaireResponse = PROM
 
-      const encounterFHIRID = `${this.$midata.makeid(12)}`;
-      const questionnaireFHIRID = `${this.$midata.makeid(12)}`;
+      const encounterFHIRID = `${this.$midata.makeid(12)}`
+      const questionnaireFHIRID = `${this.$midata.makeid(12)}`
 
-      questionnaireResponse.id = questionnaireFHIRID;
-      questionnaireResponse.encounter.reference = `Encounter/${encounterFHIRID}`;
-      questionnaireResponse.status = 'completed';
-      questionnaireResponse.subject.reference = `Patient/${this.patient.id}`;
-      questionnaireResponse.subject.display = `${this.patient.name[0].family} ${this.patient.name[0].given[0]}`;
-      questionnaireResponse.item[0].answer[0].valueInteger = this.answer1;
-      questionnaireResponse.item[1].answer[0].valueInteger = this.answer2;
-      questionnaireResponse.item[2].answer[0].valueInteger = this.answer3;
-      questionnaireResponse.item[3].answer[0].valueInteger = this.answer4;
-      questionnaireResponse.item[4].answer[0].valueInteger = this.answer5;
-      questionnaireResponse.item[5].answer[0].valueInteger = this.answer6;
-      questionnaireResponse.item[6].answer[0].valueInteger = this.answer7;
-      questionnaireResponse.item[7].answer[0].valueInteger = this.answer8;
-      questionnaireResponse.item[8].answer[0].valueInteger = this.answer9;
-      questionnaireResponse.item[9].answer[0].valueInteger = this.answer10;
+      questionnaireResponse.id = questionnaireFHIRID
+      questionnaireResponse.encounter.reference = `Encounter/${encounterFHIRID}`
+      questionnaireResponse.status = 'completed'
+      questionnaireResponse.subject.reference = `Patient/${this.patient.id}`
+      questionnaireResponse.subject.display = this.patientName
 
-      const episodeOfCare = await this.getActiveEpisodeOfCare();
-      const encounter = this.createEncounter(encounterFHIRID, episodeOfCare.id);
+      questionnaireResponse.item[0].answer[0].valueInteger = this.answer1
+      questionnaireResponse.item[1].answer[0].valueInteger = this.answer2
+      questionnaireResponse.item[2].answer[0].valueInteger = this.answer3
+      questionnaireResponse.item[3].answer[0].valueInteger = this.answer4
+      questionnaireResponse.item[4].answer[0].valueInteger = this.answer5
+      questionnaireResponse.item[5].answer[0].valueInteger = this.answer6
+      questionnaireResponse.item[6].answer[0].valueInteger = this.answer7
+      questionnaireResponse.item[7].answer[0].valueInteger = this.answer8
+      questionnaireResponse.item[8].answer[0].valueInteger = this.answer9
+      questionnaireResponse.item[9].answer[0].valueInteger = this.answer10
+
+      await setEpisodeOfCareAndEncounter(
+        encounterFHIRID,
+        questionnaireResponse
+      )
+    },
+    createEncounter(encounterFHIRID, episodeOfCareFHIRID) {
+      const encounter = ENCOUNTER
+
+      encounter.id = encounterFHIRID
+      encounter.episodeOfCare[0].reference = `EpisodeOfCare/${episodeOfCareFHIRID}`
+      encounter.subject.display = this.patientName
+      encounter.subject.reference = `Patient/${this.patient.id}`
+      return encounter
+    },
+    async getActiveEpisodeOfCare() {
+      const activeEOC = await this.$midata
+        .getEpisodeOfCare(this.patient.id)
+        .catch((e) => console.log(e))
+      const episodeOfCare = activeEOC
+        ? activeEOC
+        : this.$midata.getNewEpisodeOfCare()
+      episodeOfCare.patient.display = patientName
+      episodeOfCare.patient.reference = `Patient/${this.patient.id}`
+      return episodeOfCare
+    },
+    async setEpisodeOfCareAndEncounter(encounterFHIRID, questionnaireResponse) {
+      const episodeOfCare = await this.getActiveEpisodeOfCare()
+      const encounter = this.createEncounter(encounterFHIRID, episodeOfCare.id)
 
       console.log(
         `QuestionnaireResponse: ${JSON.stringify(
@@ -59,78 +83,25 @@ export default {
         )}\n\nEpisodeOfCare: ${JSON.stringify(
           episodeOfCare
         )}\n\nPatient: ${JSON.stringify(this.$storage.getPatient())}`
-      );
+      )
 
       if (episodeOfCare.status == 'planned') {
-        episodeOfCare.status = 'active';
-        this.$midata.createEpisodeOfCareMidata(episodeOfCare);
+        episodeOfCare.status = 'active'
+        this.$midata.createEpisodeOfCareMidata(episodeOfCare)
       } else {
-        episodeOfCare.status = 'finished';
-        this.$midata.updateEpisodeOfCareMidata(episodeOfCare);
+        episodeOfCare.status = 'finished'
+        this.$midata.updateEpisodeOfCareMidata(episodeOfCare)
       }
 
-      this.$midata.createEncounterMidata(encounter);
-      this.$midata.createQuestionnaireResponseMidata(questionnaireResponse);
-
-    },
-    createEncounter(encounterFHIRID, episodeOfCareFHIRID) {
-      const encounter = ENCOUNTER;
-
-      encounter.id = encounterFHIRID;
-      encounter.episodeOfCare[0].reference = `EpisodeOfCare/${episodeOfCareFHIRID}`;
-      encounter.subject.display = `${this.patient.name[0].family} ${this.patient.name[0].given[0]}`;
-      encounter.subject.reference = `Patient/${this.patient.id}`;
-      return encounter;
-    },
-    async getActiveEpisodeOfCare() {
-      const activeEOC = await this.$midata
-        .getEpisodeOfCare(this.patient.id)
-        .catch((e) => console.log(e));
-      const episodeOfCare = activeEOC
-        ? activeEOC
-        : this.$midata.getNewEpisodeOfCare();
-      episodeOfCare.patient.display = `${this.patient.name[0].family} ${this.patient.name[0].given[0]}`;
-      episodeOfCare.patient.reference = `Patient/${this.patient.id}`;
-      return episodeOfCare;
+      this.$midata.createEncounterMidata(encounter)
+      this.$midata.createQuestionnaireResponseMidata(questionnaireResponse)
     },
     completeBtnPressed() {
-      console.log('Button pressed');
-      this.setQuestionaire();
+      console.log('Button pressed')
+      this.setQuestionaire()
     },
   },
-  watch: {
-    answer1(value) {
-      console.log('Frage 1: ' + String(value));
-    },
-    answer2(value) {
-      console.log('Frage 2: ' + String(value));
-    },
-    answer3(value) {
-      console.log('Frage 3: ' + String(value));
-    },
-    answer4(value) {
-      console.log('Frage 4: ' + String(value));
-    },
-    answer5(value) {
-      console.log('Frage 5: ' + String(value));
-    },
-    answer6(value) {
-      console.log('Frage 6: ' + String(value));
-    },
-    answer7(value) {
-      console.log('Frage 7: ' + String(value));
-    },
-    answer8(value) {
-      console.log('Frage 8: ' + String(value));
-    },
-    answer9(value) {
-      console.log('Frage 9: ' + String(value));
-    },
-    answer10(value) {
-      console.log('Frage 10: ' + String(value));
-    },
-  },
-};
+}
 </script>
 <template>
   <q-page padding>
@@ -441,9 +412,11 @@ export default {
         id="completeBtn"
         label="Beenden"
         size="30px"
-        to='/search'
+        to="/search"
         @click="completeBtnPressed()"
       />
     </center>
   </q-page>
 </template>
+
+
