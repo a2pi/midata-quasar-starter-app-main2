@@ -1,6 +1,5 @@
 <script >
-import { PROM, ENCOUNTER } from '../data/FHIRressources'
-
+import { PROM, ENCOUNTER,EPISODE_OF_CARE } from '../data/FHIRressources'
 export default {
   name: 'Prom',
 
@@ -46,7 +45,7 @@ export default {
       questionnaireResponse.item[8].answer[0].valueInteger = this.answer9
       questionnaireResponse.item[9].answer[0].valueInteger = this.answer10
 
-      await setEpisodeOfCareAndEncounter(
+      await saveToMidata(
         encounterFHIRID,
         questionnaireResponse
       )
@@ -71,7 +70,7 @@ export default {
       episodeOfCare.patient.reference = `Patient/${this.patient.id}`
       return episodeOfCare
     },
-    async setEpisodeOfCareAndEncounter(encounterFHIRID, questionnaireResponse) {
+    async saveToMidata(encounterFHIRID, questionnaireResponse) {
       const episodeOfCare = await this.getActiveEpisodeOfCare()
       const encounter = this.createEncounter(encounterFHIRID, episodeOfCare.id)
 
@@ -85,6 +84,7 @@ export default {
         )}\n\nPatient: ${JSON.stringify(this.$storage.getPatient())}`
       )
 
+      // add the create patient ressource method
       if (episodeOfCare.status == 'planned') {
         episodeOfCare.status = 'active'
         this.$midata.createEpisodeOfCareMidata(episodeOfCare)
@@ -92,9 +92,21 @@ export default {
         episodeOfCare.status = 'finished'
         this.$midata.updateEpisodeOfCareMidata(episodeOfCare)
       }
-
       this.$midata.createEncounterMidata(encounter)
       this.$midata.createQuestionnaireResponseMidata(questionnaireResponse)
+    },
+    getNewEpisodeOfCare() {
+    const episodeOfCare = EPISODE_OF_CARE
+    this.fhirCaseID = this.$midata.makeid(12)
+    episodeOfCare.status = 'planned'
+    episodeOfCare.id = this.fhirCaseID
+    episodeOfCare.identifier[0].value = this.currentCaseID
+
+    // would be solved with this.getOrganization() but it isnt possible to reference an organization to a practicioner in midata, which is why its simulated here
+    episodeOfCare.identifier[0].assigner.display = 'Reha Bern AG'
+    episodeOfCare.identifier[0].assigner.reference =
+      'Organization/63777a87ab51910677069bfe'
+    return episodeOfCare
     },
     completeBtnPressed() {
       console.log('Button pressed')

@@ -99,6 +99,9 @@ export default {
       this.$storage.setCurrentPatient(item);
       this.$midata.setCaseID(item.caseID);
 
+      saveToStorage(item);
+    },
+    saveToStorage(item) {
       const patientIndex = this.patients.findIndex((patient) => {
         return patient.firstName === item.firstName;
       });
@@ -112,12 +115,11 @@ export default {
   },
   updated() {
     this.namePracticioner = [
-        this.$storage.getPractitioner()?.name[0]?.family,
-        this.$storage.getPractitioner()?.name[0]?.given[0],
-      ].join(' ');
+      this.$storage.getPractitioner()?.name[0]?.family,
+      this.$storage.getPractitioner()?.name[0]?.given[0],
+    ].join(' ');
   },
   mounted() {
-          
     const stringifiedPatients = localStorage.getItem('patientsArray');
     if (stringifiedPatients != null) {
       this.patients = JSON.parse(stringifiedPatients);
@@ -286,3 +288,5 @@ export default {
     </div>
   </q-page>
 </template>
+
+

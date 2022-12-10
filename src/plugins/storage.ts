@@ -2,7 +2,7 @@ import MidataService from './midataService'
 import {
   Patient,
   Practitioner,
-} from '@i4mi/fhir_r4' 
+} from '@i4mi/fhir_r4'
 import { PATIENT } from 'src/data/FHIRressources'
 
 const STORAGE_KEY = 'demo-app-storage'
@@ -54,7 +54,10 @@ export default class Storage {
   }
 
   public setCurrentPatient(currentPatient: PatientObject) {
-    this.patientResource.id = currentPatient.patFHIRID
+    if (currentPatient.patFHIRID)
+      this.patientResource.id = currentPatient.patFHIRID
+    else
+      this.patientResource.id = this.midata.makeid(12)
     this.patientResource.address[0].country = currentPatient.address
     this.patientResource.identifier[0].value = currentPatient.patID
     this.patientResource.name[0].family = currentPatient.familyName
