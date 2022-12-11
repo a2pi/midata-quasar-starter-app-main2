@@ -224,13 +224,15 @@ export default class MidataService {
     })
   }
   public makeid(length: number) {
+    
     let result = '0'
-    const i = 0
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXZY0123456789'
     const charactersLength = characters.length
-    while ( i <= length) {
+    while ( result.length <length) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength))
+
     }
+    console.log('id made');
     return result
   }
 
