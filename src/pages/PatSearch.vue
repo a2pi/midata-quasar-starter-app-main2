@@ -22,6 +22,10 @@ export default {
     };
   },
   methods: {
+    removePatient(index) {
+      this.patients.splice(index, 1);
+      localStorage.setItem('patientsArray', JSON.stringify(this.patients));
+    },
     createPatient(
       firstName,
       familyName,
@@ -46,6 +50,7 @@ export default {
       };
       return patient;
     },
+
     async enterPatient() {
       const patient = await this.$midata
         .getPatient(this.inputFirstName) // Search the patients in midata based on the Name surname and Birthday given in the frontend.
@@ -54,6 +59,9 @@ export default {
           e.name[0].family = this.inputSurName;
           e.birthDate = this.inputBirthday;
           e.identifier[0].value = this.inputPatientId;
+          console.log(
+            `The patient ${e.name[0].given[0]} was addedd to patients[]`
+          );
 
           this.patients.push(
             this.createPatient(
@@ -70,7 +78,7 @@ export default {
           );
         });
 
-      // console.log(`Patient ID: ${patient.id}`)
+      // console.log(`Patient ID: ${patient.id}`);
       if (patient) {
         if (patient.name[0].given == this.inputFirstName) {
           this.foundFlag = true;
@@ -88,20 +96,25 @@ export default {
             )
           );
         } else {
-          console.log('Bundle not delivered. no patient added to patients[]');
+          console.log('Bundle not delivered. no patient added');
         }
+
+        this.inputFirstName = '';
+        this.inputSurName = '';
+        this.inputBirthday = '';
+        this.inputPatientId = '';
+        this.inputCaseId = '';
+        this.inputEmail = '';
+        this.inputAddress = '';
       }
+
+      localStorage.setItem('patientsArray', JSON.stringify(this.patients));
     },
-    registerPatient() {
-      console.log('To be implemented');
-    },
+
     savePatientToStorage(item) {
       this.$storage.setCurrentPatient(item);
       this.$midata.setCaseID(item.caseID);
 
-      saveToStorage(item);
-    },
-    saveToStorage(item) {
       const patientIndex = this.patients.findIndex((patient) => {
         return patient.firstName === item.firstName;
       });
@@ -113,17 +126,20 @@ export default {
       localStorage.setItem('patientsArray', JSON.stringify(this.patients));
     },
   },
-  updated() {
-    this.namePracticioner = [
-      this.$storage.getPractitioner()?.name[0]?.family,
-      this.$storage.getPractitioner()?.name[0]?.given[0],
-    ].join(' ');
-  },
+    updated() {
+      this.namePracticioner = [
+        this.$storage.getPractitioner()?.name[0]?.family,
+        this.$storage.getPractitioner()?.name[0]?.given[0],
+      ].join(' ');
+    },
   mounted() {
-    const stringifiedPatients = localStorage.getItem('patientsArray');
-    if (stringifiedPatients != null) {
-      this.patients = JSON.parse(stringifiedPatients);
+    const stringiFiedPatients = localStorage.getItem('patientsArray');
+
+    if (stringiFiedPatients != null) {
+      this.patients = JSON.parse(stringiFiedPatients);
     }
+    console.log('This is patients[] loaded from LocalStorage');
+    console.log(this.patients);
   },
 };
 </script>
@@ -131,7 +147,7 @@ export default {
 <template>
   <q-page padding>
     <div>
-      <H2>Patienten erfassen</H2>
+      <H2>Patient Search</H2>
       <div class="q-pa-md" style="max-width: 700px">
         <table width="100%" border="0">
           <tr>
@@ -150,60 +166,62 @@ export default {
 
             <td rowspan="6" width="100%">
               <div class="q-pa-md" style="max-width: 400px">
-                <!--  List of Patients ----------------------------------------------------------------- -->
+                <!-- -------------------------------------------------------------------------------------------- -->
+
                 <div
                   class="q-pa-md"
                   style="width: 500px"
                   v-show="showPatientList"
                 >
-                  <div bordered separator>
-                    <q-list bordered separator>
-                      <q-item
-                        clickable
-                        v-for="item in patients"
-                        :key="item.familyName"
-                      >
-                        <q-item-section>
-                          <q-item-label overline> Patient </q-item-label>
-                          <q-item-label>
-                            {{ item.firstName }} {{ item.familyName }}
-                          </q-item-label>
+                  <q-list bordered separator>
+                    <q-item
+                      clickable
+                      v-for="item in patients"
+                      :key="item.familyName"
+                    >
+                      <q-item-section>
+                        <q-item-label overline> Patient </q-item-label>
+                        <q-item-label>
+                          {{ item.firstName }} {{ item.familyName }}
+                        </q-item-label>
 
-                          <q-item-label overline> Pat.ID </q-item-label>
-                          <q-item-label>
-                            {{ item.patID }}
-                          </q-item-label>
+                        <q-item-label overline> Pat.ID </q-item-label>
+                        <q-item-label>
+                          {{ item.patID }}
+                        </q-item-label>
 
-                          <q-item-label overline> Fall ID </q-item-label>
-                          <q-item-label>
-                            {{ item.caseID }}
-                          </q-item-label>
-                          <q-item-label overline> Completed? </q-item-label>
-                          <q-item-label>
-                            {{ item.questionnaireCompletedFlag }}
-                          </q-item-label>
-                        </q-item-section>
+                        <q-item-label overline> Fall ID </q-item-label>
+                        <q-item-label>
+                          {{ item.caseID }}
+                        </q-item-label>
+                      </q-item-section>
 
-                        <q-item-section>
-                          <q-btn
-                            push
-                            color="primary"
-                            v-bind:label="
-                              item.registered
-                                ? 'PROM beantworten'
-                                : 'Pat. registrieren'
-                            "
-                            size="10px"
-                            v-bind:to="item.registered ? '/prom' : 'patfile'"
-                            @click="savePatientToStorage(item)"
-                          />
-                        </q-item-section>
-                        <q-item-section> </q-item-section>
-                      </q-item>
-                    </q-list>
-                  </div>
+                      <q-item-section>
+                        <q-btn
+                          push
+                          color="primary"
+                          v-bind:label="
+                            item.registered
+                              ? 'PROM beantworten'
+                              : 'Pat. registrieren'
+                          "
+                          size="10px"
+                          v-bind:to="item.registered ? '/prom' : 'patfile'"
+                          @click="savePatientToStorage(item)"
+                        />
+                      </q-item-section>
+                      <q-item-section><button
+                          class="button is-medium is-primary"
+                          @click="removePatient(index)"
+                        >
+                          <b-icon class="material-icons">
+                            disabled_by_default</b-icon
+                          >
+                        </button> </q-item-section>
+                    </q-item>
+                  </q-list>
+                  <!-- -------------------------------------------------------------------------------------------- -->
                 </div>
-                <!-- -------------------------------------------------------------------------------------------- -->
               </div>
             </td>
           </tr>
@@ -282,11 +300,8 @@ export default {
             </td>
           </tr>
         </table>
-
-        <q-btn color="primary" label="Erfassen" @click="enterPatient()" />
+                <q-btn color="primary" label="Erfassen" @click="enterPatient()" />
       </div>
     </div>
   </q-page>
 </template>
-
-
