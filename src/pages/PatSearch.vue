@@ -138,8 +138,6 @@ export default {
     if (stringiFiedPatients != null) {
       this.patients = JSON.parse(stringiFiedPatients);
     }
-    console.log('This is patients[] loaded from LocalStorage');
-    console.log(this.patients);
   },
 };
 </script>

@@ -232,7 +232,6 @@ export default class MidataService {
       result += characters.charAt(Math.floor(Math.random() * charactersLength))
 
     }
-    console.log('id made');
     return result
   }
 
