@@ -147,9 +147,9 @@ export const PATIENT = {
     'identifier': [
         {
             'value': 'Patienten ID',
-            "assigner": {
-              "display": "",
-              "reference": "Organization/id2"
+            'assigner': {
+              'display': '',
+              'reference': 'Organization/id2'
             }}
     ],
     'name': [
