@@ -22,10 +22,26 @@ export default {
     };
   },
   methods: {
+    /**
+     * Removes the which was selected in the list element
+     * @param {number}  index the position of the selected patient
+     */
     removePatient(index) {
       this.patients.splice(index, 1);
       localStorage.setItem('patientsArray', JSON.stringify(this.patients));
     },
+    /**
+     * creates and returns a patient object with the needed elements for the FHIR ressources
+     * @param {string}  firstName
+     * @param {string}  familyName
+     * @param {string}  address
+     * @param {string}  birthdate //the birthdate in a YYYY-mm-DD format
+     * @param {string}  patID //the ID-number of the patient in the clinic
+     * @param {string}  caseID // the ID-number of the case in the clinic
+     * @param {boolean}  registered // checked boolean for if the patient already has a midata account or not
+     * @param {string}  fhirID //the identification of the FHIR-patient ressource
+     * @param {boolean}  questionnaireCompletedFlag //
+     */
     createPatient(
       firstName,
       familyName,
@@ -114,7 +130,7 @@ export default {
     savePatientToStorage(item) {
       this.$storage.setCurrentPatient(item);
       this.$midata.setCaseID(item.caseID);
-
+      console.log(`Flag1: ${item.questionnaireCompletedFlag}`);
       const patientIndex = this.patients.findIndex((patient) => {
         return patient.firstName === item.firstName;
       });
@@ -124,7 +140,8 @@ export default {
       }
 
       localStorage.setItem('patientsArray', JSON.stringify(this.patients));
-      this.removePatient(item)
+      console.log(`Flag2: ${item.questionnaireCompletedFlag}`);
+      //this.removePatient(item)
     },
   },
   updated() {
@@ -200,7 +217,7 @@ export default {
                           {{ item.caseID }}
                         </q-item-label>
                       </q-item-section>
-
+                      <div v-show="!item.questionnaireCompletedFlag">
                       <q-item-section>
                         <q-btn
                           push
@@ -270,7 +287,7 @@ export default {
                           </q-list>
                         </q-btn-dropdown>
                       </q-item-section>
-
+                      </div>
                     </q-item>
                   </q-list>
 
