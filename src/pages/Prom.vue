@@ -23,18 +23,14 @@ export default {
   },
   methods: {
     async setQuestionaire() {
-      console.log('second button pressed');
       const questionnaireResponse = PROM;
-console.log('3');
       const encounterFHIRID = `${this.$midata.makeid(12)}`;
       const questionnaireFHIRID = `${this.$midata.makeid(12)}`;
-console.log('4');
       questionnaireResponse.id = questionnaireFHIRID;
       questionnaireResponse.encounter.reference = `Encounter/${encounterFHIRID}`;
       questionnaireResponse.status = 'completed';
       questionnaireResponse.subject.reference = `Patient/${this.patient.id}`;
       questionnaireResponse.subject.display = `${this.patient.name[0].family} ${this.patient.name[0].given[0]}`;
-console.log('5');
       questionnaireResponse.item[0].answer[0].valueInteger = this.answer1;
       questionnaireResponse.item[1].answer[0].valueInteger = this.answer2;
       questionnaireResponse.item[2].answer[0].valueInteger = this.answer3;
@@ -59,7 +55,6 @@ console.log('5');
         )}\n\nPatient: ${JSON.stringify(this.$storage.getPatient())}`
       );
 
-      // add the create patient ressource method
       if (episodeOfCare.status == 'planned') {
         episodeOfCare.status = 'active';
         this.$midata.createEpisodeOfCareMidata(episodeOfCare);
@@ -83,9 +78,7 @@ console.log('5');
       const activeEOC = await this.$midata
         .getEpisodeOfCare(this.patient.id)
         .catch((e) => console.log(e));
-      const episodeOfCare = activeEOC
-        ? activeEOC
-        : this.$midata.getNewEpisodeOfCare();
+      const episodeOfCare = activeEOC ? activeEOC : this.getNewEpisodeOfCare();
       episodeOfCare.patient.display = `${this.patient.name[0].family} ${this.patient.name[0].given[0]}`;
       episodeOfCare.patient.reference = `Patient/${this.patient.id}`;
       return episodeOfCare;
@@ -104,7 +97,6 @@ console.log('5');
       return episodeOfCare;
     },
     completeBtnPressed() {
-      console.log('Button pressed');
       this.setQuestionaire();
     },
   },
@@ -411,7 +403,7 @@ console.log('5');
         id="completeBtn"
         label="Beenden"
         size="30px"
-        to="/search"
+        to="/ende"
         @click="completeBtnPressed()"
       />
     </center>

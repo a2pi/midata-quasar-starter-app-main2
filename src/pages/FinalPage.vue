@@ -5,6 +5,13 @@
     <h4>Sie dürfen das Tablet zurückgeben.</h4>
     </div>
   </q-page>
+  <q-btn
+        color="primary"
+        id="completeBtn"
+        label="Zurück"
+        size="30px"
+        to="/search"
+      />
 </template>
 
 <script>

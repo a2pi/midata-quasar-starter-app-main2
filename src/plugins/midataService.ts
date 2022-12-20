@@ -9,6 +9,7 @@ import {
   QuestionnaireResponse,
 } from '@i4mi/fhir_r4'
 import { PATIENT } from '../data/FHIRressources'
+import { storage } from 'src/boot/plugins'
 
 export default class MidataService {
   jsOnFhir: JSOnFhir
@@ -84,6 +85,25 @@ export default class MidataService {
         .catch((error) => reject(error))
     })
   }
+
+    /**
+   * Creates a Patient resource on the fhir server
+   * @returns a promise:
+   *              - if successfull -> response with the created resource as JSON
+   *              - if not successfull -> error message
+   */
+     public async createPatientMidata(
+    ): Promise<Patient> {
+      const currentPatient = storage.getPatient()
+       return await new Promise((resolve, reject) => {
+        this.jsOnFhir
+          .create(currentPatient)
+          .then((result) => {
+            result ? resolve(result as Patient) : reject('Couldn\'t create Patient! Check the logs!')
+          })
+          .catch((error) => reject(error))
+      })
+    }
 
   /**
    * Gets the patient resource from the fhir endpoint.
@@ -166,6 +186,7 @@ export default class MidataService {
         .catch((error) => reject(error))
     })
   }
+
   /**
    * Creates a episodeOfCare resource on the fhir server
    * @returns a promise:
@@ -224,7 +245,7 @@ export default class MidataService {
     })
   }
   public makeid(length: number) {
-    
+
     let result = '0'
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXZY0123456789'
     const charactersLength = characters.length
@@ -314,10 +335,6 @@ export default class MidataService {
         })
         .catch((error) => reject(error))
     })
-  }
-
-  public getPatientName() {
-    return this.currentPatient.name
   }
 
   public setCaseID(caseID: string) {

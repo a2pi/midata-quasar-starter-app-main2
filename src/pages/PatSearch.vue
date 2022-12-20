@@ -57,7 +57,7 @@ export default {
         .catch((e) => {
           e.name[0].given[0] = this.inputFirstName;
           e.name[0].family = this.inputSurName;
-          e.birthDate = this.inputBirthday;
+          e.birthDate = this.inputBirthday.substring(0, 4);
           e.identifier[0].value = this.inputPatientId;
           console.log(
             `The patient ${e.name[0].given[0]} was addedd to patients[]`
@@ -124,20 +124,27 @@ export default {
       }
 
       localStorage.setItem('patientsArray', JSON.stringify(this.patients));
+      this.removePatient(item)
     },
   },
-    updated() {
-      this.namePracticioner = [
-        this.$storage.getPractitioner()?.name[0]?.family,
-        this.$storage.getPractitioner()?.name[0]?.given[0],
-      ].join(' ');
-    },
+  updated() {
+    const namePracticioner = [
+      this.$storage.getPractitioner()?.name[0]?.family,
+      this.$storage.getPractitioner()?.name[0]?.given[0],
+    ].join(' ');
+    localStorage.setItem('namePracticioner', JSON.stringify(namePracticioner));
+    this.namePracticioner = namePracticioner;
+  },
   mounted() {
     const stringiFiedPatients = localStorage.getItem('patientsArray');
 
     if (stringiFiedPatients != null) {
       this.patients = JSON.parse(stringiFiedPatients);
     }
+    this.namePracticioner = localStorage.getItem(
+      'namePracticioner',
+      JSON.stringify(this.namePracticioner)
+    );
   },
 };
 </script>
@@ -208,21 +215,71 @@ export default {
                           @click="savePatientToStorage(item)"
                         />
                       </q-item-section>
-                      <q-item-section><button
-                          class="button is-medium is-primary"
-                          @click="removePatient(index)"
-                        >
-                          <b-icon class="material-icons">
-                            disabled_by_default</b-icon
-                          >
-                        </button> </q-item-section>
+                      <q-item-section>
+                        <q-btn-dropdown color="primary" label="Verzicht">
+                          <q-list>
+                            <q-item
+                              clickable
+                              v-close-popup
+                              @click="removePatient(index)"
+                            >
+                              <q-item-section>
+                                <q-item-label>Sprache</q-item-label>
+                              </q-item-section>
+                            </q-item>
+
+                            <q-item
+                              clickable
+                              v-close-popup
+                              @click="removePatient(index)"
+                            >
+                              <q-item-section>
+                                <q-item-label>Gesundheitszustand</q-item-label>
+                              </q-item-section>
+                            </q-item>
+
+                            <q-item
+                              clickable
+                              v-close-popup
+                              @click="removePatient(index)"
+                            >
+                              <q-item-section>
+                                <q-item-label>Patient will nicht</q-item-label>
+                              </q-item-section>
+                            </q-item>
+                            <q-item
+                              clickable
+                              v-close-popup
+                              @click="removePatient(index)"
+                            >
+                              <q-item-section>
+                                <q-item-label
+                                  >Versäumnis der Klinik</q-item-label
+                                >
+                              </q-item-section>
+                            </q-item>
+                            <q-item
+                              clickable
+                              v-close-popup
+                              @click="removePatient(index)"
+                            >
+                              <q-item-section>
+                                <q-item-label>Entlassung</q-item-label>
+                              </q-item-section>
+                            </q-item>
+                          </q-list>
+                        </q-btn-dropdown>
+                      </q-item-section>
+
                     </q-item>
                   </q-list>
+
                   <!-- -------------------------------------------------------------------------------------------- -->
                 </div>
               </div>
             </td>
           </tr>
+
           <tr>
             <td>
               <q-input
@@ -298,7 +355,7 @@ export default {
             </td>
           </tr>
         </table>
-                <q-btn color="primary" label="Erfassen" @click="enterPatient()" />
+        <q-btn color="primary" label="Erfassen" @click="enterPatient()" />
       </div>
     </div>
   </q-page>

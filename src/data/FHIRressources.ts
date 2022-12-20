@@ -143,11 +143,14 @@ export const ENCOUNTER=
 }
 export const PATIENT = {
     'resourceType': 'Patient',
-    'id': 'FHIR ID (generated)',
+    'id': '',
     'identifier': [
         {
-            'value': 'Patienten ID'
-        }
+            'value': 'Patienten ID',
+            "assigner": {
+              "display": "",
+              "reference": "Organization/id2"
+            }}
     ],
     'name': [
         {
@@ -168,7 +171,7 @@ export const PATIENT = {
         {
           'system': 'email',
           'value': '',
-        
+
         }
       ],
 }
